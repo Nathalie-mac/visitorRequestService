@@ -3,7 +3,6 @@ package com.example.team2.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.util.List;
 
 @Entity
@@ -27,4 +26,5 @@ public class Department {
 
     @OneToMany(mappedBy = "department", cascade = CascadeType.ALL)
     List<Request> requests;
+
 }
