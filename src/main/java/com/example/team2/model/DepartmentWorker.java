@@ -4,6 +4,8 @@ package com.example.team2.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "department_worker")
 @Getter
@@ -23,4 +25,8 @@ public class DepartmentWorker {
     @ManyToOne
     @JoinColumn(name = "department_id")
     private Department department;
+
+    @OneToMany(mappedBy = "department_worker", cascade = CascadeType.ALL)
+    List<Request> requests;
+
 }
