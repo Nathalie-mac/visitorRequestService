@@ -21,8 +21,8 @@ public class Request {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "type")
-    //enumerated
     private AppointmentType appointmentType;
 
     @Column(name = "request_department")
