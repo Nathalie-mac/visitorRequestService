@@ -26,6 +26,12 @@ public class Request {
     @Column(name = "appointment_type", nullable = false)
     private AppointmentType appointmentType;
 
+    @Column(name = "request_date", nullable = false)
+    private LocalDate requestDate;
+
+    @Column(name = "request_time", nullable = false)
+    private LocalTime requestTime;
+
     @Column(name = "request_start_date", nullable = false)
     private LocalDate requestStartDate;
 
