@@ -18,41 +18,41 @@ public class Person {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "last_name")
+    @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    @Column(name = "first_name")
+    @Column(name = "first_name", nullable = false)
     private String firstName;
 
-    @Column(name = "middle_name")
+    @Column(name = "middle_name", nullable = false)
     private String middleName;
 
     @Column(name = "phone")
     private String phone;
 
-    @Column(name = "email")
+    @Column(name = "email", nullable = false)
     private String email;
 
-    @Column(name = "note")
+    @Column(name = "note", nullable = false)
     private String note;
 
     @Column(name = "organization")
     private String organization;
 
-    @Column(name = "birth_date")
+    @Column(name = "birth_date", nullable = false)
     private LocalDate birthDate;
 
-    @Column(name = "passport_sery")
+    @Column(name = "passport_sery", nullable = false)
     private String passportSery;
 
-    @Column(name = "passport_number")
+    @Column(name = "passport_number", nullable = false)
     private String PassportNumber;
 
-    @Column(name = "photo")
-    private byte[] photo;
+    @Column(name = "photo_id", nullable = false)
+    private int photo;
 
-    @Column(name = "passport_pdf")
-    private byte[] passportPdf;
+    @Column(name = "passport_id", nullable = false)
+    private int passportPdf;
 
     @ManyToOne
     @JoinColumn(name = "request_id")

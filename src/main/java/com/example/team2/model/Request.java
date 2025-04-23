@@ -4,6 +4,7 @@ package com.example.team2.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import javax.xml.crypto.KeySelector;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -22,21 +23,25 @@ public class Request {
     private long id;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "type")
+    @Column(name = "appointment_type", nullable = false)
     private AppointmentType appointmentType;
 
-    @Column(name = "request_department")
-    private LocalDate requestDate;
+    @Column(name = "request_start_date", nullable = false)
+    private LocalDate requestStartDate;
 
-    @Column(name = "request_department")
-    private LocalTime requestTime;
+    @Column(name = "request_end_date", nullable = false)
+    private LocalDate requestEndDate;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "request_department", nullable = false)
+    @Column(name = "purpose", nullable = false)
+    private AppointmentPurpose purpose;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
     private StatusType status;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "request_department")
+    @Column(name = "reject_reason")
     private RejectReason rejectReason;
 
     @ManyToOne

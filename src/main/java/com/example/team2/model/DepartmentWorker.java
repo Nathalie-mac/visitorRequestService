@@ -19,7 +19,7 @@ public class DepartmentWorker {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "worker_name")
+    @Column(name = "worker_name", nullable = false)
     private String workerName;
 
     @ManyToOne
