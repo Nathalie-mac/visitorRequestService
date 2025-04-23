@@ -1,5 +1,6 @@
 package com.example.team2.model;
 
+import com.example.team2.model.email.ValidEmail;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -30,6 +31,7 @@ public class Person {
     @Column(name = "phone")
     private String phone;
 
+    @ValidEmail
     @Column(name = "email", nullable = false)
     private String email;
 

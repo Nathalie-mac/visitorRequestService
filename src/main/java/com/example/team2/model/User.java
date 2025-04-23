@@ -1,5 +1,6 @@
 package com.example.team2.model;
 
+import com.example.team2.model.email.ValidEmail;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -16,6 +17,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ValidEmail
     @Column(name = "user_login")
     private String userLogin;
 
