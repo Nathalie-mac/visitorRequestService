@@ -3,6 +3,7 @@ package com.example.team2.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Check;
 
 import javax.xml.crypto.KeySelector;
 import java.time.LocalDate;
@@ -33,9 +34,15 @@ public class Request {
     private LocalTime requestTime;
 
     @Column(name = "request_start_date", nullable = false)
+    @Check(name = "request_start_date",
+            constraints = "request_start_date >= (CURRENT_DATE + INTERVAL '1 day') AND" +
+            " request_start_date <= (CURRENT_DATE + INTERVAL '15 days')")
     private LocalDate requestStartDate;
 
     @Column(name = "request_end_date", nullable = false)
+    @Check(name = "request_end_date",
+            constraints = "request_end_date >= request_start_date AND" +
+            " request_end_date <= (request_start_date + INTERVAL '15 days')")
     private LocalDate requestEndDate;
 
     @Enumerated(EnumType.STRING)
