@@ -34,15 +34,15 @@ public class Request {
     private LocalTime requestTime;
 
     @Column(name = "request_start_date", nullable = false)
-    @Check(name = "request_start_date",
-            constraints = "request_start_date >= (CURRENT_DATE + INTERVAL '1 day') AND" +
-            " request_start_date <= (CURRENT_DATE + INTERVAL '15 days')")
+//    @Check(name = "request_start_date",
+//            constraints = "request_start_date >= (CURRENT_DATE + INTERVAL '1 day') AND" +
+//            " request_start_date <= (CURRENT_DATE + INTERVAL '15 days')")
     private LocalDate requestStartDate;
 
     @Column(name = "request_end_date", nullable = false)
-    @Check(name = "request_end_date",
-            constraints = "request_end_date >= request_start_date AND" +
-            " request_end_date <= (request_start_date + INTERVAL '15 days')")
+//    @Check(name = "request_end_date",
+//            constraints = "request_end_date >= request_start_date AND" +
+//            " request_end_date <= (request_start_date + INTERVAL '15 days')")
     private LocalDate requestEndDate;
 
     @Enumerated(EnumType.STRING)
@@ -65,6 +65,6 @@ public class Request {
     @JoinColumn(name = "worker_id")
     private DepartmentWorker worker;
 
-    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "request", cascade = CascadeType.ALL)
     List<Person> persons;
 }

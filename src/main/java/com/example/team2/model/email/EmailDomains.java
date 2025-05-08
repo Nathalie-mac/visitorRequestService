@@ -6,6 +6,7 @@ import lombok.Getter;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+
 @Getter
 @AllArgsConstructor
 public enum EmailDomains {
