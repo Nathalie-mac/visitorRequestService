@@ -6,9 +6,10 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum AppointmentPurpose {
-    VISITING_GRANDMA("Посещение бабушки"),
     BUSINESS("бизнес"),
-    EXCURSION("экскурсия");
+    EXCURSION("экскурсия"),
+    TRAINING("обучение"),
+    MAINTENANCE("ремонтные работы");
 
     private final String purpose;
 }
