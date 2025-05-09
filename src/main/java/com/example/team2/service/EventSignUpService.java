@@ -55,12 +55,13 @@ public class EventSignUpService {
         person.setPassportSery(visitorDTO.getPassportSeries());
         person.setPassportNumber(visitorDTO.getPassportNumber());
 
-        //person.setPassportPdf(visitorDTO); //TODO: перенести PDF паспорта из
-
         personService.save(person);
         List<Person> persons = new ArrayList<>();
         persons.add(person);
         request.setPersons(persons);
+
+        //PDF паспорта
+        //request.
 
         requestService.save(request);
     }
