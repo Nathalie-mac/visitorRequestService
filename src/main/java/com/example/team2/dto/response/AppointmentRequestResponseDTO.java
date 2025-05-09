@@ -14,7 +14,7 @@ import java.util.List;
 //с фронта
 // данные для оформления заявки клиентом
 public class AppointmentRequestResponseDTO {
-
+    private Long userId;
     private LocalDate startApplicationPeriod;
     private LocalDate endApplicationPeriod;
     private String purposeVisit;
