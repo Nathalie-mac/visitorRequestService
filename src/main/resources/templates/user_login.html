@@ -41,14 +41,14 @@
 <div class="container">
     <div class="login-container">
         <h2 class="login-header">ХранительПРО</h2>
-        <form th:action="@{/login}" method="post">
+        <form th:action="@{/auth/login}" method="post" th:object="${UserLogin}">
             <div class="mb-3">
                 <label for="username" class="form-label">Login</label>
-                <input type="text" class="form-control" id="username" name="username" required>
+                <input type="text" class="form-control" id="username" th:field="*{login}" required>
             </div>
             <div class="mb-3">
                 <label for="password" class="form-label">Password</label>
-                <input type="password" class="form-control" id="password" name="password" required>
+                <input type="password" class="form-control" id="password" th:field="*{password}" required>
             </div>
             <button type="submit" class="btn btn-primary btn-login">Войти</button>
         </form>
@@ -56,6 +56,8 @@
             <span>Нет учетной записи? </span>
             <a th:href="@{/register}">Зарегистрироваться</a>
         </div>
+
+
     </div>
 </div>
 </body>
