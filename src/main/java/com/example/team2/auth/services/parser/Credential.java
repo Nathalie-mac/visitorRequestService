@@ -8,7 +8,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class Credential {
     @NotBlank
-    String username;
+    String login;
     @NotBlank
     String password;
 }

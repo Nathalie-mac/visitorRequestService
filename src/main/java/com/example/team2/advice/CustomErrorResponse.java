@@ -1,4 +1,4 @@
-package com.example.team2.auth.advice;
+package com.example.team2.advice;
 
 import lombok.Data;
 

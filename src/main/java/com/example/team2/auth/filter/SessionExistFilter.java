@@ -1,7 +1,7 @@
 package com.example.team2.auth.filter;
 
 import com.example.team2.auth.httpresponse.HttpResponse;
-import com.example.team2.auth.services.AuthService;
+import com.example.team2.auth.services.AuthClientService;
 import com.example.team2.auth.services.RedisSessionService;
 import com.example.team2.auth.services.parser.CookieHeaderParser;
 import jakarta.servlet.*;
@@ -27,7 +27,7 @@ public class SessionExistFilter implements Filter {
         }
 
 
-        String sessionId = CookieHeaderParser.getSessionIdCookie(httpRequest.getHeader("Cookie"), AuthService.COOKIE_HEADER_SESSION_ID_NAME);
+        String sessionId = CookieHeaderParser.getSessionIdCookie(httpRequest.getHeader("Cookie"), AuthClientService.COOKIE_HEADER_SESSION_ID_NAME);
         if (sessionId == null || sessionId.isEmpty()) {
             httpResponse = HttpResponse.UNAUTHORIZED.getResponse(httpResponse);
             return;
