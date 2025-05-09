@@ -16,8 +16,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Request {
-    @OneToMany(mappedBy = "request", cascade = CascadeType.ALL)
-    List<Person> persons;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -64,6 +62,12 @@ public class Request {
     @ManyToOne
     @JoinColumn(name = "worker_id")
     private DepartmentWorker worker;
+
+    @OneToMany(mappedBy = "request", cascade = CascadeType.ALL)
+    List<Person> persons;
+
+    @OneToMany(mappedBy = "request", cascade = CascadeType.ALL)
+    List<PassportData> passportData;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
