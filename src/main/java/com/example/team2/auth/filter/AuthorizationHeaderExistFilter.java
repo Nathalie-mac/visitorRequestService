@@ -1,27 +1,31 @@
 package com.example.team2.auth.filter;
 
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
+import com.example.team2.auth.httpresponse.HttpResponse;
+import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-public class AuthorizationHeaderExistFilter extends OncePerRequestFilter {
-    public static final String WWW_AUTHENTICATE_VALUE = "Basic realm=\"*\", charset=\"UTF-8\"";
+@RequiredArgsConstructor
+public class AuthorizationHeaderExistFilter implements Filter {
+
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-
-        if (authHeader == null || authHeader.isEmpty()) {
-            response.setStatus(HttpStatus.UNAUTHORIZED.value());
-            response.setHeader(HttpHeaders.WWW_AUTHENTICATE, WWW_AUTHENTICATE_VALUE);
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        if (!(request instanceof HttpServletRequest httpRequest) || !(response instanceof HttpServletResponse)) {
+            chain.doFilter(request, response);
             return;
         }
-        filterChain.doFilter(request, response);
+
+        String authHeader = httpRequest.getHeader(HttpHeaders.AUTHORIZATION);
+        if (authHeader == null || authHeader.isEmpty()) {
+            response = HttpResponse.UNAUTHORIZED.getResponse((HttpServletResponse) response);
+            return;
+        }
+        chain.doFilter(request, response);
+
     }
 }

@@ -1,17 +1,19 @@
 package com.example.team2.auth.services.parser;
 
-import com.example.team2.auth.exceptions.DecodeCredentialsException;
-import com.example.team2.auth.exceptions.InvalidBasicAuthorizationHeaderException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+
+
+import com.example.team2.auth.exceptions.auth.DecodeCredentialsException;
+import com.example.team2.auth.exceptions.auth.InvalidBasicAuthorizationHeaderException;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.List;
 
-public class AuthorizationHeaderToUsernamePasswordAuthenticationToken {
+
+public class AuthorizationHeaderToCredentialParser {
     private static final String BASIC_PREFIX = "Basic ";
 
-    public static UsernamePasswordAuthenticationToken getAuthenticationToken(String authenticationHeader) {
+    public static Credential parse(String authenticationHeader) {
         try {
             if (!authenticationHeader.startsWith(BASIC_PREFIX)) {
                 throw new InvalidBasicAuthorizationHeaderException();
@@ -26,11 +28,8 @@ public class AuthorizationHeaderToUsernamePasswordAuthenticationToken {
             if (parts.size() != 2) {
                 throw new InvalidBasicAuthorizationHeaderException();
             }
+            return new Credential(parts.get(0), parts.get(1));
 
-            String username = parts.get(0);
-            String password = parts.get(1);
-
-            return new UsernamePasswordAuthenticationToken(username, password);
         } catch (IllegalArgumentException e) {
             throw new DecodeCredentialsException();
         }

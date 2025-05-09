@@ -1,14 +1,15 @@
 package com.example.team2.auth.advice;
 
-import com.example.team2.auth.exceptions.DecodeCredentialsException;
-import com.example.team2.auth.exceptions.ExistingUserWithThatUserLoginException;
-import com.example.team2.auth.exceptions.InvalidBasicAuthorizationHeaderException;
-import com.example.team2.auth.exceptions.UserNotFoundException;
+import com.example.team2.auth.exceptions.auth.DecodeCredentialsException;
+import com.example.team2.auth.exceptions.auth.InvalidBasicAuthorizationHeaderException;
+import com.example.team2.auth.exceptions.data.ExistingUserWithThatUsernameException;
+import com.example.team2.auth.exceptions.data.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+
 
 import java.time.LocalDateTime;
 
@@ -29,7 +30,7 @@ public class GlobalExceptionHandler {
 //    }
 
     //метод для обработки исключений
-    @ExceptionHandler(ExistingUserWithThatUserLoginException.class)
+    @ExceptionHandler(ExistingUserWithThatUsernameException.class)
     public ResponseEntity<CustomErrorResponse> handleExistingUserException(Exception ex, WebRequest request) {
         CustomErrorResponse errorResponse = new CustomErrorResponse();
         errorResponse.setTimestamp(LocalDateTime.now());
@@ -49,7 +50,7 @@ public class GlobalExceptionHandler {
         errorResponse.setMessage(ex.getMessage());
         errorResponse.setPath(request.getDescription(false));
 
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(DecodeCredentialsException.class)
@@ -61,7 +62,7 @@ public class GlobalExceptionHandler {
         errorResponse.setMessage(ex.getMessage());
         errorResponse.setPath(request.getDescription(false));
 
-        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(InvalidBasicAuthorizationHeaderException.class)
@@ -73,7 +74,8 @@ public class GlobalExceptionHandler {
         errorResponse.setMessage(ex.getMessage());
         errorResponse.setPath(request.getDescription(false));
 
-        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
+
 
 }
