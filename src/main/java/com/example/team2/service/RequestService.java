@@ -34,4 +34,12 @@ public class RequestService {
 
         return save(request);
     }
+
+    public Request findById(long id) {
+        return requestRepository.findById(id);
+    }
+
+    public void updateRequest() {
+
+    }
 }
