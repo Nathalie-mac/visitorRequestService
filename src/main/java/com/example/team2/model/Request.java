@@ -67,4 +67,8 @@ public class Request {
 
     @OneToMany(mappedBy = "request", cascade = CascadeType.ALL)
     List<Person> persons;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 }
