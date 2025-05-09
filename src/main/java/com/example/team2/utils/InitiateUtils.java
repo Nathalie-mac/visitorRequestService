@@ -36,5 +36,11 @@ public class InitiateUtils implements CommandLineRunner {
         for (Department department : departments) {
             System.out.println(department.getDepartmentName());
         }
+
+        List<Department> found = departmentService.findByDepartmentName("dep2");
+
+        for (Department deps : found) {
+            System.out.println(deps.getDepartmentName());
+        }
     }
 }

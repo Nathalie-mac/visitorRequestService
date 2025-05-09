@@ -22,4 +22,12 @@ public class DepartmentService {
     public List<Department> getAll() {
         return departmentRepository.findAll();
     }
+
+    public List<Department> findByDepartmentName(String departmentName) {
+        return departmentRepository.findByDepartmentName(departmentName);
+    }
+
+    public Department findById(long id) {
+        return departmentRepository.findById(id);
+    }
 }
