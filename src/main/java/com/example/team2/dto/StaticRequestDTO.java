@@ -1,4 +1,4 @@
-package com.example.team2.model.dto;
+package com.example.team2.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,14 +10,14 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class SignUpRequestDTO {
-
+// для статического отображения заявки, которое нельзя редактировать
+public class StaticRequestDTO {
+    private Long idRequest;
     private LocalDate startApplicationPeriod;
     private LocalDate endApplicationPeriod;
     private String purposeVisit;
-    private Long department;
-    private Long workerName;
+    private String department;
+    private String workerName;
     private List<VisitorDTO> visitors;
     private List<Integer> docs;
-
 }
