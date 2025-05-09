@@ -1,6 +1,6 @@
-package com.example.team2.model.dto.request;
+package com.example.team2.dto.request;
 
-import com.example.team2.model.dto.StaticRequestDTO;
+import com.example.team2.dto.StaticRequestDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

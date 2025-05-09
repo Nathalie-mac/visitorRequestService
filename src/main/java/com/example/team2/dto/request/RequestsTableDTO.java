@@ -1,4 +1,4 @@
-package com.example.team2.model.uidto;
+package com.example.team2.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

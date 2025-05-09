@@ -1,6 +1,6 @@
-package com.example.team2.model.dto.response;
+package com.example.team2.dto.response;
 
-import com.example.team2.model.dto.VisitorDTO;
+import com.example.team2.dto.VisitorDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

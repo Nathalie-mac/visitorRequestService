@@ -2,7 +2,7 @@ package com.example.team2.service;
 
 import com.example.team2.model.Person;
 import com.example.team2.model.Request;
-import com.example.team2.model.dto.VisitorDTO;
+import com.example.team2.dto.VisitorDTO;
 import com.example.team2.repository.PersonRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

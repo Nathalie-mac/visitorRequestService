@@ -1,8 +1,8 @@
 package com.example.team2.service;
 
 import com.example.team2.model.*;
-import com.example.team2.model.dto.response.SignUpRequestResponseDTO;
-import com.example.team2.model.dto.VisitorDTO;
+import com.example.team2.dto.response.SignUpRequestResponseDTO;
+import com.example.team2.dto.VisitorDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

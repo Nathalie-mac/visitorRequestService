@@ -1,4 +1,4 @@
-package com.example.team2.model.dto.response;
+package com.example.team2.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

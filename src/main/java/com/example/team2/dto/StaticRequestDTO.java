@@ -1,4 +1,4 @@
-package com.example.team2.model.dto;
+package com.example.team2.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

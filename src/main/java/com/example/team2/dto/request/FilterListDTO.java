@@ -1,4 +1,4 @@
-package com.example.team2.model.uidto;
+package com.example.team2.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,7 +13,7 @@ import java.util.List;
 //списки для фильтров на страницах менеджера и охранника
 public class FilterListDTO {
 
-   private List<String> appointmentTypeList;
-   private List<String> departmentList;
-   private List<String> statusList;
+    private List<String> appointmentTypeList;
+    private List<String> departmentList;
+    private List<String> statusList;
 }

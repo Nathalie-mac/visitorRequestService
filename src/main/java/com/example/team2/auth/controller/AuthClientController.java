@@ -1,6 +1,6 @@
 package com.example.team2.auth.controller;
 
-import com.example.team2.model.uidto.LoginDTO;
+import com.example.team2.dto.LoginDTO;
 import com.example.team2.uiservice.AuthClientUIService;
 import org.springframework.ui.Model;
 import com.example.team2.auth.services.AuthService;

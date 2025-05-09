@@ -1,13 +1,12 @@
-package com.example.team2.model.dto.request;
+package com.example.team2.dto.request;
 
 
-import com.example.team2.model.dto.DepartmentDTO;
-import com.example.team2.model.dto.VisitorDTO;
+import com.example.team2.dto.DepartmentDTO;
+import com.example.team2.dto.VisitorDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Data
