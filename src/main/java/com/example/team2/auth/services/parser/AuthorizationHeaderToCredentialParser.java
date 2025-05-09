@@ -1,7 +1,6 @@
 package com.example.team2.auth.services.parser;
 
 
-
 import com.example.team2.auth.exceptions.auth.DecodeCredentialsException;
 import com.example.team2.auth.exceptions.auth.InvalidBasicAuthorizationHeaderException;
 

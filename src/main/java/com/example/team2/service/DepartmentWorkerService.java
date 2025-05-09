@@ -5,8 +5,6 @@ import com.example.team2.model.DepartmentWorker;
 import com.example.team2.repository.DepartmentWorkerRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class DepartmentWorkerService {
     private final DepartmentWorkerRepository departmentWorkerRepository;

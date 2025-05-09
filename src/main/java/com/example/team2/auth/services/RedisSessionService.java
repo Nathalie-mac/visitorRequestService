@@ -32,11 +32,11 @@ public class RedisSessionService {
         return redissonClient.getBucket(redisKey);
     }
 
-    public boolean isEmptySessionRBucket(String sessionId){
+    public boolean isEmptySessionRBucket(String sessionId) {
         return isEmptySessionRBucket(getRBucket(sessionId));
     }
 
-    public boolean isEmptySessionRBucket(RBucket<String> bucket){
+    public boolean isEmptySessionRBucket(RBucket<String> bucket) {
         return !bucket.isExists();
     }
 

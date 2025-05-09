@@ -3,10 +3,11 @@ package com.example.team2.auth.services;
 
 import com.example.team2.auth.config.BCrypt.BCryptPasswordEncoder;
 import com.example.team2.auth.data.entity.session.Session;
-import com.example.team2.auth.data.entity.user.User;
 import com.example.team2.auth.services.parser.AuthorizationHeaderToCredentialParser;
 import com.example.team2.auth.services.parser.CookieHeaderParser;
 import com.example.team2.auth.services.parser.Credential;
+import com.example.team2.model.User;
+import com.example.team2.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.redisson.api.RBucket;
 import org.springframework.http.HttpHeaders;
@@ -29,7 +30,7 @@ public class AuthService {
 
     public ResponseEntity<?> signUp(String authenticationHeader) {
         Credential credential = AuthorizationHeaderToCredentialParser.parse(authenticationHeader);
-        userService.createUser(credential.getUsername(), passwordEncoder  .encode(credential.getPassword()));
+        userService.createUser(credential.getUsername(), passwordEncoder.encode(credential.getPassword()));
 
 
         return ResponseEntity.ok().build();
@@ -62,9 +63,9 @@ public class AuthService {
         return ResponseEntity.ok().build();
     }
 
-    private Session createSession(String username) {
+    private Session createSession(String login) {
         String sessionId = UUID.randomUUID().toString();
-        User user = userService.findUserByUsername(username);
+        User user = userService.findUserByLogin(login);
         Session session = new Session();
         session.setSessionId(sessionId);
         session.setUserId(user.getId());

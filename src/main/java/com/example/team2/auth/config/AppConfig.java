@@ -17,6 +17,7 @@ import org.springframework.context.annotation.Configuration;
 public class AppConfig {
     @Value("${redis.configuration.address}")
     private String redisConfigurationAddress;
+
     @Bean
     public RedissonClient redissonClient() {
 

@@ -15,17 +15,14 @@ import java.util.List;
 @NoArgsConstructor
 public class User {
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    List<Request> requests;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @ValidEmail
     @Column(name = "user_login")
     private String userLogin;
-
     @Column(name = "user_password")
     private String userPassword;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    List<Request> requests;
 }

@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 
-
 import java.time.LocalDateTime;
 
 //указывает, что методы данного компонента будут использоваться сразу несколькими контроллерами
