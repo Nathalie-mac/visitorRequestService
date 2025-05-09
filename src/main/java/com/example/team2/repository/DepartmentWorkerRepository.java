@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface DepartmentWorkerRepository extends JpaRepository<DepartmentWorker, Integer> {
     DepartmentWorker findByWorkerNameAndDepartment(String workerName, Department department);
+    DepartmentWorker findById(long id);
 }

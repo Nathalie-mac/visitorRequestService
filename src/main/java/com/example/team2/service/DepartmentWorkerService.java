@@ -16,4 +16,8 @@ public class DepartmentWorkerService {
     public DepartmentWorker findByWorkerNameAndDepartment(String workerName, Department department) {
         return departmentWorkerRepository.findByWorkerNameAndDepartment(workerName, department);
     }
+
+    public DepartmentWorker findById(long id) {
+        return departmentWorkerRepository.findById(id);
+    }
 }
