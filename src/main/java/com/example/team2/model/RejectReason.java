@@ -7,10 +7,9 @@ import lombok.Setter;
 @Getter
 @AllArgsConstructor
 public enum RejectReason {
-    INCOMPLETE_DOCUMENTS(""),
-    EXPIRED(""),
-    OTHER(""),
-    I_DONT_LIKE_YOU("");
+    BLACKLIST("черный список"),
+    INVALID_DATA("недостоверные данные"),
+    ATTACHMENTS("прикрепленные файлы");
 
     private final String reason;
 }
