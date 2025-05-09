@@ -1,7 +1,5 @@
 package com.example.team2.model.dto;
 
-import com.example.team2.model.AppointmentType;
-import com.example.team2.model.StatusType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
