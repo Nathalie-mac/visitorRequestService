@@ -1,6 +1,6 @@
 package com.example.team2.auth.controller;
 
-import com.example.team2.model.uidto.LoginUIDTO;
+import com.example.team2.model.uidto.LoginDTO;
 import com.example.team2.uiservice.AuthClientUIService;
 import org.springframework.ui.Model;
 import com.example.team2.auth.services.AuthService;
@@ -37,7 +37,7 @@ public class AuthClientController {
 
     // 2. Обработка данных формы (POST)
     @PostMapping("/submit")
-    public String submitForm(@ModelAttribute("user") LoginUIDTO user) {
+    public String submitForm(@ModelAttribute("user") LoginDTO user) {
         System.out.println("Имя: " + user.getLogin());
      //   System.out.println("Email: " + user.getEmail());
         return "result"; // Перенаправление на страницу результата
