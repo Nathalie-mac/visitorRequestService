@@ -1,5 +1,6 @@
 package com.example.team2.service;
 
+import com.example.team2.mapper.MapperUpdateRequest;
 import com.example.team2.model.*;
 import com.example.team2.model.dto.SignUpRequestDTO;
 import com.example.team2.repository.RequestRepository;
@@ -12,6 +13,7 @@ public class RequestService {
     private final RequestRepository requestRepository;
     private final DepartmentService departmentService;
     private final DepartmentWorkerService departmentWorkerService;
+    private final MapperUpdateRequest mapperUpdateRequest;
 
     public Request save(Request request) {
         return requestRepository.save(request);
@@ -39,7 +41,8 @@ public class RequestService {
         return requestRepository.findById(id);
     }
 
-    public void updateRequest() {
-
+    public void updateRequest(int ok, Request request) {
+        mapperUpdateRequest.updateRequest(ok, request); //TODO: изменить int ok на DTO
+        save(request);
     }
 }
