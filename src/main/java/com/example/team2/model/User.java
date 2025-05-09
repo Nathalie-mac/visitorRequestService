@@ -4,6 +4,8 @@ import com.example.team2.model.email.ValidEmail;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "\"user\"")
 @Getter
@@ -23,4 +25,7 @@ public class User {
 
     @Column(name = "user_password")
     private String userPassword;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    List<Request> requests;
 }

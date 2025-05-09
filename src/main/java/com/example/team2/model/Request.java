@@ -3,11 +3,8 @@ package com.example.team2.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.Check;
 
-import javax.xml.crypto.KeySelector;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -67,4 +64,8 @@ public class Request {
 
     @OneToMany(mappedBy = "request", cascade = CascadeType.ALL)
     List<Person> persons;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 }
