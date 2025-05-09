@@ -65,4 +65,7 @@ public class Person {
     @JoinColumn(name = "request_id")
     private Request request;
 
+    @Column (name = "black_list", nullable = false)
+    private String blackList;
+
 }
