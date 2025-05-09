@@ -4,7 +4,6 @@ import com.example.team2.model.*;
 import com.example.team2.model.dto.GroupVisitRequestDTO;
 import com.example.team2.model.dto.IndividualVisitRequestDTO;
 import com.example.team2.model.dto.VisitorDTO;
-import com.example.team2.repository.RequestRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
