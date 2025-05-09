@@ -1,6 +1,7 @@
 package com.example.team2.service;
 
 import com.example.team2.model.Person;
+import com.example.team2.model.Request;
 import com.example.team2.model.dto.VisitorDTO;
 import com.example.team2.repository.PersonRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +16,7 @@ public class PersonService {
         return personRepository.save(person);
     }
 
-    public Person createPerson(VisitorDTO visitorDTO) {
+    public Person createPerson(VisitorDTO visitorDTO, Request request) {
         Person person = new Person();
 
         person.setLastName(visitorDTO.getLastName());
@@ -28,6 +29,7 @@ public class PersonService {
         person.setBirthDate(visitorDTO.getBirthDate());
         person.setPassportSery(visitorDTO.getPassportSeries());
         person.setPassportNumber(visitorDTO.getPassportNumber());
+        person.setRequest(request);
 
         return save(person);
     }
