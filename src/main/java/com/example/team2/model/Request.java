@@ -65,6 +65,9 @@ public class Request {
     @OneToMany(mappedBy = "request", cascade = CascadeType.ALL)
     List<Person> persons;
 
+    @OneToMany(mappedBy = "request", cascade = CascadeType.ALL)
+    List<PassportData> passportData;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

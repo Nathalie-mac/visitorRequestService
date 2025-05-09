@@ -58,9 +58,6 @@ public class Person {
     @Column(name = "photo_id", nullable = false)
     private int photo;
 
-    @Column(name = "passport_id", nullable = false)
-    private int passportPdf;
-
     @ManyToOne
     @JoinColumn(name = "request_id")
     private Request request;
