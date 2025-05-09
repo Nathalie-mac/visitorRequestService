@@ -10,12 +10,14 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class GroupVisitRequestDTO {
+public class SignUpRequestDTO {
+
     private LocalDate startApplicationPeriod;
     private LocalDate endApplicationPeriod;
     private String purposeVisit;
     private Long department;
     private Long workerName;
-    private List<VisitorDTO> visitor;
+    private List<VisitorDTO> visitors;
     private List<Integer> docs;
+
 }

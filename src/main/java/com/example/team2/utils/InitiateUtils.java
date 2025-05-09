@@ -2,19 +2,17 @@ package com.example.team2.utils;
 
 import com.example.team2.model.Department;
 import com.example.team2.service.DepartmentService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class InitiateUtils implements CommandLineRunner {
 
     private final DepartmentService departmentService;
-
-    public InitiateUtils(DepartmentService departmentService) {
-        this.departmentService = departmentService;
-    }
 
     @Override
     public void run(String... args) throws Exception {
