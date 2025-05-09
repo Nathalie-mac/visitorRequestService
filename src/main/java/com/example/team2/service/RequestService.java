@@ -1,7 +1,7 @@
 package com.example.team2.service;
 
 import com.example.team2.model.*;
-import com.example.team2.dto.response.SignUpRequestResponseDTO;
+import com.example.team2.dto.response.AppointmentRequestResponseDTO;
 import com.example.team2.repository.RequestRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,19 +17,19 @@ public class RequestService {
         return requestRepository.save(request);
     }
 
-    public Request createRequest(SignUpRequestResponseDTO signUpRequestResponseDTO) {
+    public Request createRequest(AppointmentRequestResponseDTO appointmentRequestResponseDTO) {
         Request request = new Request();
         request.setAppointmentType(AppointmentType.INDIVIDUAL);
 
         //Информация для пропуска
-        request.setRequestStartDate(signUpRequestResponseDTO.getStartApplicationPeriod());
-        request.setRequestStartDate(signUpRequestResponseDTO.getEndApplicationPeriod());
-        request.setPurpose(AppointmentPurpose.valueOf(signUpRequestResponseDTO.getPurposeVisit()));
+        request.setRequestStartDate(appointmentRequestResponseDTO.getStartApplicationPeriod());
+        request.setRequestStartDate(appointmentRequestResponseDTO.getEndApplicationPeriod());
+        request.setPurpose(AppointmentPurpose.valueOf(appointmentRequestResponseDTO.getPurposeVisit()));
 
         //Принимающая сторона
-        Department department = departmentService.findById(signUpRequestResponseDTO.getDepartment());
+        Department department = departmentService.findById(appointmentRequestResponseDTO.getDepartment());
         request.setDepartment(department);
-        DepartmentWorker departmentWorker = departmentWorkerService.findById(signUpRequestResponseDTO.getWorkerName());
+        DepartmentWorker departmentWorker = departmentWorkerService.findById(appointmentRequestResponseDTO.getWorkerName());
         request.setWorker(departmentWorker);
 
         return save(request);

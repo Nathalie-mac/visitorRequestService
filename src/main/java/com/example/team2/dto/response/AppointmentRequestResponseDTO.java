@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 //с фронта
 // данные для оформления заявки клиентом
-public class SignUpRequestResponseDTO {
+public class AppointmentRequestResponseDTO {
 
     private LocalDate startApplicationPeriod;
     private LocalDate endApplicationPeriod;
