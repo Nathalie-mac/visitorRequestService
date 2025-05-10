@@ -72,10 +72,9 @@ public class AuthService {
         return getResponseEntity(session);
     }
 
-    public ResponseEntity<?> signInStuff(String authenticationHeader, StuffRoleType stuffRole) {
-        Credential credential = authenticationHeaderParse(authenticationHeader);
+    public ResponseEntity<?> signInStuff(LoginDTO loginDTO, StuffRoleType stuffRole) {
 
-        Session session = createStuffSession(credential.getLogin(), stuffRole);
+        Session session = createStuffSession(loginDTO.getLogin(), stuffRole);
         return getResponseEntity(session);
     }
 

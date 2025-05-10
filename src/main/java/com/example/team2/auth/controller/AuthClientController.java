@@ -23,30 +23,33 @@ public class AuthClientController {
     private final AuthClientUIService authClientUIService;
 
     // Показ формы входа
-    @GetMapping("/login")
-    public String showLoginForm(Model model) {
-        return authClientUIService.getLoginForm(model);
+    @GetMapping("/sign-in")
+    public String showSignInForm(Model model) {
+        return authClientUIService.getSignInForm(model);
     }
 
-    // 2. Обработка данных формы (POST)
-    @PostMapping("/login")
-    public String login(@ModelAttribute("LoginDTO") LoginDTO loginDTO) {
-        return authClientUIService.postLogin(loginDTO);
+    //Обработка данных формы входа (POST)
+    @PostMapping("/sign-in")
+    public String signIn(@ModelAttribute("LoginDTO") LoginDTO loginDTO) {
+        return authClientUIService.postSignIn(loginDTO);
 
     }
 
+    // Показ формы регистрации
+    @GetMapping("/sign-up")
+    public String showSignUpForm(Model model) {
+        return authClientUIService.getSignUpForm(model);
+    }
+
+    //Обработка данных формы регистрации (POST)
     @PostMapping("/sign-up")
-    public String signUp(@RequestHeader("Authorization") String authorizationHeader, Model model) {
+    public String signUp(Model model) {
 //        return authService.signUpClient(authorizationHeader);
         return authClientUIService.postSignUpForm(model);
     }
 
-    @PostMapping("/sign-in")
-    public ResponseEntity<?> signIn(@RequestHeader("Authorization") String authorizationHeader) {
-//        return authService.signInClient(authorizationHeader);
-        return null;
-    }
-
+    //выход (потом снесем)
+    //TODO: снести после отладки фронта
     @PostMapping("/logout")
     public ResponseEntity<?> logout(@RequestHeader("Cookie") String cookieHeader) {
         return authService.logout(cookieHeader);

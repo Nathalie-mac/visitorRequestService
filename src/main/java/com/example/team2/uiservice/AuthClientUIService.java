@@ -12,18 +12,13 @@ import org.springframework.ui.Model;
 public class AuthClientUIService {
     private final AuthService authService;
 
-    public String getLoginForm(Model model) {
+    // Показ формы входа
+    public String getSignInForm(Model model) {
         model.addAttribute("LoginDTO", new LoginDTO());
         return "user_login";
     }
-    public String postSignUpForm(Model model) {
-//        TODO: перенаправление на форму авторизации, сгенерировать и отослать форму аворизации на контроллер
-        LoginDTO fillLoginDTO = new LoginDTO(); //заглушка
-        authService.signUpClient(fillLoginDTO);
-        return "login";
-    }
-
-    public String postLogin(LoginDTO loginDTO) {
+    //Обработка данных формы входа (POST)
+    public String postSignIn(LoginDTO loginDTO) {
         ResponseEntity<?> response = authService.signInClient(loginDTO);
 
         if (response.getStatusCode().is2xxSuccessful()) {
@@ -32,5 +27,23 @@ public class AuthClientUIService {
             return "redirect:/auth/login?error";
         }
     }
+
+    // Показ формы регистрации
+    public String getSignUpForm(Model model) {
+        //TODO: показ формы регистрации
+        return null;
+    }
+
+    //Обработка данных формы регистрации (POST)
+    public String postSignUpForm(Model model) {
+//        TODO: перенаправление на форму авторизации, сгенерировать и отослать форму аворизации на контроллер
+        LoginDTO fillLoginDTO = new LoginDTO(); //заглушка
+        authService.signUpClient(fillLoginDTO);
+        return "login";
+    }
+
+
+
+
 
 }

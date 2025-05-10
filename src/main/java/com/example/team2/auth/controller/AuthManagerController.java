@@ -1,13 +1,14 @@
 package com.example.team2.auth.controller;
 
 import com.example.team2.auth.services.AuthService;
+import com.example.team2.dto.LoginDTO;
 import com.example.team2.model.StuffRoleType;
+import com.example.team2.uiservice.AuthStuffUIService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/auth/manager")
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class AuthManagerController {
 
     private final AuthService authService;
+    private final AuthStuffUIService authStuffUIService;
 
     //TODO: снести все для регистрации после полной отладки
     @PostMapping("/sign-up")
@@ -22,11 +24,22 @@ public class AuthManagerController {
         return authService.signUpStuff(authorizationHeader, StuffRoleType.MANAGER);
     }
 
-    @PostMapping("/sign-in")
-    public ResponseEntity<?> signIn(@RequestHeader("Authorization") String authorizationHeader) {
-        return authService.signInStuff(authorizationHeader, StuffRoleType.MANAGER);
+
+    // Показ формы входа
+    @GetMapping("/sign-in")
+    public String showSignInForm(Model model) {
+        return authStuffUIService.getSignInStuffForm(model);
     }
 
+    //Обработка данных формы входа (POST)
+    @PostMapping("/sign-in")
+    public String signIn(@ModelAttribute("LoginDTO") LoginDTO loginDTO) {
+        return authStuffUIService.postSignInManager(loginDTO);
+
+    }
+
+    //выход (потом снесем)
+    //TODO: снести после отладки фронта
     @PostMapping("/logout")
     public ResponseEntity<?> logout(@RequestHeader("Cookie") String cookieHeader) {
         return authService.logout(cookieHeader);
