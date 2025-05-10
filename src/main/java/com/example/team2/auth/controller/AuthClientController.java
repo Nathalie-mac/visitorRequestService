@@ -28,27 +28,17 @@ public class AuthClientController {
         return authClientUIService.getLoginForm(model);
     }
 
-//    @GetMapping("/login")
-//    public String showLoginForm(@RequestParam(required = false) String error, Model model) {
-//        if (error != null) {
-//            model.addAttribute("error", "Неверные учетные данные");
-//        }
-//        model.addAttribute("loginRequest", new UserLogin());
-//        return "login";
-//    }
-
     // 2. Обработка данных формы (POST)
-    @PostMapping("/submit")
-    public String submitForm(@ModelAttribute("UserLogin") LoginDTO user) {
-        System.out.println("Имя: " + user.getLogin());
-     //   System.out.println("Email: " + user.getEmail());
-        return "result"; // Перенаправление на страницу результата
+    @PostMapping("/login")
+    public String login(@ModelAttribute("LoginDTO") LoginDTO loginDTO) {
+        return authClientUIService.postLogin(loginDTO);
+
     }
 
     @PostMapping("/sign-up")
     public String signUp(@RequestHeader("Authorization") String authorizationHeader, Model model) {
 //        return authService.signUpClient(authorizationHeader);
-        return authClientUIService.getSignUpForm(model);
+        return authClientUIService.postSignUpForm(model);
     }
 
     @PostMapping("/sign-in")

@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 //на и с фронта
 //данные для входа и регистрации
 public class LoginDTO {
+
     private String login;       //e-mail посетителя или код сотрудника
     private String password;
 

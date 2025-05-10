@@ -41,7 +41,7 @@
 <div class="container">
     <div class="login-container">
         <h2 class="login-header">ХранительПРО</h2>
-        <form th:action="@{/auth/login}" method="post" th:object="${UserLogin}">
+        <form th:action="@{/auth/login}" method="post" th:object="${LoginDTO}">
             <div class="mb-3">
                 <label for="username" class="form-label">Login</label>
                 <input type="text" class="form-control" id="username" th:field="*{login}" required>
