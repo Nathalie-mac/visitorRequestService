@@ -1,7 +1,8 @@
 package com.example.team2.service;
 
+import com.example.team2.dto.StaticRequestDTO;
 import com.example.team2.dto.response.ManagerConfirmationResponseDTO;
-import com.example.team2.mapper.MapperUpdateRequest;
+import com.example.team2.mapper.MapperRequest;
 import com.example.team2.model.*;
 import com.example.team2.dto.response.SignUpRequestResponseDTO;
 import com.example.team2.repository.RequestRepository;
@@ -17,7 +18,9 @@ public class RequestService {
     private final RequestRepository requestRepository;
     private final DepartmentService departmentService;
     private final DepartmentWorkerService departmentWorkerService;
-    private final MapperUpdateRequest mapperUpdateRequest;
+    private final PassportDataService passportDataService;
+    private final PersonService personService;
+    private final MapperRequest mapperRequest;
 
     public Request save(Request request) {
         return requestRepository.save(request);
@@ -50,7 +53,7 @@ public class RequestService {
     }
 
     public void updateRequest(ManagerConfirmationResponseDTO managerConfirmationResponseDTO, Request request) {
-        mapperUpdateRequest.updateRequest(managerConfirmationResponseDTO, request); //TODO: изменить int ok на DTO
+        mapperRequest.updateRequest(managerConfirmationResponseDTO, request); //TODO: изменить int ok на DTO
         save(request);
     }
 
@@ -60,5 +63,15 @@ public class RequestService {
 
     public List<String> getAppointmentTypes(){
         return Arrays.stream(AppointmentType.values()).map(AppointmentType::getType).toList();
+    }
+
+    public StaticRequestDTO getStaticRequestDTO(Request request) {
+        StaticRequestDTO staticRequestDTO = new StaticRequestDTO();
+        mapperRequest.mapRequestToStaticRequestDTO(request, staticRequestDTO);
+
+        staticRequestDTO.setVisitors(personService.getVisitorsDTOs(request));
+        staticRequestDTO.setDocs(passportDataService.findPassportIdByRequest(request));
+
+        return staticRequestDTO;
     }
 }

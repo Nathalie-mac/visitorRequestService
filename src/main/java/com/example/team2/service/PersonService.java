@@ -7,6 +7,7 @@ import com.example.team2.repository.PersonRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -38,5 +39,34 @@ public class PersonService {
 
     public boolean isAnyPersonInBlackList(Request request) {
         return personRepository.findDistinctBlackListByRequest(request).contains(true);
+    }
+
+    public List<Person> findByRequest(Request request) {
+        return personRepository.findByRequest(request);
+    }
+
+    public List<VisitorDTO> getVisitorsDTOs(Request request) { //TODO: изменить visitor на person
+        List<VisitorDTO> visitorDTOS = new ArrayList<>();
+        List<Person> persons = findByRequest(request);
+
+        for (Person person : persons) {
+            VisitorDTO visitorDTO = new VisitorDTO();
+
+            visitorDTO.setFirstName(person.getFirstName());
+            visitorDTO.setLastName(person.getLastName());
+            visitorDTO.setMiddleName(person.getMiddleName());
+            visitorDTO.setPhoneNumber(person.getPhone());
+            visitorDTO.setEmail(person.getEmail());
+            visitorDTO.setOrganizationName(person.getOrganization());
+            visitorDTO.setNote(person.getNote());
+            visitorDTO.setBirthDate(person.getBirthDate());
+            visitorDTO.setPassportSeries(person.getPassportSery());
+            visitorDTO.setPassportNumber(person.getPassportNumber());
+            visitorDTO.setPhoto(person.getPhoto());
+
+            visitorDTOS.add(visitorDTO);
+        }
+
+        return visitorDTOS;
     }
 }

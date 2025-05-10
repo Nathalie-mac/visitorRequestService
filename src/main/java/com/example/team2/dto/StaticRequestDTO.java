@@ -13,7 +13,7 @@ import java.util.List;
 // для статического отображения заявки, которое нельзя редактировать
 public class StaticRequestDTO {
     private Long idRequest;
-    private LocalDate startApplicationPeriod;
+    private LocalDate startApplicationPeriod; //TODO: изменить названия для соответствия Entity Request
     private LocalDate endApplicationPeriod;
     private String purposeVisit;
     private String department;
