@@ -6,6 +6,7 @@ import com.example.team2.auth.data.entity.session.Session;
 import com.example.team2.auth.services.parser.AuthorizationHeaderToCredentialParser;
 import com.example.team2.auth.services.parser.CookieHeaderParser;
 import com.example.team2.auth.services.parser.Credential;
+import com.example.team2.dto.LoginDTO;
 import com.example.team2.model.Stuff;
 import com.example.team2.model.StuffRoleType;
 import com.example.team2.model.User;
@@ -53,9 +54,8 @@ public class AuthService {
                 .build();
     }
 
-    public ResponseEntity<?> signUpClient(String authenticationHeader) {
-        Credential credential = authenticationHeaderParse(authenticationHeader);
-        userService.createUser(credential.getLogin(), passwordEncoder.encode(credential.getPassword()));
+    public ResponseEntity<?> signUpClient(LoginDTO loginDTO) {
+        userService.createUser(loginDTO.getLogin(), passwordEncoder.encode(loginDTO.getPassword()));
 
         return ResponseEntity.ok().build();
     }
@@ -66,10 +66,9 @@ public class AuthService {
         return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity<?> signInClient(String authenticationHeader) {
-        Credential credential = authenticationHeaderParse(authenticationHeader);
+    public ResponseEntity<?> signInClient(LoginDTO loginDTO) {
 
-        Session session = createUserSession(credential.getLogin());
+        Session session = createUserSession(loginDTO.getLogin());
         return getResponseEntity(session);
     }
 

@@ -46,13 +46,15 @@ public class AuthClientController {
     }
 
     @PostMapping("/sign-up")
-    public ResponseEntity<?> signUp(@RequestHeader("Authorization") String authorizationHeader) {
-        return authService.signUpClient(authorizationHeader);
+    public String signUp(@RequestHeader("Authorization") String authorizationHeader, Model model) {
+//        return authService.signUpClient(authorizationHeader);
+        return authClientUIService.getSignUpForm(model);
     }
 
     @PostMapping("/sign-in")
     public ResponseEntity<?> signIn(@RequestHeader("Authorization") String authorizationHeader) {
-        return authService.signInClient(authorizationHeader);
+//        return authService.signInClient(authorizationHeader);
+        return null;
     }
 
     @PostMapping("/logout")
