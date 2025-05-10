@@ -2,6 +2,7 @@ package com.example.team2.service;
 
 import com.example.team2.dto.request.RequestsTableDTO;
 import com.example.team2.dto.request.RowRequestsDTO;
+import com.example.team2.dto.StaticRequestDTO;
 import com.example.team2.dto.response.ManagerConfirmationResponseDTO;
 import com.example.team2.mapper.MapperUpdateRequest;
 import com.example.team2.model.*;
@@ -21,6 +22,9 @@ public class RequestService {
     private final RequestRepository requestRepository;
     private final DepartmentService departmentService;
     private final DepartmentWorkerService departmentWorkerService;
+    private final PassportDataService passportDataService;
+    private final PersonService personService;
+    private final MapperRequest mapperRequest;
     private final MapperUpdateRequest mapperUpdateRequest;
     private final PersonService personService;
 
@@ -109,4 +113,14 @@ public class RequestService {
         return new RequestsTableDTO(rowRequestsDTOS);
     }
 
+
+    public StaticRequestDTO getStaticRequestDTO(Request request) {
+        StaticRequestDTO staticRequestDTO = new StaticRequestDTO();
+        mapperRequest.mapRequestToStaticRequestDTO(request, staticRequestDTO);
+
+        staticRequestDTO.setVisitors(personService.getVisitorsDTOs(request));
+        staticRequestDTO.setDocs(passportDataService.findPassportIdByRequest(request));
+
+        return staticRequestDTO;
+    }
 }
