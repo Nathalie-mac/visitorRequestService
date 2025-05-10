@@ -9,6 +9,7 @@ import com.example.team2.dto.VisitorDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -75,13 +76,22 @@ public class AppointmentRequestService { //TODO: допилить set для use
         User user = userService.findUserById(userId);
         List<Request> requests = requestService.findByUser(user);
 
+        List<SubmittedRequestRowDTO> submittedRequestRowDTOs = new ArrayList<>();
         for (Request request : requests) {
             SubmittedRequestRowDTO submittedRequestRowDTO = new SubmittedRequestRowDTO();
 
             submittedRequestRowDTO.setAppointmentType(request.getAppointmentType().getType());
             submittedRequestRowDTO.setDepartment(request.getDepartment().getDepartmentName());
             submittedRequestRowDTO.setStatus(request.getStatus().getStatusType());
+
+            //TODO: время и дата подтверждённая менеджером
+            submittedRequestRowDTO.setTime(request.getRequestTime());
+            submittedRequestRowDTO.setDate(request.getRequestDate());
+
+            submittedRequestRowDTOs.add(submittedRequestRowDTO);
         }
+
+        submittedRequestTableDTO.setSubmittedRequestList(submittedRequestRowDTOs);
 
         return submittedRequestTableDTO;
     }
