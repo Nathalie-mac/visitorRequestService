@@ -6,7 +6,7 @@ import com.example.team2.dto.StaticRequestDTO;
 import com.example.team2.dto.response.ManagerConfirmationResponseDTO;
 import com.example.team2.mapper.MapperRequest;
 import com.example.team2.model.*;
-import com.example.team2.dto.response.SignUpRequestResponseDTO;
+import com.example.team2.dto.response.AppointmentRequestResponseDTO;
 import com.example.team2.repository.RequestRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,7 +31,7 @@ public class RequestService {
         return requestRepository.save(request);
     }
 
-    public Request createRequest(SignUpRequestResponseDTO signUpRequestResponseDTO, AppointmentType appointmentType) {
+    public Request createRequest(AppointmentRequestResponseDTO signUpRequestResponseDTO, AppointmentType appointmentType) {
         Request request = new Request();
         request.setAppointmentType(appointmentType);
 
@@ -70,10 +70,9 @@ public class RequestService {
         return Arrays.stream(AppointmentType.values()).map(AppointmentType::getType).toList();
     }
 
-
-
-
-
+    public List<Request> findByUser(User user) {
+        return requestRepository.findByUser(user);
+    }
 
     public StaticRequestDTO getStaticRequestDTO(Request request) {
         StaticRequestDTO staticRequestDTO = new StaticRequestDTO();
@@ -85,19 +84,19 @@ public class RequestService {
         return staticRequestDTO;
     }
 
-    String findStatusByRequest(Request request) {
-        return requestRepository.findStatusByRequest(request).getStatusType();
+    String findStatusById(long id) {
+        return requestRepository.findStatusById(id).getStatusType();
     }
 
-    String findRejectReasonByRequest(Request request) {
-        return requestRepository.findRejectReasonByRequest(request).getReason();
+    String findRejectReasonById(long id) {
+        return requestRepository.findRejectReasonById(id).getReason();
     }
 
-    LocalDate findRequestDateByRequest(Request request) {
-        return requestRepository.findRequestDateByRequest(request);
+    LocalDate findRequestDateById(long id) {
+        return requestRepository.findRequestDateById(id);
     }
 
-    LocalTime findRequestTimeByRequest(Request request) {
-        return requestRepository.findRequestTimeByRequest(request);
+    LocalTime findRequestTimeById(long id) {
+        return requestRepository.findRequestTimeById(id);
     }
 }
