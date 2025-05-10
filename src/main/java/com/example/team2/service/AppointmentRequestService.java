@@ -57,7 +57,7 @@ public class AppointmentRequestService { //TODO: допилить set для use
         return request;
     }
 
-    public SignUpRequestRequestDTO getPurposeDepartmentPersonDocLists() {
+    public SignUpRequestRequestDTO getPurposeDepartmentLists() { //TODO: менее конченное название
         SignUpRequestRequestDTO signUpRequestRequestDTO = new SignUpRequestRequestDTO();
 
         List<String> appointmentPurpose = Arrays.stream(AppointmentPurpose.values()).map(AppointmentPurpose::getPurpose).toList();

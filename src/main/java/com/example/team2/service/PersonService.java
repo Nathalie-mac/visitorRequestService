@@ -7,6 +7,8 @@ import com.example.team2.repository.PersonRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class PersonService {
@@ -32,5 +34,9 @@ public class PersonService {
         person.setRequest(request);
 
         return save(person);
+    }
+
+    public boolean isAnyPersonInBlackList(Request request) {
+        return personRepository.findDistinctBlackListByRequest(request).contains(true);
     }
 }

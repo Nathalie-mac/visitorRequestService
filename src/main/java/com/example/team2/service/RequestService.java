@@ -1,5 +1,6 @@
 package com.example.team2.service;
 
+import com.example.team2.dto.response.ManagerConfirmationResponseDTO;
 import com.example.team2.mapper.MapperUpdateRequest;
 import com.example.team2.model.*;
 import com.example.team2.dto.response.SignUpRequestResponseDTO;
@@ -48,8 +49,8 @@ public class RequestService {
         return requestRepository.findById(id);
     }
 
-    public void updateRequest(int ok, Request request) {
-        mapperUpdateRequest.updateRequest(ok, request); //TODO: изменить int ok на DTO
+    public void updateRequest(ManagerConfirmationResponseDTO managerConfirmationResponseDTO, Request request) {
+        mapperUpdateRequest.updateRequest(managerConfirmationResponseDTO, request); //TODO: изменить int ok на DTO
         save(request);
     }
 
