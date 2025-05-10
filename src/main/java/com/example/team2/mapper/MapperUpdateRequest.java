@@ -1,5 +1,6 @@
 package com.example.team2.mapper;
 
+import com.example.team2.dto.request.RowRequestsDTO;
 import com.example.team2.dto.response.ManagerConfirmationResponseDTO;
 import com.example.team2.model.Request;
 import org.mapstruct.*;
@@ -21,4 +22,13 @@ public interface MapperUpdateRequest {
     @Mapping(target = "worker", ignore = true)
     @Mapping(target = "user", ignore = true)
     void updateRequest(ManagerConfirmationResponseDTO managerConfirmationResponseDTO, @MappingTarget Request request);// TODO: Заменить int ok на DTO
+
+    @Mapping(target = "idRequest", source = "id")
+    @Mapping(target = "appointmentType", source = "") //TODO: expression for appointment Type
+    @Mapping(target = "userNames", ignore = true)
+    @Mapping(target = "department", ignore = true)
+    @Mapping(target = "date", source = "requestDate")
+    @Mapping(target = "time", source = "requestTime")
+    @Mapping(target = "status", source = "") //TODO: expression for status type
+    void mapToRowRequestDTO(Request request, @MappingTarget RowRequestsDTO rowRequestsDTO);
 }

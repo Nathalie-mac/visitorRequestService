@@ -1,5 +1,7 @@
 package com.example.team2.service;
 
+import com.example.team2.dto.request.RequestsTableDTO;
+import com.example.team2.dto.request.RowRequestsDTO;
 import com.example.team2.dto.response.ManagerConfirmationResponseDTO;
 import com.example.team2.mapper.MapperUpdateRequest;
 import com.example.team2.model.*;
@@ -8,6 +10,8 @@ import com.example.team2.repository.RequestRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -18,6 +22,7 @@ public class RequestService {
     private final DepartmentService departmentService;
     private final DepartmentWorkerService departmentWorkerService;
     private final MapperUpdateRequest mapperUpdateRequest;
+    private final PersonService personService;
 
     public Request save(Request request) {
         return requestRepository.save(request);
@@ -61,4 +66,47 @@ public class RequestService {
     public List<String> getAppointmentTypes(){
         return Arrays.stream(AppointmentType.values()).map(AppointmentType::getType).toList();
     }
+
+    //терминал менеджера, страница "оформление заявок", таблица
+    public RequestsTableDTO getRequestsTableDTO() {
+      List<RowRequestsDTO> rowRequestsDTOS = new ArrayList<>();
+      List<Request> requests = requestRepository.findAll();
+      if (requests.isEmpty()) {
+          //TODO: обработка ошибок
+      }else{
+          for (Request request : requests) {
+              RowRequestsDTO rowRequestsDTO = new RowRequestsDTO();
+              mapperUpdateRequest.mapToRowRequestDTO(request, rowRequestsDTO);
+              rowRequestsDTO.setUserNames(personService.getPersonFiosInRequest(request.getId()));
+
+              Department department = departmentService.findById(request.getDepartment().getId());
+              rowRequestsDTO.setDepartment(department.getDepartmentName());
+
+              rowRequestsDTOS.add(rowRequestsDTO);
+          }
+      }
+      return new RequestsTableDTO(rowRequestsDTOS);
+    }
+
+    //терминал охранника, страница "одобренные заявки", таблица
+    public RequestsTableDTO getApprovedRequestsTableDTO() {
+        List<RowRequestsDTO> rowRequestsDTOS = new ArrayList<>();
+        List<Request> requests = requestRepository.getApprovedRequests();
+        if (requests.isEmpty()) {
+            //TODO: обработка ошибок
+        }else{
+            for (Request request : requests) {
+                RowRequestsDTO rowRequestsDTO = new RowRequestsDTO();
+                mapperUpdateRequest.mapToRowRequestDTO(request, rowRequestsDTO);
+                rowRequestsDTO.setUserNames(personService.getPersonFiosInRequest(request.getId()));
+
+                Department department = departmentService.findById(request.getDepartment().getId());
+                rowRequestsDTO.setDepartment(department.getDepartmentName());
+
+                rowRequestsDTOS.add(rowRequestsDTO);
+            }
+        }
+        return new RequestsTableDTO(rowRequestsDTOS);
+    }
+
 }
