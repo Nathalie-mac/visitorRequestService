@@ -70,47 +70,9 @@ public class RequestService {
         return Arrays.stream(AppointmentType.values()).map(AppointmentType::getType).toList();
     }
 
-    //терминал менеджера, страница "оформление заявок", таблица
-    public RequestsTableDTO getRequestsTableDTO() {
-      List<RowRequestsDTO> rowRequestsDTOS = new ArrayList<>();
-      List<Request> requests = requestRepository.findAll();
-      if (requests.isEmpty()) {
-          //TODO: обработка ошибок
-      }else{
-          for (Request request : requests) {
-              RowRequestsDTO rowRequestsDTO = new RowRequestsDTO();
-              mapperRequest.mapToRowRequestDTO(request, rowRequestsDTO);
-              rowRequestsDTO.setUserNames(personService.getPersonFiosInRequest(request.getId()));
 
-              Department department = departmentService.findById(request.getDepartment().getId());
-              rowRequestsDTO.setDepartment(department.getDepartmentName());
 
-              rowRequestsDTOS.add(rowRequestsDTO);
-          }
-      }
-      return new RequestsTableDTO(rowRequestsDTOS);
-    }
 
-    //терминал охранника, страница "одобренные заявки", таблица
-    public RequestsTableDTO getApprovedRequestsTableDTO() {
-        List<RowRequestsDTO> rowRequestsDTOS = new ArrayList<>();
-        List<Request> requests = requestRepository.getApprovedRequests();
-        if (requests.isEmpty()) {
-            //TODO: обработка ошибок
-        }else{
-            for (Request request : requests) {
-                RowRequestsDTO rowRequestsDTO = new RowRequestsDTO();
-                mapperRequest.mapToRowRequestDTO(request, rowRequestsDTO);
-                rowRequestsDTO.setUserNames(personService.getPersonFiosInRequest(request.getId()));
-
-                Department department = departmentService.findById(request.getDepartment().getId());
-                rowRequestsDTO.setDepartment(department.getDepartmentName());
-
-                rowRequestsDTOS.add(rowRequestsDTO);
-            }
-        }
-        return new RequestsTableDTO(rowRequestsDTOS);
-    }
 
 
     public StaticRequestDTO getStaticRequestDTO(Request request) {
