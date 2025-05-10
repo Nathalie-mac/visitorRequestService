@@ -24,6 +24,7 @@ public class RequestService {
     private final DepartmentService departmentService;
     private final DepartmentWorkerService departmentWorkerService;
     private final PassportDataService passportDataService;
+    private final UserService userService;
     private final PersonService personService;
     private final MapperRequest mapperRequest;
 
@@ -31,24 +32,24 @@ public class RequestService {
         return requestRepository.save(request);
     }
 
-    public Request createRequest(AppointmentRequestResponseDTO signUpRequestResponseDTO, AppointmentType appointmentType) {
+    public Request createRequest(AppointmentRequestResponseDTO appointmentRequestResponseDTO, AppointmentType appointmentType) {
         Request request = new Request();
         request.setAppointmentType(appointmentType);
 
         //Информация для пропуска
-        request.setRequestStartDate(signUpRequestResponseDTO.getStartApplicationPeriod());
-        request.setRequestStartDate(signUpRequestResponseDTO.getEndApplicationPeriod());
-        request.setPurpose(AppointmentPurpose.valueOf(signUpRequestResponseDTO.getPurposeVisit()));
+        request.setRequestStartDate(appointmentRequestResponseDTO.getStartApplicationPeriod());
+        request.setRequestStartDate(appointmentRequestResponseDTO.getEndApplicationPeriod());
+        request.setPurpose(AppointmentPurpose.valueOf(appointmentRequestResponseDTO.getPurposeVisit()));
 
         //Принимающая сторона
-        Department department = departmentService.findById(signUpRequestResponseDTO.getDepartment());
+        Department department = departmentService.findById(appointmentRequestResponseDTO.getDepartment());
         request.setDepartment(department);
-        DepartmentWorker departmentWorker = departmentWorkerService.findById(signUpRequestResponseDTO.getWorkerName());
+        DepartmentWorker departmentWorker = departmentWorkerService.findById(appointmentRequestResponseDTO.getWorkerName());
         request.setWorker(departmentWorker);
 
         //Остальное, что нужно
         request.setStatus(StatusType.PENDING); // По умолчанию статус
-        //TODO: добавить set для User
+        request.setUser(userService.findUserById(appointmentRequestResponseDTO.getUserId()));
 
         return save(request);
     }
