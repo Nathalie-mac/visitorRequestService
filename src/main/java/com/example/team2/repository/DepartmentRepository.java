@@ -8,8 +8,6 @@ import java.util.List;
 
 @Repository
 public interface DepartmentRepository extends JpaRepository<Department, Long> {
-    List<Department> findByDepartmentName(String departmentName);
-
     Department findById(long id);
 
     List<String> findDistinctDepartmentNameBy();

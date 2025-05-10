@@ -9,6 +9,7 @@ import java.util.List;
 
 @Repository
 public interface RequestRepository extends JpaRepository<Request, Long> {
+    Request findById(long id);
 
     @Query("SELECT r FROM Request r WHERE r.status = 'APPROVED'")
     List<Request> getApprovedRequests();

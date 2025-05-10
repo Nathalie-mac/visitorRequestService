@@ -19,9 +19,9 @@ public class RequestService {
         return requestRepository.save(request);
     }
 
-    public Request createRequest(SignUpRequestResponseDTO signUpRequestResponseDTO) {
+    public Request createRequest(SignUpRequestResponseDTO signUpRequestResponseDTO, AppointmentType appointmentType) {
         Request request = new Request();
-        request.setAppointmentType(AppointmentType.INDIVIDUAL);
+        request.setAppointmentType(appointmentType);
 
         //Информация для пропуска
         request.setRequestStartDate(signUpRequestResponseDTO.getStartApplicationPeriod());
@@ -33,6 +33,10 @@ public class RequestService {
         request.setDepartment(department);
         DepartmentWorker departmentWorker = departmentWorkerService.findById(signUpRequestResponseDTO.getWorkerName());
         request.setWorker(departmentWorker);
+
+        //Остальное, что нужно
+        request.setStatus(StatusType.PENDING); // По умолчанию статус
+        //TODO: добавить set для User
 
         return save(request);
     }
