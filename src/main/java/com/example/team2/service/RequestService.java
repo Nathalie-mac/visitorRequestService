@@ -11,6 +11,7 @@ import com.example.team2.repository.RequestRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -57,7 +58,7 @@ public class RequestService {
     }
 
     public void updateRequest(ManagerConfirmationResponseDTO managerConfirmationResponseDTO, Request request) {
-        mapperRequest.updateRequest(managerConfirmationResponseDTO, request); //TODO: изменить int ok на DTO
+        mapperRequest.updateRequest(managerConfirmationResponseDTO, request);
         save(request);
     }
 
@@ -120,5 +121,21 @@ public class RequestService {
         staticRequestDTO.setDocs(passportDataService.findPassportIdByRequest(request));
 
         return staticRequestDTO;
+    }
+
+    String findStatusByRequest(Request request) {
+        return requestRepository.findStatusByRequest(request).getStatusType();
+    }
+
+    String findRejectReasonByRequest(Request request) {
+        return requestRepository.findRejectReasonByRequest(request).getReason();
+    }
+
+    LocalDate findRequestDateByRequest(Request request) {
+        return requestRepository.findRequestDateByRequest(request);
+    }
+
+    LocalTime findRequestTimeByRequest(Request request) {
+        return requestRepository.findRequestTimeByRequest(request);
     }
 }

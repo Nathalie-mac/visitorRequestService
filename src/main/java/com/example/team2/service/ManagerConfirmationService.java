@@ -9,6 +9,9 @@ import com.example.team2.model.StatusType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ManagerConfirmationService {
@@ -30,20 +33,22 @@ public class ManagerConfirmationService {
         Request request = requestService.findById(requestId);
 
         managerConfirmationRequestDTO.setInBlackList(personService.isAnyPersonInBlackList(request));
+        managerConfirmationRequestDTO.setRequestDTO(requestService.getStaticRequestDTO(request));
 
-        StaticRequestDTO requestDTO = new StaticRequestDTO();
+        String status = requestService.findStatusByRequest(request);
+        List<String> statusTypes = Arrays.stream(StatusType.values()).map(StatusType::getStatusType).toList();
+        managerConfirmationRequestDTO.setStatus(status);
+        managerConfirmationRequestDTO.setStatusList(statusTypes);
 
-        managerConfirmationRequestDTO.setRequestDTO();
-        managerConfirmationRequestDTO.setStatus();
-        managerConfirmationRequestDTO.setRejectReason();
-        managerConfirmationRequestDTO.setVisitTime();
-        managerConfirmationRequestDTO.setVisitDate();
+        String rejectionReason = requestService.findRejectReasonByRequest(request);
+        List<String> rejectionReasons = Arrays.stream(RejectReason.values()).map(RejectReason::getReason).toList();
+        managerConfirmationRequestDTO.setRejectReason(rejectionReason);
+        managerConfirmationRequestDTO.setRejectReasonList(rejectionReasons);
+
+        managerConfirmationRequestDTO.setVisitTime(requestService.findRequestTimeByRequest(request));
+        managerConfirmationRequestDTO.setVisitDate(requestService.findRequestDateByRequest(request));
 
         return managerConfirmationRequestDTO;
     }
 
-
-
-
-    //
 }
