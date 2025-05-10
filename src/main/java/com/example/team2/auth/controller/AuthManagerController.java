@@ -4,6 +4,7 @@ import com.example.team2.auth.services.AuthService;
 import com.example.team2.dto.LoginDTO;
 import com.example.team2.model.StuffRoleType;
 import com.example.team2.uiservice.AuthStuffUIService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -33,8 +34,8 @@ public class AuthManagerController {
 
     //Обработка данных формы входа (POST)
     @PostMapping("/sign-in")
-    public String signIn(@ModelAttribute("LoginDTO") LoginDTO loginDTO) {
-        return authStuffUIService.postSignInManager(loginDTO);
+    public String signIn(@ModelAttribute("LoginDTO") LoginDTO loginDTO, HttpServletResponse response) {
+        return authStuffUIService.postSignInManager(loginDTO, response);
 
     }
 

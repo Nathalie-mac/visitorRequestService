@@ -37,47 +37,32 @@ public class AuthService {
         return AuthorizationHeaderToCredentialParser.parse(authenticationHeader);
     }
 
-    private static ResponseEntity<Object> getResponseEntity(Session session) {
-        ResponseCookie cookie = ResponseCookie.from(COOKIE_HEADER_SESSION_ID_NAME, session.getSessionId())
-                .httpOnly(true)                                 // Защита от доступа через JavaScript
-                .path("/")                                      // Доступно для всего приложения
-                .maxAge(2 * 60 * 60)               // Время жизни cookie (например, 1 час)
-                .build();
-
-        // Подготавливаем заголовки ответа
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.SET_COOKIE, cookie.toString());
-
-        // Возвращаем ответ с заголовком Set-Cookie без тела
-        return ResponseEntity.ok()
-                .headers(headers)
-                .build();
-    }
-
-    public ResponseEntity<?> signUpClient(LoginDTO loginDTO) {
+    public boolean signUpClient(LoginDTO loginDTO) {
         userService.createUser(loginDTO.getLogin(), passwordEncoder.encode(loginDTO.getPassword()));
 
-        return ResponseEntity.ok().build();
+        return true;
     }
 
+    //TODO: снести после отладки
     public ResponseEntity<?> signUpStuff(String authenticationHeader, StuffRoleType roleType) {
         Credential credential = authenticationHeaderParse(authenticationHeader);
         stuffService.createStuff(credential.getLogin(), passwordEncoder.encode(credential.getPassword()), roleType);
         return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity<?> signInClient(LoginDTO loginDTO) {
+    public CustomResponse signInClient(LoginDTO loginDTO) {
 
         Session session = createUserSession(loginDTO.getLogin());
-        return getResponseEntity(session);
+        return new CustomResponse(true, session.getSessionId());
     }
 
-    public ResponseEntity<?> signInStuff(LoginDTO loginDTO, StuffRoleType stuffRole) {
+    public CustomResponse signInStuff(LoginDTO loginDTO, StuffRoleType stuffRole) {
 
         Session session = createStuffSession(loginDTO.getLogin(), stuffRole);
-        return getResponseEntity(session);
+        return new CustomResponse(true, session.getSessionId());
     }
 
+    //TODO: снести после отладки
     public ResponseEntity<?> logout(String cookieHeader) {
         String sessionId = CookieHeaderParser.getSessionIdCookie(cookieHeader, COOKIE_HEADER_SESSION_ID_NAME);
         RBucket<String> bucket = redisSessionService.getRBucket(sessionId);

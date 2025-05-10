@@ -3,6 +3,7 @@ package com.example.team2.auth.controller;
 import com.example.team2.auth.services.AuthService;
 import com.example.team2.dto.LoginDTO;
 import com.example.team2.uiservice.AuthClientUIService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.ui.Model;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -30,8 +31,8 @@ public class AuthClientController {
 
     //Обработка данных формы входа (POST)
     @PostMapping("/sign-in")
-    public String signIn(@ModelAttribute("LoginDTO") LoginDTO loginDTO) {
-        return authClientUIService.postSignIn(loginDTO);
+    public String signIn(@ModelAttribute("LoginDTO") LoginDTO loginDTO, HttpServletResponse response) {
+        return authClientUIService.postSignIn(loginDTO, response);
 
     }
 
@@ -43,9 +44,9 @@ public class AuthClientController {
 
     //Обработка данных формы регистрации (POST)
     @PostMapping("/sign-up")
-    public String signUp(Model model) {
+    public String signUp(@ModelAttribute("LoginDTO") LoginDTO loginDTO) {
 //        return authService.signUpClient(authorizationHeader);
-        return authClientUIService.postSignUpForm(model);
+        return authClientUIService.postSignUpForm(loginDTO);
     }
 
     //выход (потом снесем)

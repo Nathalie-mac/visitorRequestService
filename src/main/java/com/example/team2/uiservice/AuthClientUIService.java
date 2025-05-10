@@ -1,8 +1,14 @@
 package com.example.team2.uiservice;
 
 import com.example.team2.auth.services.AuthService;
+import com.example.team2.auth.services.CustomResponse;
+import com.example.team2.auth.services.parser.CookieHeaderParser;
 import com.example.team2.dto.LoginDTO;
+import com.example.team2.uiservice.provider.SessionCookieProvider;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -18,28 +24,33 @@ public class AuthClientUIService {
         return "user_login";
     }
     //Обработка данных формы входа (POST)
-    public String postSignIn(LoginDTO loginDTO) {
-        ResponseEntity<?> response = authService.signInClient(loginDTO);
+    public String postSignIn(LoginDTO loginDTO, HttpServletResponse response) {
+        CustomResponse authResponse = authService.signInClient(loginDTO);
 
-        if (response.getStatusCode().is2xxSuccessful()) {
+        if (authResponse.isSuccess()) {
+
+            SessionCookieProvider.setUpSessionCookie(response, authResponse.getCookieSessionId());
+
+
             return "redirect:/dashboard";
         } else {
             return "redirect:/auth/login?error";
         }
     }
 
+
+
     // Показ формы регистрации
     public String getSignUpForm(Model model) {
         //TODO: показ формы регистрации
-        return null;
+        return "user_registration";
     }
 
     //Обработка данных формы регистрации (POST)
-    public String postSignUpForm(Model model) {
+    public String postSignUpForm(LoginDTO loginDTO) {
 //        TODO: перенаправление на форму авторизации, сгенерировать и отослать форму аворизации на контроллер
-        LoginDTO fillLoginDTO = new LoginDTO(); //заглушка
-        authService.signUpClient(fillLoginDTO);
-        return "login";
+        authService.signUpClient(loginDTO);
+        return "user_login";
     }
 
 
