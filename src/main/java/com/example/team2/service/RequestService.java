@@ -7,6 +7,9 @@ import com.example.team2.repository.RequestRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class RequestService {
@@ -48,5 +51,13 @@ public class RequestService {
     public void updateRequest(int ok, Request request) {
         mapperUpdateRequest.updateRequest(ok, request); //TODO: изменить int ok на DTO
         save(request);
+    }
+
+    public List<String> getStatuses(){
+        return Arrays.stream(StatusType.values()).map(StatusType::getStatusType).toList();
+    }
+
+    public List<String> getAppointmentTypes(){
+        return Arrays.stream(AppointmentType.values()).map(AppointmentType::getType).toList();
     }
 }

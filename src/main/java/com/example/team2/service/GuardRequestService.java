@@ -15,14 +15,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class GuardRequestService {
     private final RequestService requestService;
-    private final RequestRepository requestRepository;
-    private final DepartmentRepository departmentRepository;
+    //private final RequestRepository requestRepository;
+    private final DepartmentService departmentService;
 
     //списки для фильтров на странице охранника
-    public FilterListDTO getGuardFilterLists(){
-        List<String> statuses = requestRepository.findDistinctStatusBy();
-        List<String> departments = departmentRepository.findDistinctDepartmentNameBy();
-        List<String> appointments = requestRepository.findDistinctAppoinmentTypeBy();
+    public FilterListDTO getFilterLists(){
+        List<String> statuses = requestService.getStatuses();
+        List<String> departments = departmentService.getDepartmentNames();
+        List<String> appointments = requestService.getAppointmentTypes();
         if (statuses.isEmpty() || departments.isEmpty() || appointments.isEmpty()){
             // TODO: обработка исключениЯ
             return null;
@@ -31,21 +31,4 @@ public class GuardRequestService {
             return filterListDTO;
         }
     }
-
-    //выдаем список
-    public a(){
-        List<Request> requests = requestRepository.getApprovedRequests();
-        if (requests.isEmpty()){
-            // TODO: обработка исключениЯ
-        }else{
-            for (Request request: requests){
-
-            }
-        }
-
-        //TODO:  добавить маппер для ДТО-шки
-    }
-
-
-
 }

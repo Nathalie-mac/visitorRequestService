@@ -52,4 +52,8 @@ public class DepartmentService {
 
         return departmentDTOS;
     }
+
+    public List<String> getDepartmentNames(){
+        return departmentRepository.findDistinctDepartmentNameBy();
+    }
 }
