@@ -16,6 +16,6 @@ public class ManagerConfirmationResponseDTO {
     private Long idRequest;
     private String status;
     private String rejectReason;
-    private LocalDate visitDate;
+    private LocalDate visitDate; //TODO: изменить наименования для соответствия Entity
     private LocalTime visitTime;
 }

@@ -1,0 +1,48 @@
+package com.example.team2.mapper;
+
+import com.example.team2.dto.StaticRequestDTO;
+import com.example.team2.dto.request.RowRequestsDTO;
+import com.example.team2.dto.response.ManagerConfirmationResponseDTO;
+import com.example.team2.model.Request;
+import org.mapstruct.*;
+
+@Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+public interface MapperRequest {
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "appointmentType", ignore = true)
+    @Mapping(target = "requestDate", source = "visitDate") //TODO: поменять названия для visitDate и visitTime для соответствия Entity
+    @Mapping(target = "requestTime", source = "visitTime")
+    @Mapping(target = "actualEnterTime", ignore = true)
+    @Mapping(target = "actualExitTime", ignore = true)
+    @Mapping(target = "requestStartDate", ignore = true)
+    @Mapping(target = "requestEndDate", ignore = true)
+    @Mapping(target = "purpose", ignore = true)
+    @Mapping(target = "status",
+            expression = "java(StatusType.valueOf(managerConfirmationResponseDTO.getStatus()))")
+    @Mapping(target = "rejectReason",
+            expression = "java(RejectReason.valueOf(managerConfirmationResponseDTO.getRejectReason()))")
+    @Mapping(target = "department", ignore = true)
+    @Mapping(target = "worker", ignore = true)
+    @Mapping(target = "user", ignore = true)
+    void updateRequest(ManagerConfirmationResponseDTO managerConfirmationResponseDTO, @MappingTarget Request request);
+
+    @Mapping(target = "idRequest", source = "id")
+    @Mapping(target = "startApplicationPeriod", source = "requestStartDate")
+    @Mapping(target = "endApplicationPeriod", source = "requestEndDate")
+    @Mapping(target = "purposeVisit", expression = "java(request.getPurpose().getPurpose())")
+    @Mapping(target = "department", expression = "java(request.getDepartment().getDepartmentName())")
+    @Mapping(target = "workerName", source = "java(request.getWorker().getWorkerName())")
+    @Mapping(target = "visitors", ignore = true)
+    @Mapping(target = "docs", ignore = true)
+    void mapRequestToStaticRequestDTO(Request request, @MappingTarget StaticRequestDTO staticRequestDTO);
+
+    @Mapping(target = "idRequest", source = "id")
+    @Mapping(target = "appointmentType", expression = "java(AppointmentType.valueOf(request.getAppointmentType))")
+    @Mapping(target = "userNames", ignore = true)
+    @Mapping(target = "department", ignore = true)
+    @Mapping(target = "date", source = "requestDate")
+    @Mapping(target = "time", source = "requestTime")
+    @Mapping(target = "status", expression = "java(StatusType.valueOf(request.getStatus()))")
+    void mapToRowRequestDTO(Request request, @MappingTarget RowRequestsDTO rowRequestsDTO);
+
+}
