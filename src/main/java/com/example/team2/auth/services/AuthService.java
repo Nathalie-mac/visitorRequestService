@@ -23,7 +23,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class AuthClientService {
+public class AuthService {
 
 
     public static final String COOKIE_HEADER_SESSION_ID_NAME = "CATSSESSIONID";

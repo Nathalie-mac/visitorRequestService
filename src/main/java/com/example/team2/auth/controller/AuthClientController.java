@@ -1,17 +1,15 @@
 package com.example.team2.auth.controller;
 
+import com.example.team2.auth.services.AuthService;
 import com.example.team2.dto.LoginDTO;
 import com.example.team2.uiservice.AuthClientUIService;
 import org.springframework.ui.Model;
-import com.example.team2.auth.services.AuthService;
-import com.example.team2.auth.services.AuthClientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 

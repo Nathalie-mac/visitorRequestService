@@ -1,6 +1,6 @@
 package com.example.team2.auth.controller;
 
-import com.example.team2.auth.services.AuthClientService;
+import com.example.team2.auth.services.AuthService;
 import com.example.team2.model.StuffRoleType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequiredArgsConstructor
 public class AuthGuardOfficerController {
 
-    private final AuthClientService authService;
+    private final AuthService authService;
 
     //TODO: снести все для регистрации после полной отладки
     @PostMapping("/sign-up")
