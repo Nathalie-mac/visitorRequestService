@@ -39,7 +39,7 @@ public class AuthClientController {
 
     // 2. Обработка данных формы (POST)
     @PostMapping("/submit")
-    public String submitForm(@ModelAttribute("user") LoginDTO user) {
+    public String submitForm(@ModelAttribute("UserLogin") LoginDTO user) {
         System.out.println("Имя: " + user.getLogin());
      //   System.out.println("Email: " + user.getEmail());
         return "result"; // Перенаправление на страницу результата
