@@ -17,6 +17,4 @@ import java.util.List;
 public class SignUpRequestRequestDTO {
     private List<String> purposeVisit;
     private List<DepartmentDTO> departments;
-    private List<VisitorDTO> visitors;
-    private List<Integer> docs;
 }
