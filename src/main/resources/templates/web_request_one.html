@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ХранительПРО - Форма записи</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+        background-color: #f8f9fa;
+        font-family: Arial, sans-serif;
+        padding: 20px;
+    }
+    .form-container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    }
+    .form-header {
+        text-align: center;
+        margin-bottom: 30px;
+        color: #2c3e50;
+        border-bottom: 2px solid #eee;
+        padding-bottom: 15px;
+    }
+    .form-section {
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #eee;
+    }
+    .section-title {
+        font-weight: bold;
+        margin-bottom: 20px;
+        color: #3498db;
+    }
+    .required-field::after {
+        content: " *";
+        color: red;
+    }
+    .form-actions {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 30px;
+    }
+    .date-inputs {
+        display: flex;
+        gap: 15px;
+    }
+    .date-inputs .form-group {
+        flex: 1;
+    }
+  </style>
+</head>
+<body>
+<div class="form-container">
+  <h2 class="form-header">Форма записи на посещение мероприятия</h2>
+
+  <form th:action="@{/submit-visit}" method="post" enctype="multipart/form-data" th:object="${appointmentRequest}">
+    <!-- Информация для пропуска -->
+    <div class="form-section">
+      <h5 class="section-title">Информация для пропуска</h5>
+      <div class="date-inputs">
+        <div class="form-group">
+          <label for="startDate" class="required-field">Срок действия заявки с</label>
+          <input type="date" class="form-control" id="startDate"
+                 th:field="*{startApplicationPeriod}" required>
+        </div>
+        <div class="form-group">
+          <label for="endDate" class="required-field">по</label>
+          <input type="date" class="form-control" id="endDate"
+                 th:field="*{endApplicationPeriod}" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="purpose">Цель посещения</label>
+        <select class="form-control" id="purpose" th:field="*{purposeVisit}">
+          <option value="">-- Выберите цель --</option>
+          <option th:each="purpose : ${appointmentRequestData.purposeVisit}"
+                  th:value="${purpose}"
+                  th:text="${purpose}"></option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Принимающая сторона -->
+    <div class="form-section">
+      <h5 class="section-title">Принимающая сторона</h5>
+      <div class="form-group">
+        <label for="department" class="required-field">Подразделение</label>
+        <select class="form-control" id="department"
+                th:field="*{department}"
+                required
+                onchange="updateWorkers(this)">
+          <option value="">-- Выберите подразделение --</option>
+          <option th:each="dept : ${appointmentRequestData.departments}"
+                  th:value="${dept.id}"
+                  th:text="${dept.name}"></option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="workerName" class="required-field">ФИО сотрудника</label>
+        <select class="form-control" id="workerName" th:field="*{workerName}" required>
+          <option value="">-- Сначала выберите подразделение --</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Информация о посетителе -->
+    <div class="form-section" th:each="visitor, iterStat : *{visitors}" th:if="${iterStat.index == 0}">
+      <h5 class="section-title">Информация о посетителе</h5>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="lastName" class="required-field">Фамилия</label>
+            <input type="text" class="form-control" id="lastName"
+                   th:field="*{visitors[0].lastName}" required>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="firstName" class="required-field">Имя</label>
+            <input type="text" class="form-control" id="firstName"
+                   th:field="*{visitors[0].firstName}" required>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="middleName">Отчество</label>
+            <input type="text" class="form-control" id="middleName"
+                   th:field="*{visitors[0].middleName}">
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="phone">Телефон</label>
+            <input type="tel" class="form-control" id="phone"
+                   th:field="*{visitors[0].phoneNumber}">
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="email">E-mail</label>
+            <input type="email" class="form-control" id="email"
+                   th:field="*{visitors[0].email}">
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="organization">Организация</label>
+        <input type="text" class="form-control" id="organization"
+               th:field="*{visitors[0].organizationName}">
+      </div>
+      <div class="form-group">
+        <label for="notes">Примечание</label>
+        <textarea class="form-control" id="notes" rows="2"
+                  th:field="*{visitors[0].note}"></textarea>
+      </div>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="birthDate">Дата рождения</label>
+            <input type="date" class="form-control" id="birthDate"
+                   th:field="*{visitors[0].birthDate}">
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="passportSeries">Серия паспорта</label>
+            <input type="text" class="form-control" id="passportSeries"
+                   th:field="*{visitors[0].passportSeries}">
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="passportNumber">Номер паспорта</label>
+            <input type="text" class="form-control" id="passportNumber"
+                   th:field="*{visitors[0].passportNumber}">
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="photo">Добавить фото</label>
+        <input type="file" class="form-control" id="photo" name="photo" accept="image/*">
+        <small class="form-text text-muted">
+          Допустимые форматы: JPG, PNG, GIF (макс. 5MB)
+        </small>
+      </div>
+    </div>
+
+    <!-- Прикрепляемые документы -->
+    <div class="form-section">
+      <h5 class="section-title">Прикрепляемые документы</h5>
+      <div class="form-group">
+        <label for="documents">Прикрепить файл</label>
+        <input type="file" class="form-control" id="documents" name="documents" multiple>
+      </div>
+    </div>
+
+    <!-- Кнопки действий -->
+    <div class="form-actions">
+      <button type="reset" class="btn btn-outline-danger">Очистить заявку</button>
+      <button type="submit" class="btn btn-primary">Оформить заявку</button>
+    </div>
+  </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // Функция для обновления списка сотрудников при выборе подразделения
+  function updateWorkers(select) {
+      const departmentId = select.value;
+      const workerSelect = document.getElementById('workerName');
+
+      // Очищаем текущие варианты
+      workerSelect.innerHTML = '<option value="">-- Выберите сотрудника --</option>';
+
+      if (!departmentId) return;
+
+      // Получаем данные о подразделениях из Thymeleaf
+      const departments = JSON.parse(document.getElementById('departmentsData').textContent);
+
+      // Находим выбранное подразделение
+      const selectedDept = departments.find(dept => dept.id == departmentId);
+
+      if (selectedDept && selectedDept.departmentWorkers) {
+          // Добавляем сотрудников из выбранного подразделения
+          Object.entries(selectedDept.departmentWorkers).forEach(([name, id]) => {
+              const option = document.createElement('option');
+              option.value = id;
+              option.textContent = name;
+              workerSelect.appendChild(option);
+          });
+      }
+  }
+
+  // Инициализация данных при загрузке страницы
+  document.addEventListener('DOMContentLoaded', function() {
+      // Сохраняем данные о подразделениях в скрытом элементе
+      const departmentsData = document.createElement('div');
+      departmentsData.id = 'departmentsData';
+      departmentsData.style.display = 'none';
+      departmentsData.textContent = JSON.stringify(/*[[${appointmentRequestData.departments}]]*/ []);
+      document.body.appendChild(departmentsData);
+  });
+</script>
+</body>
+</html>

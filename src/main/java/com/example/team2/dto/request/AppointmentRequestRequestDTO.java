@@ -17,5 +17,4 @@ import java.util.List;
 public class AppointmentRequestRequestDTO {
     private List<String> purposeVisit;
     private List<DepartmentDTO> departments;
-    private List<Integer> docs;
 }
