@@ -6,7 +6,10 @@ import com.example.team2.auth.data.entity.session.Session;
 import com.example.team2.auth.services.parser.AuthorizationHeaderToCredentialParser;
 import com.example.team2.auth.services.parser.CookieHeaderParser;
 import com.example.team2.auth.services.parser.Credential;
+import com.example.team2.model.Stuff;
+import com.example.team2.model.StuffRoleType;
 import com.example.team2.model.User;
+import com.example.team2.service.StuffService;
 import com.example.team2.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.redisson.api.RBucket;
@@ -20,26 +23,20 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class AuthService {
+public class AuthClientService {
 
 
     public static final String COOKIE_HEADER_SESSION_ID_NAME = "CATSSESSIONID";
     private final BCryptPasswordEncoder passwordEncoder;
     private final UserService userService;
+    private final StuffService stuffService;
     private final RedisSessionService redisSessionService;
 
-    public ResponseEntity<?> signUp(String authenticationHeader) {
-        Credential credential = AuthorizationHeaderToCredentialParser.parse(authenticationHeader);
-        userService.createUser(credential.getUsername(), passwordEncoder.encode(credential.getPassword()));
-
-
-        return ResponseEntity.ok().build();
+    private static Credential authenticationHeaderParse(String authenticationHeader) {
+        return AuthorizationHeaderToCredentialParser.parse(authenticationHeader);
     }
 
-    public ResponseEntity<?> signIn(String authenticationHeader) {
-        Credential credential = AuthorizationHeaderToCredentialParser.parse(authenticationHeader);
-
-        Session session = createSession(credential.getUsername());
+    private static ResponseEntity<Object> getResponseEntity(Session session) {
         ResponseCookie cookie = ResponseCookie.from(COOKIE_HEADER_SESSION_ID_NAME, session.getSessionId())
                 .httpOnly(true)                                 // Защита от доступа через JavaScript
                 .path("/")                                      // Доступно для всего приложения
@@ -56,6 +53,33 @@ public class AuthService {
                 .build();
     }
 
+    public ResponseEntity<?> signUpClient(String authenticationHeader) {
+        Credential credential = authenticationHeaderParse(authenticationHeader);
+        userService.createUser(credential.getLogin(), passwordEncoder.encode(credential.getPassword()));
+
+        return ResponseEntity.ok().build();
+    }
+
+    public ResponseEntity<?> signUpStuff(String authenticationHeader, StuffRoleType roleType) {
+        Credential credential = authenticationHeaderParse(authenticationHeader);
+        stuffService.createStuff(credential.getLogin(), passwordEncoder.encode(credential.getPassword()), roleType);
+        return ResponseEntity.ok().build();
+    }
+
+    public ResponseEntity<?> signInClient(String authenticationHeader) {
+        Credential credential = authenticationHeaderParse(authenticationHeader);
+
+        Session session = createUserSession(credential.getLogin());
+        return getResponseEntity(session);
+    }
+
+    public ResponseEntity<?> signInStuff(String authenticationHeader, StuffRoleType stuffRole) {
+        Credential credential = authenticationHeaderParse(authenticationHeader);
+
+        Session session = createStuffSession(credential.getLogin(), stuffRole);
+        return getResponseEntity(session);
+    }
+
     public ResponseEntity<?> logout(String cookieHeader) {
         String sessionId = CookieHeaderParser.getSessionIdCookie(cookieHeader, COOKIE_HEADER_SESSION_ID_NAME);
         RBucket<String> bucket = redisSessionService.getRBucket(sessionId);
@@ -63,17 +87,29 @@ public class AuthService {
         return ResponseEntity.ok().build();
     }
 
-    private Session createSession(String login) {
+
+    private Session createUserSession(String login) {
         String sessionId = UUID.randomUUID().toString();
         User user = userService.findUserByLogin(login);
+        return createSession(sessionId, user.getId());
+
+    }
+
+    private Session createStuffSession(String code, StuffRoleType stuffRole) {
+        String sessionId = UUID.randomUUID().toString();
+        Stuff stuff = stuffService.findStuffByCodeAndRole(code, stuffRole);
+        return createSession(sessionId, stuff.getId());
+
+    }
+
+    private Session createSession(String sessionId, long id) {
         Session session = new Session();
         session.setSessionId(sessionId);
-        session.setUserId(user.getId());
+        session.setUserId(id);
         session.setCreatedAt(LocalDateTime.now());
         session.setExpiresAt(LocalDateTime.now().plusHours(2));
         redisSessionService.saveSessionToRedis(session);
         return session;
-
     }
 
 

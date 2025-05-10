@@ -25,12 +25,22 @@ public class Request {
     @Column(name = "appointment_type", nullable = false)
     private AppointmentType appointmentType;
 
-    @Column(name = "request_date", nullable = false)
+    //назначенные дата и время посещения, терминал сотрудника общего отдела
+    @Column(name = "request_date")
     private LocalDate requestDate;
 
-    @Column(name = "request_time", nullable = false)
+    @Column(name = "request_time")
     private LocalTime requestTime;
 
+    //реальное время захода и ухода, терминал сотрудника охраны
+    @Column(name = "actual_enter_time")
+    private LocalTime actualEnterTime;
+
+    @Column(name = "actual_exit_time")
+    private LocalTime actualExitTime;
+
+
+    //желаемые даты посещения, веб-сервис заказа пропуска
     @Column(name = "request_start_date", nullable = false)
 //    @Check(name = "request_start_date",
 //            constraints = "request_start_date >= (CURRENT_DATE + INTERVAL '1 day') AND" +
