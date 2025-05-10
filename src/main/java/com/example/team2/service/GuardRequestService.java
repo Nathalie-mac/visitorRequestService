@@ -42,7 +42,7 @@ public class GuardRequestService {
         GuardOfficerSetUpTimeRequestDTO guardOfficerSetUpTimeDTO = new GuardOfficerSetUpTimeRequestDTO();
         Request request = requestService.findById(requestId);
         guardOfficerSetUpTimeDTO.setInBlackList(personService.isAnyPersonInBlackList(request));
-        //guardOfficerSetUpTimeDTO.setRequestDTO(); //TODO: дописать после Семена staticRequest
+        guardOfficerSetUpTimeDTO.setRequestDTO(requestService.getStaticRequestDTO(request));
         guardOfficerSetUpTimeDTO.setEnterTime(request.getActualEnterTime());
         guardOfficerSetUpTimeDTO.setExitTime(request.getActualExitTime());
         return guardOfficerSetUpTimeDTO;

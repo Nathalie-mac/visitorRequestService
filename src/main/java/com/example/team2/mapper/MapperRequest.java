@@ -1,6 +1,7 @@
 package com.example.team2.mapper;
 
 import com.example.team2.dto.StaticRequestDTO;
+import com.example.team2.dto.request.RowRequestsDTO;
 import com.example.team2.dto.response.ManagerConfirmationResponseDTO;
 import com.example.team2.model.Request;
 import org.mapstruct.*;
@@ -34,4 +35,14 @@ public interface MapperRequest {
     @Mapping(target = "visitors", ignore = true)
     @Mapping(target = "docs", ignore = true)
     void mapRequestToStaticRequestDTO(Request request, @MappingTarget StaticRequestDTO staticRequestDTO);
+
+    @Mapping(target = "idRequest", source = "id")
+    @Mapping(target = "appointmentType", expression = "java(AppointmentType.valueOf(request.getAppointmentType))")
+    @Mapping(target = "userNames", ignore = true)
+    @Mapping(target = "department", ignore = true)
+    @Mapping(target = "date", source = "requestDate")
+    @Mapping(target = "time", source = "requestTime")
+    @Mapping(target = "status", expression = "java(StatusType.valueOf(request.getStatus()))")
+    void mapToRowRequestDTO(Request request, @MappingTarget RowRequestsDTO rowRequestsDTO);
+
 }

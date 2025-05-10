@@ -23,12 +23,4 @@ public interface MapperUpdateRequest {
     @Mapping(target = "user", ignore = true)
     void updateRequest(ManagerConfirmationResponseDTO managerConfirmationResponseDTO, @MappingTarget Request request);// TODO: Заменить int ok на DTO
 
-    @Mapping(target = "idRequest", source = "id")
-    @Mapping(target = "appointmentType", source = "") //TODO: expression for appointment Type
-    @Mapping(target = "userNames", ignore = true)
-    @Mapping(target = "department", ignore = true)
-    @Mapping(target = "date", source = "requestDate")
-    @Mapping(target = "time", source = "requestTime")
-    @Mapping(target = "status", source = "") //TODO: expression for status type
-    void mapToRowRequestDTO(Request request, @MappingTarget RowRequestsDTO rowRequestsDTO);
-}
+    }

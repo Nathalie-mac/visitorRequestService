@@ -4,7 +4,7 @@ import com.example.team2.dto.request.RequestsTableDTO;
 import com.example.team2.dto.request.RowRequestsDTO;
 import com.example.team2.dto.StaticRequestDTO;
 import com.example.team2.dto.response.ManagerConfirmationResponseDTO;
-import com.example.team2.mapper.MapperUpdateRequest;
+import com.example.team2.mapper.MapperRequest;
 import com.example.team2.model.*;
 import com.example.team2.dto.response.SignUpRequestResponseDTO;
 import com.example.team2.repository.RequestRepository;
@@ -25,8 +25,6 @@ public class RequestService {
     private final PassportDataService passportDataService;
     private final PersonService personService;
     private final MapperRequest mapperRequest;
-    private final MapperUpdateRequest mapperUpdateRequest;
-    private final PersonService personService;
 
     public Request save(Request request) {
         return requestRepository.save(request);
@@ -59,7 +57,7 @@ public class RequestService {
     }
 
     public void updateRequest(ManagerConfirmationResponseDTO managerConfirmationResponseDTO, Request request) {
-        mapperUpdateRequest.updateRequest(managerConfirmationResponseDTO, request); //TODO: изменить int ok на DTO
+        mapperRequest.updateRequest(managerConfirmationResponseDTO, request); //TODO: изменить int ok на DTO
         save(request);
     }
 
@@ -80,7 +78,7 @@ public class RequestService {
       }else{
           for (Request request : requests) {
               RowRequestsDTO rowRequestsDTO = new RowRequestsDTO();
-              mapperUpdateRequest.mapToRowRequestDTO(request, rowRequestsDTO);
+              mapperRequest.mapToRowRequestDTO(request, rowRequestsDTO);
               rowRequestsDTO.setUserNames(personService.getPersonFiosInRequest(request.getId()));
 
               Department department = departmentService.findById(request.getDepartment().getId());
@@ -101,7 +99,7 @@ public class RequestService {
         }else{
             for (Request request : requests) {
                 RowRequestsDTO rowRequestsDTO = new RowRequestsDTO();
-                mapperUpdateRequest.mapToRowRequestDTO(request, rowRequestsDTO);
+                mapperRequest.mapToRowRequestDTO(request, rowRequestsDTO);
                 rowRequestsDTO.setUserNames(personService.getPersonFiosInRequest(request.getId()));
 
                 Department department = departmentService.findById(request.getDepartment().getId());
