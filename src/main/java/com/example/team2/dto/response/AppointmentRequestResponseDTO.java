@@ -17,6 +17,9 @@ import java.util.List;
 public class AppointmentRequestResponseDTO {
 
     @NotNull
+    private Long userId;
+
+    @NotNull
     private LocalDate startApplicationPeriod;
 
     @NotNull

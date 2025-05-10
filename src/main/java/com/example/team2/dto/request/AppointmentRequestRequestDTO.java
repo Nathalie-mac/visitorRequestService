@@ -15,7 +15,8 @@ import java.util.List;
 @AllArgsConstructor
 //на фронт
 // данные для выпадающих списков, необходимых для формы оформления заявок
-public class SignUpRequestRequestDTO {
+public class AppointmentRequestRequestDTO {
+
     @NotNull
     private List<String> purposeVisit;
     private List<DepartmentDTO> departments;
