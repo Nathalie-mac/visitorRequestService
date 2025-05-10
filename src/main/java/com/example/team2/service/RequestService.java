@@ -1,7 +1,12 @@
 package com.example.team2.service;
 
+import com.example.team2.dto.request.RequestsTableDTO;
+import com.example.team2.dto.request.RowRequestsDTO;
+import com.example.team2.dto.StaticRequestDTO;
+import com.example.team2.dto.response.ManagerConfirmationResponseDTO;
+import com.example.team2.mapper.MapperRequest;
 import com.example.team2.model.*;
-import com.example.team2.dto.response.SignUpRequestResponseDTO;
+import com.example.team2.dto.response.AppointmentRequestResponseDTO;
 import com.example.team2.repository.RequestRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,19 +31,19 @@ public class RequestService {
         return requestRepository.save(request);
     }
 
-    public Request createRequest(SignUpRequestResponseDTO signUpRequestResponseDTO, AppointmentType appointmentType) {
+    public Request createRequest(AppointmentRequestResponseDTO appointmentRequestResponseDTO, AppointmentType appointmentType) {
         Request request = new Request();
         request.setAppointmentType(appointmentType);
 
         //Информация для пропуска
-        request.setRequestStartDate(signUpRequestResponseDTO.getStartApplicationPeriod());
-        request.setRequestStartDate(signUpRequestResponseDTO.getEndApplicationPeriod());
-        request.setPurpose(AppointmentPurpose.valueOf(signUpRequestResponseDTO.getPurposeVisit()));
+        request.setRequestStartDate(appointmentRequestResponseDTO.getStartApplicationPeriod());
+        request.setRequestStartDate(appointmentRequestResponseDTO.getEndApplicationPeriod());
+        request.setPurpose(AppointmentPurpose.valueOf(appointmentRequestResponseDTO.getPurposeVisit()));
 
         //Принимающая сторона
-        Department department = departmentService.findById(signUpRequestResponseDTO.getDepartment());
+        Department department = departmentService.findById(appointmentRequestResponseDTO.getDepartment());
         request.setDepartment(department);
-        DepartmentWorker departmentWorker = departmentWorkerService.findById(signUpRequestResponseDTO.getWorkerName());
+        DepartmentWorker departmentWorker = departmentWorkerService.findById(appointmentRequestResponseDTO.getWorkerName());
         request.setWorker(departmentWorker);
 
         //Остальное, что нужно
@@ -65,48 +70,9 @@ public class RequestService {
         return Arrays.stream(AppointmentType.values()).map(AppointmentType::getType).toList();
     }
 
-    //терминал менеджера, страница "оформление заявок", таблица
-    public RequestsTableDTO getRequestsTableDTO() {
-      List<RowRequestsDTO> rowRequestsDTOS = new ArrayList<>();
-      List<Request> requests = requestRepository.findAll();
-      if (requests.isEmpty()) {
-          //TODO: обработка ошибок
-      }else{
-          for (Request request : requests) {
-              RowRequestsDTO rowRequestsDTO = new RowRequestsDTO();
-              mapperRequest.mapToRowRequestDTO(request, rowRequestsDTO);
-              rowRequestsDTO.setUserNames(personService.getPersonFiosInRequest(request.getId()));
-
-              Department department = departmentService.findById(request.getDepartment().getId());
-              rowRequestsDTO.setDepartment(department.getDepartmentName());
-
-              rowRequestsDTOS.add(rowRequestsDTO);
-          }
-      }
-      return new RequestsTableDTO(rowRequestsDTOS);
+    public List<Request> findByUser(User user) {
+        return requestRepository.findByUser(user);
     }
-
-    //терминал охранника, страница "одобренные заявки", таблица
-    public RequestsTableDTO getApprovedRequestsTableDTO() {
-        List<RowRequestsDTO> rowRequestsDTOS = new ArrayList<>();
-        List<Request> requests = requestRepository.getApprovedRequests();
-        if (requests.isEmpty()) {
-            //TODO: обработка ошибок
-        }else{
-            for (Request request : requests) {
-                RowRequestsDTO rowRequestsDTO = new RowRequestsDTO();
-                mapperRequest.mapToRowRequestDTO(request, rowRequestsDTO);
-                rowRequestsDTO.setUserNames(personService.getPersonFiosInRequest(request.getId()));
-
-                Department department = departmentService.findById(request.getDepartment().getId());
-                rowRequestsDTO.setDepartment(department.getDepartmentName());
-
-                rowRequestsDTOS.add(rowRequestsDTO);
-            }
-        }
-        return new RequestsTableDTO(rowRequestsDTOS);
-    }
-
 
     public StaticRequestDTO getStaticRequestDTO(Request request) {
         StaticRequestDTO staticRequestDTO = new StaticRequestDTO();
@@ -118,19 +84,19 @@ public class RequestService {
         return staticRequestDTO;
     }
 
-    String findStatusByRequest(Request request) {
-        return requestRepository.findStatusByRequest(request).getStatusType();
+    String findStatusById(long id) {
+        return requestRepository.findStatusById(id).getStatusType();
     }
 
-    String findRejectReasonByRequest(Request request) {
-        return requestRepository.findRejectReasonByRequest(request).getReason();
+    String findRejectReasonById(long id) {
+        return requestRepository.findRejectReasonById(id).getReason();
     }
 
-    LocalDate findRequestDateByRequest(Request request) {
-        return requestRepository.findRequestDateByRequest(request);
+    LocalDate findRequestDateById(long id) {
+        return requestRepository.findRequestDateById(id);
     }
 
-    LocalTime findRequestTimeByRequest(Request request) {
-        return requestRepository.findRequestTimeByRequest(request);
+    LocalTime findRequestTimeById(long id) {
+        return requestRepository.findRequestTimeById(id);
     }
 }

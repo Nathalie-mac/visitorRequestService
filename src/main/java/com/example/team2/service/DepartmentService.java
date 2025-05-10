@@ -54,6 +54,6 @@ public class DepartmentService {
     }
 
     public List<String> getDepartmentNames(){
-        return departmentRepository.findDistinctDepartmentNameBy();
+        return departmentRepository.findDistinctByDepartmentName();
     }
 }
