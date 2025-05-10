@@ -1,15 +1,16 @@
 package com.example.team2.service;
 
-import com.example.team2.dto.request.SignUpRequestRequestDTO;
+import com.example.team2.dto.request.AppointmentRequestRequestDTO;
+import com.example.team2.dto.request.SubmittedRequestRowDTO;
+import com.example.team2.dto.request.SubmittedRequestTableDTO;
 import com.example.team2.model.*;
-import com.example.team2.dto.response.SignUpRequestResponseDTO;
+import com.example.team2.dto.response.AppointmentRequestResponseDTO;
 import com.example.team2.dto.VisitorDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -18,9 +19,10 @@ public class AppointmentRequestService { //TODO: допилить set для use
     private final RequestService requestService;
     private final PassportDataService passportDataService;
     private final DepartmentService departmentService;
+    private final UserService userService;
 
 
-    public Request createIndividualAppointment(SignUpRequestResponseDTO signUpRequestResponseDTO) {
+    public Request createIndividualAppointment(AppointmentRequestResponseDTO signUpRequestResponseDTO) {
         Request request = requestService.createRequest(signUpRequestResponseDTO, AppointmentType.INDIVIDUAL);
 
         //Информация о посетителе
@@ -37,7 +39,7 @@ public class AppointmentRequestService { //TODO: допилить set для use
         return request;
     }
 
-    public Request createPublicAppointment(SignUpRequestResponseDTO signUpRequestResponseDTO) {
+    public Request createPublicAppointment(AppointmentRequestResponseDTO signUpRequestResponseDTO) {
         Request request = requestService.createRequest(signUpRequestResponseDTO, AppointmentType.PUBLIC);
 
         //Информация о посетителе
@@ -57,8 +59,8 @@ public class AppointmentRequestService { //TODO: допилить set для use
         return request;
     }
 
-    public SignUpRequestRequestDTO getPurposeDepartmentLists() { //TODO: менее конченное название
-        SignUpRequestRequestDTO signUpRequestRequestDTO = new SignUpRequestRequestDTO();
+    public AppointmentRequestRequestDTO getPurposeDepartmentLists() { //TODO: менее конченное название
+        AppointmentRequestRequestDTO signUpRequestRequestDTO = new AppointmentRequestRequestDTO();
 
         List<String> appointmentPurpose = Arrays.stream(AppointmentPurpose.values()).map(AppointmentPurpose::getPurpose).toList();
         signUpRequestRequestDTO.setPurposeVisit(appointmentPurpose);
@@ -66,5 +68,21 @@ public class AppointmentRequestService { //TODO: допилить set для use
         signUpRequestRequestDTO.setDepartments(departmentService.getDepartmentsDTOs());
 
         return  signUpRequestRequestDTO;
+    }
+
+    public SubmittedRequestTableDTO getSubmittedRequestTable(long userId) {
+        SubmittedRequestTableDTO submittedRequestTableDTO = new SubmittedRequestTableDTO();
+        User user = userService.findUserById(userId);
+        List<Request> requests = requestService.findByUser(user);
+
+        for (Request request : requests) {
+            SubmittedRequestRowDTO submittedRequestRowDTO = new SubmittedRequestRowDTO();
+
+            submittedRequestRowDTO.setAppointmentType(request.getAppointmentType().getType());
+            submittedRequestRowDTO.setDepartment(request.getDepartment().getDepartmentName());
+            submittedRequestRowDTO.setStatus(request.getStatus().getStatusType());
+        }
+
+        return submittedRequestTableDTO;
     }
 }

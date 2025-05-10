@@ -66,18 +66,18 @@ public class ManagerConfirmationService {
         managerConfirmationRequestDTO.setInBlackList(personService.isAnyPersonInBlackList(request));
         managerConfirmationRequestDTO.setRequestDTO(requestService.getStaticRequestDTO(request));
 
-        String status = requestService.findStatusByRequest(request);
+        String status = requestService.findStatusById(requestId);
         List<String> statusTypes = Arrays.stream(StatusType.values()).map(StatusType::getStatusType).toList();
         managerConfirmationRequestDTO.setStatus(status);
         managerConfirmationRequestDTO.setStatusList(statusTypes);
 
-        String rejectionReason = requestService.findRejectReasonByRequest(request);
+        String rejectionReason = requestService.findRejectReasonById(requestId);
         List<String> rejectionReasons = Arrays.stream(RejectReason.values()).map(RejectReason::getReason).toList();
         managerConfirmationRequestDTO.setRejectReason(rejectionReason);
         managerConfirmationRequestDTO.setRejectReasonList(rejectionReasons);
 
-        managerConfirmationRequestDTO.setVisitTime(requestService.findRequestTimeByRequest(request));
-        managerConfirmationRequestDTO.setVisitDate(requestService.findRequestDateByRequest(request));
+        managerConfirmationRequestDTO.setVisitTime(requestService.findRequestTimeById(requestId));
+        managerConfirmationRequestDTO.setVisitDate(requestService.findRequestDateById(requestId));
 
         return managerConfirmationRequestDTO;
     }
