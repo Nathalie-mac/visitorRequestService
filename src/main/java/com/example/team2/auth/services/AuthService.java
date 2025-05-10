@@ -87,6 +87,11 @@ public class AuthService {
         return ResponseEntity.ok().build();
     }
 
+    public Long getUserIdFromCookie(String cookieHeader){
+        String sessionId = CookieHeaderParser.getSessionIdCookie(cookieHeader, COOKIE_HEADER_SESSION_ID_NAME);
+
+        return redisSessionService.getUserIdFromSession(sessionId);
+    }
 
     private Session createUserSession(String login) {
         String sessionId = UUID.randomUUID().toString();
@@ -111,6 +116,7 @@ public class AuthService {
         redisSessionService.saveSessionToRedis(session);
         return session;
     }
+
 
 
 }
