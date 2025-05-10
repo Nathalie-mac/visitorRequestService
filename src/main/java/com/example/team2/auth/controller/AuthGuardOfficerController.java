@@ -12,7 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/auth/guardofficcer")
+@RequestMapping("/auth/guardofficer")
 @RequiredArgsConstructor
 public class AuthGuardOfficerController {
 
@@ -28,7 +28,7 @@ public class AuthGuardOfficerController {
     // Показ формы входа
     @GetMapping("/sign-in")
     public String showSignInForm(Model model) {
-        return authStuffUIService.getSignInStuffForm(model);
+        return authStuffUIService.getSignInStuffForm(model, StuffRoleType.GUARD_OFFICER);
     }
 
     //Обработка данных формы входа (POST)

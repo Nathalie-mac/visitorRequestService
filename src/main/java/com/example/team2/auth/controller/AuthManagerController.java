@@ -29,7 +29,7 @@ public class AuthManagerController {
     // Показ формы входа
     @GetMapping("/sign-in")
     public String showSignInForm(Model model) {
-        return authStuffUIService.getSignInStuffForm(model);
+        return authStuffUIService.getSignInStuffForm(model, StuffRoleType.MANAGER);
     }
 
     //Обработка данных формы входа (POST)

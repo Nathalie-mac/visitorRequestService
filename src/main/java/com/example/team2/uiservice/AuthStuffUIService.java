@@ -7,7 +7,6 @@ import com.example.team2.model.StuffRoleType;
 import com.example.team2.uiservice.provider.SessionCookieProvider;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
@@ -17,10 +16,16 @@ public class AuthStuffUIService {
      private final AuthService authService;
 
     // Показ общей формы входа для сотрудников
-    public String getSignInStuffForm(Model model) {
-        //TODO: отображение формы авторизации
-        return null;
+    public String getSignInStuffForm(Model model, StuffRoleType roleType) {
+        model.addAttribute("LoginDTO", new LoginDTO());
+        if (roleType.equals(StuffRoleType.MANAGER)){
+            model.addAttribute("requestURL", "/auth/manager/sign-in");
+        }else{
+            model.addAttribute("requestURL", "/auth/guardofficer/sign-in");
+        }
+        return "stuff_login";
     }
+
     //Обработка данных формы входа менеджера (POST)
     public String postSignInManager(LoginDTO loginDTO, HttpServletResponse response) {
         CustomResponse authResponse = authService.signInStuff(loginDTO, StuffRoleType.MANAGER);
