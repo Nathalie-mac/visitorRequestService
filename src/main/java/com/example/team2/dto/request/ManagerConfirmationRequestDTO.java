@@ -17,8 +17,10 @@ import java.util.List;
 public class ManagerConfirmationRequestDTO {
     private boolean inBlackList;
     private StaticRequestDTO requestDTO;
-    private List<String> status;            //Отклонено|Одобрено (для выпадающего списка)
-    private List<String> rejectReason;      //причины отклонения (для выпадающего списка), в нем присутствует причина "Черный список", но у менеджера он не отображается
+    private List<String> statusList; //Отклонено|Одобрено (для выпадающего списка)
+    private String status;
+    private List<String> rejectReasonList; //причины отклонения (для выпадающего списка), в нем присутствует причина "Черный список", но у менеджера он не отображается
+    private String rejectReason;
     private LocalDate visitDate;            // если есть оно отображается, если нет, то нет
     private LocalTime visitTime;            // если есть оно отображается, если нет, то нет
 }

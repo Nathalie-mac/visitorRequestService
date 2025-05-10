@@ -2,7 +2,6 @@ package com.example.team2.dto.request;
 
 
 import com.example.team2.dto.DepartmentDTO;
-import com.example.team2.dto.VisitorDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

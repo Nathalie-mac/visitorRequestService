@@ -29,6 +29,9 @@ public class UserService {
         return save(user);
     }
 
+    public User findUserById(long id) {
+        return userRepository.findUserById(id);
+    }
 
     public User findUserByLogin(String login) {
         User findUser = userRepository.findUserByUserLogin(login);
