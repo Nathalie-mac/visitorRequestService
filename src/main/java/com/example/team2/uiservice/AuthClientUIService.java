@@ -24,7 +24,7 @@ public class AuthClientUIService {
         return "user_login";
     }
     //Обработка данных формы входа (POST)
-    public String postSignIn(LoginDTO loginDTO, HttpServletResponse response) {
+    public String postSignIn(Model model, LoginDTO loginDTO, HttpServletResponse response) {
         CustomResponse authResponse = authService.signInClient(loginDTO);
 
         if (authResponse.isSuccess()) {
@@ -32,9 +32,10 @@ public class AuthClientUIService {
             SessionCookieProvider.setUpSessionCookie(response, authResponse.getCookieSessionId());
 
 
-            return "redirect:/dashboard";
+            return "web_request_table";
         } else {
-            return "redirect:/auth/login?error";
+            //TODO: форма ошибки
+            return null;
         }
     }
 

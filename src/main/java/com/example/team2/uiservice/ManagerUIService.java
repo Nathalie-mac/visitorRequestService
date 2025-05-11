@@ -1,0 +1,38 @@
+package com.example.team2.uiservice;
+
+import com.example.team2.dto.LoginDTO;
+import com.example.team2.dto.request.FilterListDTO;
+import com.example.team2.dto.request.RequestsTableDTO;
+import com.example.team2.model.StuffRoleType;
+import com.example.team2.service.GuardRequestService;
+import com.example.team2.service.ManagerConfirmationService;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+
+@Service
+@RequiredArgsConstructor
+public class ManagerUIService {
+    private final ManagerConfirmationService managerConfirmationService;
+    private final GuardRequestService guardRequestService;
+
+
+    // Показ формы входа
+    public String getMainPage(Model model) {
+        RequestsTableDTO requestsTableDTO = managerConfirmationService.getRequestsTableDTO();
+        FilterListDTO filterList = guardRequestService.getFilterLists();
+        model.addAttribute("requests", requestsTableDTO.getRegistrationApplicationTable());
+        model.addAttribute("filterList", filterList);
+        return "manager_confirmation_request";
+    }
+
+//    //Обработка данных формы входа (POST)
+//    public String openRequest(@ModelAttribute("LoginDTO") LoginDTO loginDTO, Model model, HttpServletResponse response) {
+//        return authStuffUIService.postSignInManager(loginDTO,model, response);
+//
+//    }
+}

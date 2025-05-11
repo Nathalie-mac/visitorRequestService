@@ -12,7 +12,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-@Repository
+
 public interface RequestRepository extends JpaRepository<Request, Long> {
     Request findById(long id);
 
