@@ -26,9 +26,9 @@ public interface MapperRequest {
     @Mapping(target = "requestEndDate", ignore = true)
     @Mapping(target = "purpose", ignore = true)
     @Mapping(target = "status",
-            expression = "java(StatusType.valueOf(managerConfirmationResponseDTO.getStatus()))")
+            expression = "java(StatusType.PENDING.getEnum(managerConfirmationResponseDTO.getStatus()))")
     @Mapping(target = "rejectReason",
-            expression = "java(RejectReason.valueOf(managerConfirmationResponseDTO.getRejectReason()))")
+            expression = "java(RejectReason.ATTACHMENTS.getEnum(managerConfirmationResponseDTO.getRejectReason()))")
     @Mapping(target = "department", ignore = true)
     @Mapping(target = "worker", ignore = true)
     @Mapping(target = "user", ignore = true)
