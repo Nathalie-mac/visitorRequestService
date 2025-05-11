@@ -90,7 +90,12 @@ public class RequestService {
     }
 
     String findRejectReasonById(long id) {
-        return requestRepository.findById(id).getRejectReason().getReason();
+        RejectReason rejectReason = requestRepository.findById(id).getRejectReason();
+        if (rejectReason != null) {
+            return requestRepository.findById(id).getRejectReason().getReason();
+        } else {
+            return null;
+        }
     }
 
     LocalDate findRequestDateById(long id) {
