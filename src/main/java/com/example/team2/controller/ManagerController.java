@@ -1,5 +1,7 @@
 package com.example.team2.controller;
 
+import com.example.team2.dto.LoginDTO;
+import com.example.team2.dto.response.ManagerConfirmationResponseDTO;
 import com.example.team2.uiservice.ManagerUIService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -24,10 +26,10 @@ public class ManagerController {
         return managerUIService.openRequest(requestId,model);
     }
 
-//    //Обработка данных формы заявки (POST)
-//    @PostMapping("/request")
-//    public String showConfirmationRequestPage(@RequestParam("id") Long requestId, Model model) {
-//        return managerUIService.openRequest(requestId,model);
-//    }
+    //Обработка данных формы заявки (POST)
+    @PostMapping("/request")
+    public String confirmationRequest(@ModelAttribute("responseDTO") ManagerConfirmationResponseDTO responseDTO) {
+        return managerUIService.confirmationRequest(responseDTO);
+    }
 
 }

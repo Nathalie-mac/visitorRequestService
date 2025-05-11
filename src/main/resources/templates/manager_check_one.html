@@ -101,7 +101,7 @@
     <div class="request-header">Проверка заявки</div>
     <div class="section-title">Заявка на индивидуальное посещение</div>
 
-    <form th:action="@{/process-request}" method="post" th:object="${responseDTO}">
+    <form th:action="@{/request}" method="post" th:object="${responseDTO}">
         <input type="hidden" th:field="*{idRequest}" th:value="${managerConfirmation.requestDTO.idRequest}">
 
         <!-- Статус заявки -->

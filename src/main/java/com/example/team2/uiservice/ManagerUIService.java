@@ -1,20 +1,14 @@
 package com.example.team2.uiservice;
 
-import com.example.team2.dto.LoginDTO;
 import com.example.team2.dto.request.FilterListDTO;
 import com.example.team2.dto.request.ManagerConfirmationRequestDTO;
 import com.example.team2.dto.request.RequestsTableDTO;
 import com.example.team2.dto.response.ManagerConfirmationResponseDTO;
-import com.example.team2.model.StuffRoleType;
 import com.example.team2.service.GuardRequestService;
 import com.example.team2.service.ManagerConfirmationService;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
 
 @Service
 @RequiredArgsConstructor
@@ -42,13 +36,17 @@ public class ManagerUIService {
         model.addAttribute("managerConfirmation", managerRequestDTO);
         model.addAttribute("responseDTO", responseDTO);
 
-        if(managerRequestDTO.getRequestDTO().getVisitors().size() > 1){
+        if (managerRequestDTO.getRequestDTO().getVisitors().size() > 1) {
             return "manager_check_many";
         } else {
             return "manager_check_one";
         }
-
-
-
     }
+
+    //Обработка данных формы входа (POST)
+    public String confirmationRequest(ManagerConfirmationResponseDTO responseDTO) {
+        managerConfirmationService.requestCheck(responseDTO);
+        return "redirect:/manager/main";
+    }
+
 }
