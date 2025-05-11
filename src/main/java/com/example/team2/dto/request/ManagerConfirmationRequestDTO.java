@@ -21,11 +21,10 @@ public class ManagerConfirmationRequestDTO {
     private StaticRequestDTO requestDTO;
     @NotNull
     private List<String> statusList; //Отклонено|Одобрено (для выпадающего списка)
-    @NotNull
+
     private String status;
     @NotNull
     private List<String> rejectReasonList; //причины отклонения (для выпадающего списка), в нем присутствует причина "Черный список", но у менеджера он не отображается
-    @NotNull
     private String rejectReason;
     private LocalDate visitDate;            // если есть оно отображается, если нет, то нет
     private LocalTime visitTime;            // если есть оно отображается, если нет, то нет
