@@ -2,6 +2,7 @@ package com.example.team2.service;
 
 //сервис для терминала сотрудника охраны
 
+import com.example.team2.dto.BlyadskoeFioDTO;
 import com.example.team2.dto.request.FilterListDTO;
 import com.example.team2.dto.request.GuardOfficerSetUpTimeRequestDTO;
 import com.example.team2.dto.request.RequestsTableDTO;
@@ -45,6 +46,15 @@ public class GuardRequestService {
 //        }
     }
 
+
+    public List<String> getPersonFiosInRequest(Long id){
+        Request request = requestService.findById(id);
+        List<BlyadskoeFioDTO> rawFios =  personService.findNameByRequest(request);
+        return rawFios.stream()
+                .map(dto -> String.join(" ", dto.lastName(), dto.firstName(), dto.middleName()))
+                .toList();
+    }
+
     //терминал охранника, страница "одобренные заявки", таблица
     public RequestsTableDTO getApprovedRequestsTableDTO() {
         List<RowRequestsDTO> rowRequestsDTOS = new ArrayList<>();
@@ -55,7 +65,7 @@ public class GuardRequestService {
             for (Request request : requests) {
                 RowRequestsDTO rowRequestsDTO = new RowRequestsDTO();
                 mapperRequest.mapToRowRequestDTO(request, rowRequestsDTO);
-                rowRequestsDTO.setUserNames(personService.getPersonFiosInRequest(request.getId()));
+                rowRequestsDTO.setUserNames(getPersonFiosInRequest(request.getId()));
 
                 Department department = departmentService.findById(request.getDepartment().getId());
                 rowRequestsDTO.setDepartment(department.getDepartmentName());

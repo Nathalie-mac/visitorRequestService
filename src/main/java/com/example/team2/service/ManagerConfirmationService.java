@@ -26,6 +26,7 @@ public class ManagerConfirmationService {
     private final RequestRepository requestRepository;
     private final MapperRequest mapperRequest;
     private final DepartmentService departmentService;
+    private final GuardRequestService guardRequestService;
 
     //Данные с фронта
     public Request requestCheck(ManagerConfirmationResponseDTO managerConfirmationResponseDTO) { //TODO: придумать менее конченое название
@@ -34,6 +35,8 @@ public class ManagerConfirmationService {
 
         return request;
     }
+
+
 
 
     //терминал менеджера, страница "оформление заявок", таблица
@@ -47,7 +50,7 @@ public class ManagerConfirmationService {
             for (Request request : requests) {
                 RowRequestsDTO rowRequestsDTO = new RowRequestsDTO();
                 mapperRequest.mapToRowRequestDTO(request, rowRequestsDTO);
-                rowRequestsDTO.setUserNames(personService.getPersonFiosInRequest(request.getId()));
+                rowRequestsDTO.setUserNames(guardRequestService.getPersonFiosInRequest(request.getId()));
 
                 Department department = departmentService.findById(request.getDepartment().getId());
                 rowRequestsDTO.setDepartment(department.getDepartmentName());
