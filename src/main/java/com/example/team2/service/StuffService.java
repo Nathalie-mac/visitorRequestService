@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 public class StuffService {
     private final StuffRepository stuffRepository;
 
-    private Stuff save(Stuff stuff) {
+    public Stuff save(Stuff stuff) {
         return stuffRepository.save(stuff);
     }
 
