@@ -15,7 +15,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class AppointmentRequestService { //TODO: допилить set для user в RequestService
+public class AppointmentRequestService {
     private final PersonService personService;
     private final RequestService requestService;
     private final PassportDataService passportDataService;
@@ -60,7 +60,7 @@ public class AppointmentRequestService { //TODO: допилить set для use
         return request;
     }
 
-    public AppointmentRequestRequestDTO getPurposeDepartmentLists() { //TODO: менее конченное название
+    public AppointmentRequestRequestDTO getPurposeDepartmentLists() {
         AppointmentRequestRequestDTO signUpRequestRequestDTO = new AppointmentRequestRequestDTO();
 
         List<String> appointmentPurpose = Arrays.stream(AppointmentPurpose.values()).map(AppointmentPurpose::getPurpose).toList();
@@ -84,7 +84,6 @@ public class AppointmentRequestService { //TODO: допилить set для use
             submittedRequestRowDTO.setDepartment(request.getDepartment().getDepartmentName());
             submittedRequestRowDTO.setStatus(request.getStatus().getStatusType());
 
-            //TODO: время и дата подтверждённая менеджером
             submittedRequestRowDTO.setTime(request.getRequestTime());
             submittedRequestRowDTO.setDate(request.getRequestDate());
 
