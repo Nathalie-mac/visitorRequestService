@@ -19,4 +19,8 @@ public class DepartmentWorkerService {
     public DepartmentWorker findById(long id) {
         return departmentWorkerRepository.findById(id);
     }
+
+    public DepartmentWorker save(DepartmentWorker departmentWorker) {
+        return departmentWorkerRepository.save(departmentWorker);
+    }
 }
