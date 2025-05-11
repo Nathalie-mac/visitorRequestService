@@ -1,5 +1,6 @@
 package com.example.team2.test;
 
+import com.example.team2.auth.config.BCrypt.BCryptPasswordEncoder;
 import com.example.team2.model.*;
 import com.example.team2.service.*;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ public class TestDataFiller {
     private final StuffService stuffService;
     private final UserService userService;
     private final RequestService requestService;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     /**
      * при запуске приложения заполняет БД тестовыми данными
@@ -41,10 +43,7 @@ public class TestDataFiller {
         departmentWorkerService.save(departmentWorker);
 
         //Пользователь
-        User user = new User();
-        user.setUserLogin("sa");
-        user.setUserPassword("sa");
-        userService.save(user);
+        User user = userService.createUser("sa@gmail.com", bCryptPasswordEncoder.encode("sa"));
 
         //Запрос на мероприятие
         Request request = new Request();
@@ -83,17 +82,9 @@ public class TestDataFiller {
 
         //Аккаунт рабочего
         //Менеджер
-        Stuff stuff = new Stuff();
-        stuff.setStuffRole(StuffRoleType.MANAGER);
-        stuff.setStuffPassword("11");
-        stuff.setUserCode("11");
-        stuffService.save(stuff);
-
+        stuffService.createStuff("11", bCryptPasswordEncoder.encode("11"), StuffRoleType.MANAGER);
         //Охранник
-        Stuff stuff2 = new Stuff();
-        stuff2.setStuffRole(StuffRoleType.MANAGER);
-        stuff2.setStuffPassword("22");
-        stuff2.setUserCode("22");
-        stuffService.save(stuff2);
+        stuffService.createStuff("22", bCryptPasswordEncoder.encode("22"), StuffRoleType.GUARD_OFFICER);
+
     }
 }
