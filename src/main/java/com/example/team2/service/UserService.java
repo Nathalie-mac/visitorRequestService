@@ -13,7 +13,7 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public User save(User user) {
+    private User save(User user) {
         return userRepository.save(user);
     }
 
