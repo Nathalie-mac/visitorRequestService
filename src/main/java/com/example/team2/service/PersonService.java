@@ -5,6 +5,7 @@ import com.example.team2.model.Person;
 import com.example.team2.model.Request;
 import com.example.team2.dto.VisitorDTO;
 import com.example.team2.repository.PersonRepository;
+import com.example.team2.repository.RequestRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
@@ -48,13 +49,6 @@ public class PersonService {
     }
 
 
-    public List<String> getPersonFiosInRequest(Long id){
-        List<BlyadskoeFioDTO> rawFios =  personRepository.findNameByRequest(id);
-        return rawFios.stream()
-                .map(dto -> String.join(" ", dto.lastName(), dto.firstName(), dto.middleName()))
-                .toList();
-    }
-
     public List<Person> findByRequest(Request request) {
         return personRepository.findByRequest(request);
     }
@@ -82,5 +76,9 @@ public class PersonService {
         }
 
         return visitorDTOS;
+    }
+
+    public List<BlyadskoeFioDTO> findNameByRequest(Request request) {
+        return personRepository.findNameByRequest(request);
     }
 }
