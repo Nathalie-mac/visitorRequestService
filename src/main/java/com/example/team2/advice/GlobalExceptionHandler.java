@@ -1,22 +1,30 @@
 package com.example.team2.advice;
 
-import com.example.team2.auth.exceptions.auth.DecodeCredentialsException;
-import com.example.team2.auth.exceptions.auth.InvalidBasicAuthorizationHeaderException;
-import com.example.team2.auth.exceptions.data.ExistingUserWithThatUsernameException;
-import com.example.team2.auth.exceptions.data.UserNotFoundException;
+import com.example.team2.exceptions.auth.DecodeCredentialsException;
+import com.example.team2.exceptions.auth.InvalidBasicAuthorizationHeaderException;
+import com.example.team2.exceptions.data.ExistingUserWithThatUsernameException;
+import com.example.team2.exceptions.data.UserNotFoundException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.View;
 
 import java.time.LocalDateTime;
 
 //указывает, что методы данного компонента будут использоваться сразу несколькими контроллерами
 @ControllerAdvice
 public class GlobalExceptionHandler {
+    private final View error;
+
+    public GlobalExceptionHandler(View error) {
+        this.error = error;
+    }
 
 //    @ExceptionHandler(Exception.class)
 //    public ResponseEntity<CustomErrorResponse> handleException(Exception ex, WebRequest request) {
@@ -31,29 +39,37 @@ public class GlobalExceptionHandler {
 //    }
 
     //метод для обработки исключений
+    //Авторизация юзера: пользователь с такой почтой уже есть
     @ExceptionHandler(ExistingUserWithThatUsernameException.class)
-    public ResponseEntity<CustomErrorResponse> handleExistingUserException(Exception ex, WebRequest request) {
+    public String handleExistingUserException(Exception ex, WebRequest request, Model model) {
         CustomErrorResponse errorResponse = new CustomErrorResponse();
         errorResponse.setTimestamp(LocalDateTime.now());
         errorResponse.setStatus(HttpStatus.BAD_REQUEST.value());
-        errorResponse.setError("Existing user");
+        errorResponse.setError("Пользователь с такой почтой уже существует!");
         errorResponse.setMessage(ex.getMessage());
         errorResponse.setPath(request.getDescription(false));
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        model.addAttribute("errorMessage", errorResponse.getError());
+        model.addAttribute("status", errorResponse.getStatus());
+
+        return "error_login";
     }
 
+    //Авторизация юзера: пользователь не найден при попытке входа
     @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<CustomErrorResponse> handleNonExistingUserException(Exception ex, WebRequest request) {
+    public String handleNonExistingUserException(Exception ex, WebRequest request, Model model) {
         CustomErrorResponse errorResponse = new CustomErrorResponse();
         errorResponse.setTimestamp(LocalDateTime.now());
         errorResponse.setStatus(HttpStatus.NOT_FOUND.value());
-        errorResponse.setError("User not found");
+        errorResponse.setError("Пользователь с такой почтой не найден!");
         errorResponse.setMessage(ex.getMessage());
         errorResponse.setPath(request.getDescription(false));
+        model.addAttribute("errorMessage", errorResponse.getError());
+        model.addAttribute("status", errorResponse.getStatus());
 
-        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        return "error_login";
     }
 
+    //Авторизация юзера:
     @ExceptionHandler(DecodeCredentialsException.class)
     public ResponseEntity<CustomErrorResponse> handleDecodeCredentialsException(Exception ex, WebRequest request) {
         CustomErrorResponse errorResponse = new CustomErrorResponse();
@@ -102,6 +118,16 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
+    //TODO: дописать
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public String handleMethodArgumentNotValidException(
+            MethodArgumentNotValidException ex, WebRequest request, Model model) {
+        CustomErrorResponse errorResponse = new CustomErrorResponse();
+        errorResponse.setTimestamp(LocalDateTime.now());
+        errorResponse.setStatus(HttpStatus.BAD_REQUEST.value());
+        model.addAttribute("errorMessage", "some Message");
+        return "error_login";
+        //errorResponse.setError("Недопус");
 
-
+    }
 }

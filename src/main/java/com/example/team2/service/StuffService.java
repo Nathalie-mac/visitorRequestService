@@ -1,7 +1,7 @@
 package com.example.team2.service;
 
-import com.example.team2.auth.exceptions.data.ExistingUserWithThatUsernameException;
-import com.example.team2.auth.exceptions.data.UserNotFoundException;
+import com.example.team2.exceptions.data.ExistingUserWithThatUsernameException;
+import com.example.team2.exceptions.data.UserNotFoundException;
 import com.example.team2.model.Stuff;
 import com.example.team2.model.StuffRoleType;
 import com.example.team2.repository.StuffRepository;
