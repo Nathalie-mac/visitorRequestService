@@ -86,18 +86,23 @@ public class RequestService {
     }
 
     String findStatusById(long id) {
-        return requestRepository.findStatusById(id).getStatusType();
+        return requestRepository.findById(id).getStatus().getStatusType();
     }
 
     String findRejectReasonById(long id) {
-        return requestRepository.findRejectReasonById(id).getReason();
+        RejectReason rejectReason = requestRepository.findById(id).getRejectReason();
+        if (rejectReason != null) {
+            return requestRepository.findById(id).getRejectReason().getReason();
+        } else {
+            return null;
+        }
     }
 
     LocalDate findRequestDateById(long id) {
-        return requestRepository.findRequestDateById(id);
+        return requestRepository.findById(id).getRequestDate();
     }
 
     LocalTime findRequestTimeById(long id) {
-        return requestRepository.findRequestTimeById(id);
+        return requestRepository.findById(id).getRequestTime();
     }
 }

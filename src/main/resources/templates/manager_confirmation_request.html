@@ -152,10 +152,10 @@
                 <td th:text="${request.appointmentType} ?: ' '"></td>
 <!--                <td th:text="${request.appointmentType}"></td>-->
                 <td>
-                     <span th:if="${request.userNames}?.size() > 0"
-                           th:each="name, iter : ${request.userNames}"
-                           th:text="${name} + (${not iter.last} ? ', ' : '')"></span>
-                    <span th:unless="${request.userNames}?.size() > 0"> </span>
+                     <span th:if="${request.userNames != null and not request.userNames.empty}"
+                        th:each="name, iter : ${request.userNames}"
+                        th:text="${name} + (${not iter.last} ? ', ' : '')"></span>
+                    <span th:unless="${request.userNames != null and not request.userNames.empty}"> </span>
                 </td>
 <!--                <td>-->
 <!--                    <span th:each="name, iter : ${request.userNames}"-->
@@ -177,9 +177,9 @@
 <!--                кажется, надо поменять логику работы со статусами-->
                 <td>
                 <span th:if="${request.status}"
-                      th:classappend="${request.status == 'на рассмотрении'} ? 'badge badge-pending' :
-                          ${request.status == 'одобрена'} ? 'badge badge-approved' :
-                          'badge badge-rejected'"
+                      th:classappend="${request.status == T(com.example.team2.model.StatusType).PENDING.statusType} ? 'badge badge-pending' :
+                          (${request.status == T(com.example.team2.model.StatusType).APPROVED.statusType} ? 'badge badge-approved' :
+                          'badge badge-rejected')"
                       th:text="${request.status}"></span>
                     <span th:unless="${request.status}" class="badge"> </span>
                 </td>
@@ -232,7 +232,7 @@
         btn.addEventListener('click', function() {
             const requestId = this.getAttribute('data-id');
             // Отправка ID заявки на сервер или переход на страницу заявки
-            window.location.href = '/request?id=' + requestId;
+            window.location.href = '/manager/request?id=' + requestId;
         });
     });
 </script>
