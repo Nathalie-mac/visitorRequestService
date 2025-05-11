@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ХранительПРО - Заявка на групповое посещение</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    body {
+        background-color: #f8f9fa;
+        font-family: 'Arial', sans-serif;
+        padding: 20px;
+    }
+    .application-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    }
+    .application-header {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        color: #2c3e50;
+        border-bottom: 2px solid #eee;
+        padding-bottom: 10px;
+    }
+    .section-title {
+        font-size: 18px;
+        font-weight: bold;
+        margin: 25px 0 15px 0;
+        color: #3498db;
+    }
+    .section-divider {
+        border-top: 1px dashed #ddd;
+        margin: 20px 0;
+    }
+    .info-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+    .info-item {
+        margin-bottom: 10px;
+    }
+    .info-label {
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+    .time-inputs {
+        display: flex;
+        gap: 15px;
+    }
+    .time-inputs .form-group {
+        flex: 1;
+    }
+    .photo-upload {
+        margin: 15px 0;
+    }
+    .submit-btn {
+        background-color: #3498db;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-weight: bold;
+        cursor: pointer;
+        margin-top: 20px;
+    }
+    .submit-btn:hover {
+        background-color: #2980b9;
+    }
+    .checkbox-label {
+        margin-left: 5px;
+    }
+    .form-check-input {
+        margin-top: 0.2em;
+    }
+    .visitors-table {
+        width: 100%;
+        margin: 20px 0;
+        border-collapse: collapse;
+    }
+    .visitors-table th, .visitors-table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+    .visitors-table th {
+        background-color: #f2f2f2;
+    }
+    .add-visitor-btn {
+        margin-bottom: 20px;
+    }
+    .date-range {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+    }
+    .date-range .form-group {
+        flex: 1;
+    }
+    .visitor-info {
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 5px;
+        margin-bottom: 15px;
+    }
+    .time-display {
+        font-size: 16px;
+        font-weight: bold;
+        margin-top: 5px;
+    }
+    .no-time {
+        color: #6c757d;
+        font-style: italic;
+    }
+  </style>
+</head>
+<body>
+<div class="application-container">
+  <div class="application-header">Работа с заявкой</div>
+  <div class="section-title">Заявка на групповое посещение</div>
+
+  <form th:action="@{/group-application}" th:object="${guardOfficerDTO}" method="post" enctype="multipart/form-data">
+    <input type="hidden" th:field="*{requestDTO.idRequest}">
+
+    <!-- Время входа/выхода -->
+    <div class="time-inputs">
+      <div class="form-group">
+        <label class="info-label">Время входа на территорию</label>
+        <div th:if="${guardOfficerDTO.enterTime != null}" class="time-display">
+          <span th:text="${#temporals.format(guardOfficerDTO.enterTime, 'HH:mm')}"></span>
+        </div>
+        <div th:if="${guardOfficerDTO.enterTime == null}" class="time-display no-time">
+          Время не указано
+        </div>
+        <input type="time" class="form-control" th:field="*{time}">
+        <button type="submit" class="submit-btn" name="action" value="saveEnterTime">Сохранить время входа
+          <i class="fas fa-save"></i>
+        </button>
+      </div>
+      <div class="form-group">
+        <label class="info-label">Время ухода с территории</label>
+        <div th:if="${guardOfficerDTO.exitTime != null}" class="time-display">
+          <span th:text="${#temporals.format(guardOfficerDTO.exitTime, 'HH:mm')}"></span>
+        </div>
+        <div th:if="${guardOfficerDTO.exitTime == null}" class="time-display no-time">
+          Время не указано
+        </div>
+        <input type="time" class="form-control" th:field="*{time}">
+        <button type="submit" class="submit-btn" name="action" value="saveExitTime">Сохранить время выхода
+          <i class="fas fa-save"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- Информация о заявке -->
+    <div class="section-title">Информация о заявке</div>
+
+    <!-- Информация для пропуска -->
+    <div class="section-title">Информация для пропуска</div>
+
+    <div class="info-item">
+      <div class="info-label">Срок действия заявки:</div>
+      <div class="date-range">
+        <div class="form-group">
+          <label>с</label>
+          <div class="form-control" th:text="${#temporals.format(guardOfficerDTO.requestDTO.startApplicationPeriod, 'dd.MM.yyyy')}"></div>
+        </div>
+        <div class="form-group">
+          <label>по</label>
+          <div class="form-control" th:text="${#temporals.format(guardOfficerDTO.requestDTO.endApplicationPeriod, 'dd.MM.yyyy')}"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="info-label">Цель посещения</label>
+      <div class="form-control" th:text="${guardOfficerDTO.requestDTO.purposeVisit}"></div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- Принимающая сторона -->
+    <div class="section-title">Принимающая сторона</div>
+    <div class="form-group">
+      <label class="info-label">Подразделение:</label>
+      <div class="form-control" th:text="${guardOfficerDTO.requestDTO.department}"></div>
+    </div>
+    <div class="form-group">
+      <label class="info-label">ФИО:</label>
+      <div class="form-control" th:text="${guardOfficerDTO.requestDTO.workerName}"></div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- Список посетителей -->
+    <div class="section-title">Список посетителей</div>
+    <table class="visitors-table">
+      <thead>
+      <tr>
+        <th>№</th>
+        <th>ФИО</th>
+        <th>Организация</th>
+        <th>Телефон</th>
+        <th>Примечание</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="visitor, iterStat : ${guardOfficerDTO.requestDTO.visitors}">
+        <td th:text="${iterStat.count}"></td>
+        <td th:text="${visitor.lastName + ' ' + visitor.firstName + ' ' + (visitor.middleName != null ? visitor.middleName : '')}"></td>
+        <td th:text="${visitor.organizationName != null} ? ${visitor.organizationName} : '-'"></td>
+        <td th:text="${visitor.phoneNumber}"></td>
+        <td th:text="${visitor.note != null} ? ${visitor.note} : '-'"></td>
+      </tr>
+      </tbody>
+    </table>
+
+    <div class="section-divider"></div>
+
+    <!-- Прикрепляемые документы -->
+    <div class="section-title">Прикрепляемые документы</div>
+    <div class="form-group">
+      <ul style="list-style-type: none; padding-left: 0;">
+        <li th:if="${guardOfficerDTO.requestDTO.docs == null || guardOfficerDTO.requestDTO.docs.isEmpty()}">
+          Нет прикрепленных файлов
+        </li>
+        <li th:each="doc : ${guardOfficerDTO.requestDTO.docs}" th:unless="${guardOfficerDTO.requestDTO.docs == null || guardOfficerDTO.requestDTO.docs.isEmpty()}">
+          <i class="fas fa-file"></i> Документ ID: <span th:text="${doc}"></span>
+        </li>
+      </ul>
+    </div>
+
+<!--    &lt;!&ndash; Черный список &ndash;&gt;-->
+<!--    <div class="form-check" th:if="${guardOfficerDTO.inBlackList}">-->
+<!--      <input class="form-check-input" type="checkbox" checked disabled>-->
+<!--      <label class="form-check-label text-danger">-->
+<!--        Посетители в черном списке-->
+<!--      </label>-->
+<!--    </div>-->
+
+  </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+</body>
+</html>

@@ -1,9 +1,11 @@
-package com.example.team2.auth.advice;
+package com.example.team2.advice;
 
 import com.example.team2.auth.exceptions.auth.DecodeCredentialsException;
 import com.example.team2.auth.exceptions.auth.InvalidBasicAuthorizationHeaderException;
 import com.example.team2.auth.exceptions.data.ExistingUserWithThatUsernameException;
 import com.example.team2.auth.exceptions.data.UserNotFoundException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -75,6 +77,31 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(JsonMappingException.class)
+    public ResponseEntity<CustomErrorResponse> handleJsonMappingException(Exception ex, WebRequest request) {
+        CustomErrorResponse errorResponse = new CustomErrorResponse();
+        errorResponse.setTimestamp(LocalDateTime.now());
+        errorResponse.setStatus(HttpStatus.BAD_REQUEST.value());
+        errorResponse.setError("error in json mapping when searching for userId");
+        errorResponse.setMessage(ex.getMessage());
+        errorResponse.setPath(request.getDescription(false));
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(JsonProcessingException.class)
+    public ResponseEntity<CustomErrorResponse> handleJsonProcessingException(Exception ex, WebRequest request) {
+        CustomErrorResponse errorResponse = new CustomErrorResponse();
+        errorResponse.setTimestamp(LocalDateTime.now());
+        errorResponse.setStatus(HttpStatus.BAD_REQUEST.value());
+        errorResponse.setError("error in json processing when searching for userId");
+        errorResponse.setMessage(ex.getMessage());
+        errorResponse.setPath(request.getDescription(false));
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
 
 
 }

@@ -36,13 +36,13 @@ public class GuardRequestService {
         List<String> departments = departmentService.getDepartmentNames();
         List<String> appointments = requestService.getAppointmentTypes();
 
-        if (statuses.isEmpty() || departments.isEmpty() || appointments.isEmpty()){
-            // TODO: обработка исключениЯ
-            return null;
-        }else{
-            FilterListDTO filterListDTO = new FilterListDTO(appointments, departments, statuses);
-            return filterListDTO;
-        }
+//        if (statuses.isEmpty() || departments.isEmpty() || appointments.isEmpty()){
+//            // TODO: обработка исключениЯ
+//            return null;
+//        }else{
+        FilterListDTO filterListDTO = new FilterListDTO(appointments, departments, statuses);
+        return filterListDTO;
+//        }
     }
 
     //терминал охранника, страница "одобренные заявки", таблица

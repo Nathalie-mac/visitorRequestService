@@ -27,6 +27,18 @@ public class RedisSessionService {
         bucket.set(json, 2, TimeUnit.HOURS);
     }
 
+    @SneakyThrows
+    public Long getUserIdFromSession(String sessionId) {
+
+        RBucket<String> bucket = getRBucket(sessionId);
+        String json = bucket.get();
+
+        Session session = mapper.readValue(json, Session.class);
+        return session.getUserId();
+
+
+    }
+
     public RBucket<String> getRBucket(String sessionId) {
         String redisKey = SESSION_PREFIX + sessionId;
         return redissonClient.getBucket(redisKey);

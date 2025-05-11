@@ -1,6 +1,7 @@
 package com.example.team2.service;
 
 import com.example.team2.auth.exceptions.data.ExistingUserWithThatUsernameException;
+import com.example.team2.auth.exceptions.data.UserNotFoundException;
 import com.example.team2.model.User;
 import com.example.team2.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,7 @@ public class UserService {
 
     public User createUser(String login, String password) {
 
-        if (findUserByLogin(login) != null) {
+        if (userRepository.findUserByUserLogin(login) != null) {
             throw new ExistingUserWithThatUsernameException();
         }
         User user = new User();
@@ -33,6 +34,10 @@ public class UserService {
     }
 
     public User findUserByLogin(String login) {
+        User findUser = userRepository.findUserByUserLogin(login);
+        if (findUser == null) {
+            throw new UserNotFoundException();
+        }
         return userRepository.findUserByUserLogin(login);
     }
 }

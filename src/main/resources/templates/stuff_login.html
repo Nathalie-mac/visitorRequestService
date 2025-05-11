@@ -41,7 +41,7 @@
 <div class="container">
     <div class="login-container">
         <h2 class="login-header">ХранительПРО</h2>
-        <form th:action="@{/auth/sign-in}" method="post" th:object="${LoginDTO}">
+        <form th:action="${requestURL}" method="post" th:object="${LoginDTO}">
             <div class="mb-3">
                 <label for="login" class="form-label">Login</label>
                 <input type="text" class="form-control" id="login" th:field="*{login}" required>
@@ -52,11 +52,6 @@
             </div>
             <button type="submit" class="btn btn-primary btn-login">Войти</button>
         </form>
-        <div class="register-link">
-            <span>Нет учетной записи? </span>
-            <a th:href="@{/sign-up}">Зарегистрироваться</a>
-        </div>
-
 
     </div>
 </div>

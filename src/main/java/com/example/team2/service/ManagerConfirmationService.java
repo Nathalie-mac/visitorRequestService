@@ -40,6 +40,7 @@ public class ManagerConfirmationService {
     public RequestsTableDTO getRequestsTableDTO() {
         List<RowRequestsDTO> rowRequestsDTOS = new ArrayList<>();
         List<Request> requests = requestRepository.findAll();
+
         if (requests.isEmpty()) {
             //TODO: обработка ошибок
         }else{
