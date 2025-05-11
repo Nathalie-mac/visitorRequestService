@@ -6,7 +6,12 @@ import com.example.team2.dto.response.ManagerConfirmationResponseDTO;
 import com.example.team2.model.Request;
 import org.mapstruct.*;
 
-@Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+import java.time.LocalDateTime;
+import java.util.List;
+
+
+@Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
+        imports = {LocalDateTime.class, com.example.team2.model.StatusType.class, com.example.team2.model.RejectReason.class, com.example.team2.model.AppointmentType.class, com.example.team2.model.Request.class, com.example.team2.dto.response.ManagerConfirmationResponseDTO.class})
 public interface MapperRequest {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "appointmentType", ignore = true)
