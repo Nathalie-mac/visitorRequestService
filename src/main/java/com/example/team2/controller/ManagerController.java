@@ -1,16 +1,10 @@
 package com.example.team2.controller;
 
-import com.example.team2.dto.LoginDTO;
-import com.example.team2.model.StuffRoleType;
 import com.example.team2.uiservice.ManagerUIService;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/manager")
@@ -24,10 +18,16 @@ public class ManagerController {
         return managerUIService.getMainPage(model);
     }
 
-//    //Обработка данных формы входа (POST)
-//    @PostMapping("/sign-in")
-//    public String signIn(@ModelAttribute("LoginDTO") LoginDTO loginDTO, Model model, HttpServletResponse response) {
-//        return authStuffUIService.postSignInManager(loginDTO,model, response);
-//
+    //Показ формы обработки заявки
+    @GetMapping("/request")
+    public String showConfirmationRequestPage(@RequestParam("id") Long requestId, Model model) {
+        return managerUIService.openRequest(requestId,model);
+    }
+
+//    //Обработка данных формы заявки (POST)
+//    @PostMapping("/request")
+//    public String showConfirmationRequestPage(@RequestParam("id") Long requestId, Model model) {
+//        return managerUIService.openRequest(requestId,model);
 //    }
+
 }

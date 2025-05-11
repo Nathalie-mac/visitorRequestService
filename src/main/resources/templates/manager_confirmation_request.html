@@ -189,10 +189,10 @@
 <!--                                          'badge badge-rejected'"-->
 <!--                          th:text="${request.status}"></span>-->
 <!--                </td>-->
-<!--                <td>-->
-<!--                    <button class="open-btn" th:data-id="${request.idRequest}">Открыть заявку</button>-->
-<!--                </td>-->
-<!--            </tr>-->
+                <td>
+                    <button class="open-btn" th:data-id="${request.idRequest}">Открыть заявку</button>
+                </td>
+            </tr>
 
             <!-- Пустая строка, если нет заявок -->
             <tr class="empty-row" th:if="${requests.empty}">
@@ -232,7 +232,7 @@
         btn.addEventListener('click', function() {
             const requestId = this.getAttribute('data-id');
             // Отправка ID заявки на сервер или переход на страницу заявки
-            window.location.href = '/check-request?id=' + requestId;
+            window.location.href = '/request?id=' + requestId;
         });
     });
 </script>

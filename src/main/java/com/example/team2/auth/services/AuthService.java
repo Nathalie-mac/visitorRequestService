@@ -39,7 +39,6 @@ public class AuthService {
 
     public boolean signUpClient(LoginDTO loginDTO) {
         userService.createUser(loginDTO.getLogin(), passwordEncoder.encode(loginDTO.getPassword()));
-
         return true;
     }
 
