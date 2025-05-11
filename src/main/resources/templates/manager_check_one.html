@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ХранительПРО - Проверка заявки</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Arial', sans-serif;
+            padding: 20px;
+        }
+        .request-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+        .request-header {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 25px 0 15px 0;
+            color: #3498db;
+        }
+        .section-divider {
+            border-top: 1px dashed #ddd;
+            margin: 20px 0;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .info-item {
+            margin-bottom: 10px;
+        }
+        .info-label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .date-inputs {
+            display: flex;
+            gap: 15px;
+        }
+        .date-inputs .form-group {
+            flex: 1;
+        }
+        .blacklist-status {
+            padding: 10px;
+            border-radius: 5px;
+            margin: 15px 0;
+            font-weight: bold;
+        }
+        .in-blacklist {
+            background-color: #ffecec;
+            color: #d32f2f;
+        }
+        .not-in-blacklist {
+            background-color: #e8f5e9;
+            color: #388e3c;
+        }
+        .photo-upload {
+            margin: 15px 0;
+        }
+        .submit-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .submit-btn:hover {
+            background-color: #2980b9;
+        }
+        .static-info {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="request-container">
+    <div class="request-header">Проверка заявки</div>
+    <div class="section-title">Заявка на индивидуальное посещение</div>
+
+    <form th:action="@{/process-request}" method="post" th:object="${responseDTO}">
+        <input type="hidden" th:field="*{idRequest}" th:value="${managerConfirmation.requestDTO.idRequest}">
+
+        <!-- Статус заявки -->
+        <div class="form-group">
+            <label class="info-label">Статус заявки</label>
+            <select class="form-control" th:field="*{status}" required>
+                <option value="">-- Выберите статус --</option>
+                <option th:each="statusItem : ${managerConfirmation.status}"
+                        th:value="${statusItem}"
+                        th:text="${statusItem}"></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="info-label">Причина</label>
+            <select class="form-control" th:field="*{rejectReason}" th:disabled="*{status} != 'Отклонено'">
+                <option value="">-- Выберите причину --</option>
+                <option th:each="reason : ${managerConfirmation.rejectReason}"
+                        th:value="${reason}"
+                        th:text="${reason}"></option>
+            </select>
+        </div>
+        <div class="date-inputs">
+            <div class="form-group">
+                <label class="info-label">Установите дату посещения</label>
+                <input type="date" class="form-control" th:field="*{visitDate}">
+            </div>
+            <div class="form-group">
+                <label class="info-label">Установите время посещения</label>
+                <input type="time" class="form-control" th:field="*{visitTime}">
+            </div>
+        </div>
+
+        <button type="submit" class="submit-btn">Сохранить решение</button>
+
+        <!-- Информация для пропуска -->
+        <div class="section-title">Информация для пропуска</div>
+        <div class="static-info">
+            <div class="info-item">
+                <div class="info-label">Срок действия заявок:</div>
+                <div>
+                    с <span th:text="${#temporals.format(managerConfirmation.requestDTO.startApplicationPeriod, 'dd.MM.yyyy')}"></span>
+                    по <span th:text="${#temporals.format(managerConfirmation.requestDTO.endApplicationPeriod, 'dd.MM.yyyy')}"></span>
+                </div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Цель посещения:</div>
+                <div th:text="${managerConfirmation.requestDTO.purposeVisit}"></div>
+            </div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- Принимающая сторона -->
+        <div class="section-title">Принимающая сторона</div>
+        <div class="static-info">
+            <div class="info-item">
+                <div class="info-label">Подразделение:</div>
+                <div th:text="${managerConfirmation.requestDTO.department}"></div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">ФИО:</div>
+                <div th:text="${managerConfirmation.requestDTO.workerName}"></div>
+            </div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- Информация о посетителе -->
+        <div class="section-title">Информация о посетителе</div>
+        <div class="static-info" th:each="visitor : ${managerConfirmation.requestDTO.visitors}">
+            <div class="info-grid">
+                <div>
+                    <div class="form-group">
+                        <div class="info-label">Фамилия:</div>
+                        <div th:text="${visitor.lastName}"></div>
+                    </div>
+                    <div class="form-group">
+                        <div class="info-label">Имя:</div>
+                        <div th:text="${visitor.firstName}"></div>
+                    </div>
+                    <div class="form-group">
+                        <div class="info-label">Отчество:</div>
+                        <div th:text="${visitor.middleName}"></div>
+                    </div>
+                    <div class="form-group">
+                        <div class="info-label">Телефон:</div>
+                        <div th:text="${visitor.phoneNumber}"></div>
+                    </div>
+                    <div class="form-group">
+                        <div class="info-label">E-mail:</div>
+                        <div th:text="${visitor.email}"></div>
+                    </div>
+                </div>
+                <div>
+                    <div class="form-group">
+                        <div class="info-label">Организация:</div>
+                        <div th:text="${visitor.organizationName}"></div>
+                    </div>
+                    <div class="form-group">
+                        <div class="info-label">Примечание:</div>
+                        <div th:text="${visitor.note}"></div>
+                    </div>
+                    <div class="form-group">
+                        <div class="info-label">Дата рождения:</div>
+                        <div th:text="${visitor.birthDate != null} ? ${#temporals.format(visitor.birthDate, 'dd.MM.yyyy')} : ''"></div>
+                    </div>
+                    <div class="form-group">
+                        <div class="info-label">Серия паспорта:</div>
+                        <div th:text="${visitor.passportSeries}"></div>
+                    </div>
+                    <div class="form-group">
+                        <div class="info-label">Номер паспорта:</div>
+                        <div th:text="${visitor.passportNumber}"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="photo-upload">
+                <div class="info-label">Фото:</div>
+                <div th:if="${visitor.photo != null}">
+                    <img th:src="@{'/photo/' + ${visitor.photo}}" alt="Фото посетителя" style="max-width: 150px;">
+                </div>
+                <div th:unless="${visitor.photo != null}">Фото отсутствует</div>
+            </div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- Прикрепляемые документы -->
+        <div class="section-title">Прикрепляемые документы</div>
+        <div class="static-info">
+            <div th:if="${not managerConfirmation.requestDTO.docs.empty}">
+                <ul style="list-style-type: none; padding-left: 0;">
+                    <li th:each="doc : ${managerConfirmation.requestDTO.docs}">
+                        <i class="fas fa-file"></i> Документ #<span th:text="${doc}"></span>
+                    </li>
+                </ul>
+            </div>
+            <div th:if="${managerConfirmation.requestDTO.docs.empty}">
+                Нет прикрепленных файлов
+            </div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- Статус черного списка -->
+        <div th:classappend="${managerConfirmation.inBlackList} ? 'blacklist-status in-blacklist' : 'blacklist-status not-in-blacklist'">
+            <span th:text="${managerConfirmation.inBlackList} ? 'Заявка находится в черном списке' : 'Заявка не находится в черном списке'"></span>
+        </div>
+
+<!--        &lt;!&ndash; Статус заявки &ndash;&gt;-->
+<!--        <div class="form-group">-->
+<!--            <label class="info-label">Статус заявки</label>-->
+<!--            <select class="form-control" th:field="*{status}" required>-->
+<!--                <option value="">&#45;&#45; Выберите статус &#45;&#45;</option>-->
+<!--                <option th:each="statusItem : ${managerConfirmation.status}"-->
+<!--                        th:value="${statusItem}"-->
+<!--                        th:text="${statusItem}"></option>-->
+<!--            </select>-->
+<!--        </div>-->
+<!--        <div class="form-group">-->
+<!--            <label class="info-label">Причина</label>-->
+<!--            <select class="form-control" th:field="*{rejectReason}" th:disabled="*{status} != 'Отклонено'">-->
+<!--                <option value="">&#45;&#45; Выберите причину &#45;&#45;</option>-->
+<!--                <option th:each="reason : ${managerConfirmation.rejectReason}"-->
+<!--                        th:value="${reason}"-->
+<!--                        th:text="${reason}"></option>-->
+<!--            </select>-->
+<!--        </div>-->
+<!--        <div class="date-inputs">-->
+<!--            <div class="form-group">-->
+<!--                <label class="info-label">Установите дату посещения</label>-->
+<!--                <input type="date" class="form-control" th:field="*{visitDate}">-->
+<!--            </div>-->
+<!--            <div class="form-group">-->
+<!--                <label class="info-label">Установите время посещения</label>-->
+<!--                <input type="time" class="form-control" th:field="*{visitTime}">-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        <button type="submit" class="submit-btn">Сохранить решение</button>-->
+    </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+<script>
+    // Активация/деактивация поля причины в зависимости от статуса
+    document.querySelector('select[th\\:field="*{status}"]').addEventListener('change', function() {
+        const reasonField = document.querySelector('select[th\\:field="*{rejectReason}"]');
+        reasonField.disabled = this.value !== 'Отклонено';
+        if (reasonField.disabled) {
+            reasonField.value = '';
+        }
+    });
+</script>
+</body>
+</html>
