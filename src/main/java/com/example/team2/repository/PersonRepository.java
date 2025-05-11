@@ -15,6 +15,6 @@ public interface PersonRepository extends JpaRepository<Person, Long> {
     List<Person> findByRequest(Request request);
 
     @Query("SELECT NEW com.example.team2.dto.BlyadskoeFioDTO(p.lastName, p.firstName, p.middleName) " +
-            "FROM Person p WHERE p.request = :requestId")
-    List<BlyadskoeFioDTO> findNameByRequest(Long requestId);
+            "FROM Person p WHERE p.request = :request")
+    List<BlyadskoeFioDTO> findNameByRequest(Request request);
 }
