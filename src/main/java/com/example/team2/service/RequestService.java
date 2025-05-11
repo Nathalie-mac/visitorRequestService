@@ -24,6 +24,7 @@ public class RequestService {
     private final DepartmentService departmentService;
     private final DepartmentWorkerService departmentWorkerService;
     private final PassportDataService passportDataService;
+    private final UserService userService;
     private final PersonService personService;
     private final MapperRequest mapperRequest;
 
@@ -48,7 +49,7 @@ public class RequestService {
 
         //Остальное, что нужно
         request.setStatus(StatusType.PENDING); // По умолчанию статус
-        //TODO: добавить set для User
+        request.setUser(userService.findUserById(appointmentRequestResponseDTO.getUserId()));
 
         return save(request);
     }
