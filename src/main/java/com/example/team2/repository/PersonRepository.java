@@ -11,7 +11,7 @@ import java.util.List;
 
 @Repository
 public interface PersonRepository extends JpaRepository<Person, Long> {
-    List<Boolean> findDistinctBlackListByRequest(Request request);
+    List<Person> findDistinctBlackListByRequest(Request request);
     List<Person> findByRequest(Request request);
 
     @Query("SELECT NEW com.example.team2.dto.BlyadskoeFioDTO(p.lastName, p.firstName, p.middleName) " +

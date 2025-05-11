@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -41,7 +42,8 @@ public class PersonService {
     }
 
     public boolean isAnyPersonInBlackList(Request request) {
-        return personRepository.findDistinctBlackListByRequest(request).contains(true);
+        List<Person> persons = personRepository.findDistinctBlackListByRequest(request);
+        return persons.stream().anyMatch(Person::isBlackList);
     }
 
     public Person getPerson(Long id) {
