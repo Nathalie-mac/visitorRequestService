@@ -54,6 +54,9 @@ public class DepartmentService {
     }
 
     public List<String> getDepartmentNames(){
-        return departmentRepository.findDistinctByDepartmentName();
+        List<Department> departments = findAll();
+        return departments.stream()
+                .map(Department::getDepartmentName)
+                .toList();
     }
 }
