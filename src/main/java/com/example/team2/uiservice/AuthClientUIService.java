@@ -9,6 +9,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -23,6 +24,8 @@ public class AuthClientUIService {
         model.addAttribute("LoginDTO", new LoginDTO());
         return "user_login";
     }
+
+    //TODO: доделать проверку на соответствие пароля
     //Обработка данных формы входа (POST)
     public String postSignIn(Model model, LoginDTO loginDTO, HttpServletResponse response) {
         CustomResponse authResponse = authService.signInClient(loginDTO);
@@ -34,8 +37,9 @@ public class AuthClientUIService {
 
             return "web_request_table";
         } else {
-            //TODO: форма ошибки
-            return null;
+            model.addAttribute("errorMessage", "Упс! Вы ввели неправильный пароль. Попробуйте еще раз");
+            model.addAttribute("status", HttpStatus.UNAUTHORIZED.value());
+            return "error_login";
         }
     }
 
