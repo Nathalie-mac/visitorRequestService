@@ -159,8 +159,28 @@
       </select>
     </div>
 
+<!--    &lt;!&ndash; Дата и время посещения &ndash;&gt;-->
+<!--    <div class="date-inputs">-->
+<!--      <div class="form-group">-->
+<!--        <label class="info-label">Дата посещения</label>-->
+<!--        <input type="date" class="form-control" th:field="*{visitDate}" id="visitDate"-->
+<!--               th:disabled="${managerConfirmation.status != T(com.example.team2.model.StatusType).PENDING.statusType}"-->
+<!--               th:classappend="${managerConfirmation.status != T(com.example.team2.model.StatusType).PENDING.statusType} ? 'readonly-field'"-->
+<!--               th:value="${managerConfirmation.visitDate != null} ? ${#temporals.format(managerConfirmation.visitDate, 'yyyy-MM-dd')} : ''"-->
+<!--               required>-->
+<!--      </div>-->
+<!--      <div class="form-group">-->
+<!--        <label class="info-label">Время посещения</label>-->
+<!--        <input type="time" class="form-control" th:field="*{visitTime}" id="visitTime"-->
+<!--               th:disabled="${managerConfirmation.status != T(com.example.team2.model.StatusType).PENDING.statusType}"-->
+<!--               th:classappend="${managerConfirmation.status != T(com.example.team2.model.StatusType).PENDING.statusType} ? 'readonly-field'"-->
+<!--               th:value="${managerConfirmation.visitTime != null} ? ${managerConfirmation.visitTime} : ''"-->
+<!--               required>-->
+<!--      </div>-->
+<!--    </div>-->
+
     <!-- Дата и время посещения -->
-    <div class="date-inputs">
+    <div id="dateTimeGroup" class="date-inputs">
       <div class="form-group">
         <label class="info-label">Дата посещения</label>
         <input type="date" class="form-control" th:field="*{visitDate}" id="visitDate"
@@ -180,9 +200,8 @@
     </div>
 
     <button type="submit" class="submit-btn" id="submitBtn"
-            th:disabled="${managerConfirmation.status != T(com.example.team2.model.StatusType).PENDING.statusType}">Сохранить решение</button>
-
-
+            th:disabled="${managerConfirmation.status != T(com.example.team2.model.StatusType).PENDING.statusType}">Сохранить решение
+    </button>
 
     <div class="section-divider"></div>
 
@@ -305,50 +324,108 @@
     const visitTimeField = document.getElementById('visitTime');
     const submitBtn = document.getElementById('submitBtn');
 
-    // Устанавливаем значения из DTO при загрузке
-    function setInitialValues() {
-      if (!dtoData.isPending) {
-        if (statusSelect && dtoData.status) {
-          statusSelect.value = dtoData.status;
-        }
-        if (rejectReasonSelect && dtoData.rejectReason) {
-          rejectReasonSelect.value = dtoData.rejectReason;
-        }
-        if (visitDateField && dtoData.visitDate) {
-          visitDateField.value = dtoData.visitDate;
-        }
-        if (visitTimeField && dtoData.visitTime) {
-          visitTimeField.value = dtoData.visitTime;
-        }
-      }
-    }
+<!--    // Устанавливаем значения из DTO при загрузке-->
+<!--    function setInitialValues() {-->
+<!--      if (!dtoData.isPending) {-->
+<!--        if (statusSelect && dtoData.status) {-->
+<!--          statusSelect.value = dtoData.status;-->
+<!--        }-->
+<!--        if (rejectReasonSelect && dtoData.rejectReason) {-->
+<!--          rejectReasonSelect.value = dtoData.rejectReason;-->
+<!--        }-->
+<!--        if (visitDateField && dtoData.visitDate) {-->
+<!--          visitDateField.value = dtoData.visitDate;-->
+<!--        }-->
+<!--        if (visitTimeField && dtoData.visitTime) {-->
+<!--          visitTimeField.value = dtoData.visitTime;-->
+<!--        }-->
+<!--      }-->
+<!--    }-->
 
-    // Функция для управления состоянием формы
+        function setInitialValues() {
+          if (!dtoData.isPending) {
+              if (statusSelect && dtoData.status) {
+                  statusSelect.value = dtoData.status;
+              }
+              if (rejectReasonSelect && dtoData.rejectReason) {
+                  rejectReasonSelect.Value = dtoData.rejectReason;
+              }
+              if (visitDateField && dtoData.visitDate) {
+                  visitDateField.Value = dtoData.visitDate;
+              }
+              if (visitTimeField && dtoData.visitTime) {
+                  visitTimeField.Value = dtoData.visitTime;
+              }
+          }
+
+          // Вызываем handleFormState для установки начального состояния
+          handleFormState();
+        }
+
+<!--    // Функция для управления состоянием формы-->
+<!--    function handleFormState() {-->
+<!--      const currentStatus = statusSelect ? statusSelect.value : null;-->
+
+<!--      // Управление полем причины-->
+<!--      if (rejectReasonGroup && rejectReasonSelect) {-->
+<!--        const isRejected = currentStatus === 'отклонена по причине';-->
+<!--        rejectReasonGroup.style.display = isRejected ? 'block' : 'none';-->
+<!--        rejectReasonSelect.disabled = !dtoData.isPending || !isRejected;-->
+
+
+<!--        if (!isRejected) {-->
+<!--          rejectReasonSelect.value = '';-->
+<!--        }-->
+<!--      }-->
+
+<!--      // Управление кнопкой отправки-->
+<!--      if (submitBtn) {-->
+<!--        submitBtn.disabled = !dtoData.isPending;-->
+
+<!--        // Для статуса "одобрена" проверяем дату и время-->
+<!--        if (currentStatus === 'одобрена' && dtoData.isPending) {-->
+<!--          const dateValid = visitDateField.value.trim() !== '';-->
+<!--          const timeValid = visitTimeField.value.trim() !== '';-->
+<!--          submitBtn.disabled = !(dateValid && timeValid);-->
+<!--        }-->
+<!--      }-->
+<!--    }-->
+
     function handleFormState() {
       const currentStatus = statusSelect ? statusSelect.value : null;
+      const dateTimeGroup = document.getElementById('dateTimeGroup');
 
       // Управление полем причины
       if (rejectReasonGroup && rejectReasonSelect) {
-        const isRejected = currentStatus === 'отклонена по причине';
-        rejectReasonGroup.style.display = isRejected ? 'block' : 'none';
-        rejectReasonSelect.disabled = !dtoData.isPending || !isRejected;
+          const isRejected = currentStatus === 'отклонена по причине';
+          rejectReasonGroup.style.display = isRejected ? 'block' : 'none';
+          rejectReasonSelect.disabled = !dtoData.isPending || !isRejected;
 
+          if (!isRejected) {
+              rejectReasonSelect.value = '';
+          }
+      }
 
-        if (!isRejected) {
-          rejectReasonSelect.value = '';
-        }
+      // Управление полями даты и времени
+      if (dateTimeGroup) {
+          const isApproved = currentStatus === 'одобрена';
+          dateTimeGroup.style.display = isApproved ? 'flex' : 'none';
+
+          // Снимаем required, если статус не "одобрена"
+          if (visitDateField) visitDateField.required = isApproved;
+          if (visitTimeField) visitTimeField.required = isApproved;
       }
 
       // Управление кнопкой отправки
       if (submitBtn) {
-        submitBtn.disabled = !dtoData.isPending;
+          submitBtn.disabled = !dtoData.isPending;
 
-        // Для статуса "одобрена" проверяем дату и время
-        if (currentStatus === 'одобрена' && dtoData.isPending) {
-          const dateValid = visitDateField.value.trim() !== '';
-          const timeValid = visitTimeField.value.trim() !== '';
-          submitBtn.disabled = !(dateValid && timeValid);
-        }
+          // Для статуса "одобрена" проверяем дату и время
+          if (currentStatus === 'одобрена' && dtoData.isPending) {
+              const dateValid = visitDateField.value.trim() !== '';
+              const timeValid = visitTimeField.value.trim() !== '';
+              submitBtn.disabled = !(dateValid && timeValid);
+          }
       }
     }
 

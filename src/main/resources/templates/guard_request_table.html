@@ -32,9 +32,14 @@
     }
     .filter-row {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(4, 1fr);
         gap: 15px;
         margin-bottom: 15px;
+    }
+    @media (max-width: 768px) {
+        .filter-row {
+            grid-template-columns: 1fr;
+        }
     }
     .filter-group {
         margin-bottom: 15px;
@@ -43,36 +48,6 @@
         font-weight: bold;
         margin-bottom: 5px;
         display: block;
-    }
-    .search-section {
-        background: white;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        margin-bottom: 30px;
-    }
-    .search-description {
-        color: #666;
-        margin-bottom: 15px;
-        font-style: italic;
-    }
-    .search-grid {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 15px;
-        margin-bottom: 15px;
-    }
-    .search-btn {
-        background-color: #3498db;
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 5px;
-        font-weight: bold;
-        cursor: pointer;
-    }
-    .search-btn:hover {
-        background-color: #2980b9;
     }
     .results-section {
         background: white;
@@ -106,6 +81,24 @@
         border: 1px solid #ddd;
         border-radius: 4px;
     }
+    .view-btn {
+        background-color: #3498db;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    .view-btn:hover {
+        background-color: #2980b9;
+    }
+    .empty-row td {
+        color: #999;
+        font-style: italic;
+        text-align: center;
+        padding: 20px;
+    }
   </style>
 </head>
 <body>
@@ -117,7 +110,7 @@
 
   <!-- Фильтры -->
   <div class="filter-section">
-    <div class="filter-title">Выберите фильтры:</div>
+    <div class="filter-title">Фильтры:</div>
     <div class="filter-row">
       <div class="filter-group">
         <label class="filter-label">Тип посещения</label>
@@ -138,27 +131,17 @@
         </select>
       </div>
       <div class="filter-group">
-        <label class="filter-label">Дата</label>
+        <label class="filter-label">Дата посещения</label>
         <input type="date" class="form-control" id="dateFilter">
       </div>
-    </div>
-  </div>
-
-  <!-- Поиск заявки -->
-  <div class="search-section">
-    <div class="search-description">
-      Введите ФИО для поиска заявки, действительной на текущую дату. (Можно ввести часть ФИО)
-    </div>
-    <div class="search-grid">
       <div class="filter-group">
         <label class="filter-label">ФИО посетителя</label>
-        <input type="text" class="form-control" id="fioSearch" placeholder="Введите фамилию, имя или отчество">
+        <input type="text" class="form-control" id="fioFilter" placeholder="Введите часть ФИО">
       </div>
     </div>
-    <button type="button" class="search-btn" id="searchButton">Найти</button>
   </div>
 
-  <!-- Результаты поиска -->
+  <!-- Результаты -->
   <div class="results-section">
     <table class="results-table">
       <thead>
@@ -172,9 +155,13 @@
       </thead>
       <tbody>
       <!-- Данные из RequestsTableDTO -->
-      <tr th:each="row : ${requestsTable.registrationApplicationTable}">
+      <tr th:each="row : ${requestsTable.registrationApplicationTable}"
+          th:data-id="${row.idRequest}"
+          th:data-type="${row.appointmentType}"
+          th:data-dept="${row.department}"
+          th:data-date="${#temporals.format(row.date, 'yyyy-MM-dd')}">
         <td th:text="${row.appointmentType}">Тип посещения</td>
-        <td>
+        <td th:data-fio="${#strings.toLowerCase(#strings.listJoin(row.userNames, ','))}">
           <span th:each="name, iter : ${row.userNames}"
                 th:text="${name} + (${iter.last} ? '' : ', ')">ФИО</span>
         </td>
@@ -185,15 +172,20 @@
           </span>
         </td>
         <td>
-          <button class="btn btn-sm btn-outline-primary"
-                  th:onclick="'viewRequest(' + ${row.idRequest} + ')'">
+          <button class="view-btn" th:onclick="'viewRequest(' + ${row.idRequest} + ')'">
             Просмотр
           </button>
         </td>
       </tr>
+
       <!-- Пустая строка, если нет результатов -->
-      <tr th:if="${requestsTable.registrationApplicationTable == null or requestsTable.registrationApplicationTable.empty}">
-        <td colspan="5" class="text-center">Нет данных для отображения</td>
+      <tr class="empty-row" th:if="${requestsTable.registrationApplicationTable == null or requestsTable.registrationApplicationTable.empty}">
+        <td colspan="5">Нет данных для отображения</td>
+      </tr>
+
+      <!-- Строка, которая показывается при фильтрации, когда нет совпадений -->
+      <tr class="empty-row no-matches" style="display: none;">
+        <td colspan="5">Нет заявок, соответствующих выбранным фильтрам</td>
       </tr>
       </tbody>
     </table>
@@ -204,27 +196,62 @@
 <script>
   // Функция для просмотра заявки
   function viewRequest(id) {
-      console.log('Просмотр заявки с ID:', id);
-      // Реализовать переход к просмотру заявки
+      window.location.href = '/manager/request?id=' + id;
   }
 
-  // Логика фильтрации и поиска
-  document.getElementById('searchButton').addEventListener('click', function() {
-      const fio = document.getElementById('fioSearch').value;
-      const type = document.getElementById('appointmentTypeFilter').value;
-      const department = document.getElementById('departmentFilter').value;
-      const date = document.getElementById('dateFilter').value;
+  // Функция для фильтрации таблицы
+  function filterTable() {
+      const typeFilter = document.getElementById('appointmentTypeFilter').value;
+      const deptFilter = document.getElementById('departmentFilter').value;
+      const dateFilter = document.getElementById('dateFilter').value;
+      const fioFilter = document.getElementById('fioFilter').value.toLowerCase();
 
-      console.log('Параметры поиска:', {
-          fio: fio,
-          type: type,
-          department: department,
-          date: date
+      let hasMatches = false;
+      const rows = document.querySelectorAll('.results-table tbody tr[data-id]');
+
+      rows.forEach(row => {
+          const rowType = row.getAttribute('data-type');
+          const rowDept = row.getAttribute('data-dept');
+          const rowDate = row.getAttribute('data-date');
+          const rowFio = row.querySelector('td:nth-child(2)').getAttribute('data-fio');
+
+          // Проверяем соответствие фильтрам
+          const typeMatch = !typeFilter || rowType === typeFilter;
+          const deptMatch = !deptFilter || rowDept === deptFilter;
+          const dateMatch = !dateFilter || rowDate === dateFilter;
+          const fioMatch = !fioFilter || rowFio.includes(fioFilter);
+
+          if (typeMatch && deptMatch && dateMatch && fioMatch) {
+              row.style.display = '';
+              hasMatches = true;
+          } else {
+              row.style.display = 'none';
+          }
       });
 
-      // Здесь можно реализовать AJAX-запрос для фильтрации данных
-      // или отправить форму на сервер для обновления страницы с параметрами
+      // Показываем/скрываем сообщение "Нет совпадений"
+      const noMatchesRow = document.querySelector('.no-matches');
+      const emptyRow = document.querySelector('.empty-row:not(.no-matches)');
+
+      if (rows.length > 0 && !hasMatches) {
+          noMatchesRow.style.display = '';
+          if (emptyRow) emptyRow.style.display = 'none';
+      } else {
+          noMatchesRow.style.display = 'none';
+          if (emptyRow) emptyRow.style.display = '';
+      }
+  }
+
+  // Навешиваем обработчики на все элементы фильтрации
+  document.querySelectorAll('#appointmentTypeFilter, #departmentFilter, #dateFilter, #fioFilter').forEach(element => {
+      element.addEventListener('change', filterTable);
+      element.addEventListener('input', function() {
+          if (this.id === 'fioFilter') filterTable();
+      });
   });
+
+  // Инициализация фильтрации при загрузке
+  document.addEventListener('DOMContentLoaded', filterTable);
 </script>
 </body>
 </html>
