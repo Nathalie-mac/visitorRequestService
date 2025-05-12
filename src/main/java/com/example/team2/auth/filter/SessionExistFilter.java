@@ -1,5 +1,6 @@
 package com.example.team2.auth.filter;
 
+import com.example.team2.auth.exceptions.auth.InvalidCookieException;
 import com.example.team2.auth.httpresponse.HttpResponse;
 import com.example.team2.auth.services.AuthService;
 import com.example.team2.auth.services.RedisSessionService;
@@ -25,9 +26,12 @@ public class SessionExistFilter implements Filter {
             chain.doFilter(request, response);
             return;
         }
+        String cookie = httpRequest.getHeader("Cookie");
 
-
-        String sessionId = CookieHeaderParser.getSessionIdCookie(httpRequest.getHeader("Cookie"), AuthService.COOKIE_HEADER_SESSION_ID_NAME);
+        if (cookie == null){
+            throw new InvalidCookieException();
+        }
+        String sessionId = CookieHeaderParser.getSessionIdCookie(cookie, AuthService.COOKIE_HEADER_SESSION_ID_NAME);
         if (sessionId == null || sessionId.isEmpty()) {
             httpResponse = HttpResponse.UNAUTHORIZED.getResponse(httpResponse);
             return;
