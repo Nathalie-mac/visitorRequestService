@@ -1,6 +1,7 @@
 package com.example.team2.auth.services;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CustomResponse {
-    boolean isSuccess;
-    String cookieSessionId;
+    private boolean isSuccess;
+    private Long userId;
+    private String cookieSessionId;
 }
