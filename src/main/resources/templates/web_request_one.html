@@ -116,21 +116,21 @@
           <div class="form-group">
             <label for="lastName" class="required-field">Фамилия</label>
             <input type="text" class="form-control" id="lastName"
-                   name="visitorLastName" th:value="${appointmentRequest.visitorLastName}" required>
+                   name="visitorLastName" th:value="${visitor.lastName}" required>
           </div>
         </div>
         <div class="col-md-4">
           <div class="form-group">
             <label for="firstName" class="required-field">Имя</label>
             <input type="text" class="form-control" id="firstName"
-                   name="visitorFirstName" th:value="${appointmentRequest.visitorFirstName}" required>
+                   name="visitorFirstName" th:value="${visitor.firstName}" required>
           </div>
         </div>
         <div class="col-md-4">
           <div class="form-group">
             <label for="middleName">Отчество</label>
             <input type="text" class="form-control" id="middleName"
-                   name="visitorMiddleName" th:value="${appointmentRequest.visitorMiddleName}">
+                   name="visitorMiddleName" th:value="${visitor.middleName}">
           </div>
         </div>
       </div>
@@ -139,47 +139,47 @@
           <div class="form-group">
             <label for="phone">Телефон</label>
             <input type="tel" class="form-control" id="phone"
-                   name="visitorPhone" th:value="${appointmentRequest.visitorPhone}">
+                   name="visitorPhone" th:value="${visitor.phoneNumber}">
           </div>
         </div>
         <div class="col-md-6">
           <div class="form-group">
             <label for="email">E-mail</label>
             <input type="email" class="form-control" id="email"
-                   name="visitorEmail" th:value="${appointmentRequest.visitorEmail}">
+                   name="visitorEmail" th:value="${visitor.email}">
           </div>
         </div>
       </div>
       <div class="form-group">
         <label for="organization">Организация</label>
         <input type="text" class="form-control" id="organization"
-               name="visitorOrganization" th:value="${appointmentRequest.visitorOrganization}">
+               name="visitorOrganization" th:value="${visitor.organizationName}">
       </div>
       <div class="form-group">
         <label for="notes">Примечание</label>
         <textarea class="form-control" id="notes" rows="2"
-                  name="visitorNote" th:text="${appointmentRequest.visitorNote}"></textarea>
+                  name="visitorNote" th:text="${visitor.note}"></textarea>
       </div>
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
             <label for="birthDate">Дата рождения</label>
             <input type="date" class="form-control" id="birthDate"
-                   name="visitorBirthDate" th:value="${appointmentRequest.visitorBirthDate}">
+                   name="visitorBirthDate" th:value="${visitor.birthDate}">
           </div>
         </div>
         <div class="col-md-4">
           <div class="form-group">
             <label for="passportSeries">Серия паспорта</label>
             <input type="text" class="form-control" id="passportSeries"
-                   name="visitorPassportSeries" th:value="${appointmentRequest.visitorPassportSeries}">
+                   name="visitorPassportSeries" th:value="${visitor.passportSeries}">
           </div>
         </div>
         <div class="col-md-4">
           <div class="form-group">
             <label for="passportNumber">Номер паспорта</label>
             <input type="text" class="form-control" id="passportNumber"
-                   name="visitorPassportNumber" th:value="${appointmentRequest.visitorPassportNumber}">
+                   name="visitorPassportNumber" th:value="${visitor.passportNumber}">
           </div>
         </div>
       </div>

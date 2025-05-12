@@ -3,12 +3,9 @@ package com.example.team2.uiservice;
 import com.example.team2.auth.services.AuthService;
 import com.example.team2.auth.services.CustomResponse;
 import com.example.team2.dto.LoginDTO;
-import com.example.team2.dto.request.FilterListDTO;
-import com.example.team2.dto.request.RequestsTableDTO;
 import com.example.team2.model.StuffRoleType;
 import com.example.team2.service.GuardRequestService;
 import com.example.team2.service.ManagerConfirmationService;
-import com.example.team2.service.RequestService;
 import com.example.team2.uiservice.provider.SessionCookieProvider;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -48,10 +45,10 @@ public class AuthStuffUIService {
     public String postSignInGuardOfficer(LoginDTO loginDTO, HttpServletResponse response) {
         CustomResponse authResponse = authService.signInStuff(loginDTO, StuffRoleType.GUARD_OFFICER);
         // TODO: редирект на главную страницу охранника
-        if (authResponse.isSuccess()) {
-            SessionCookieProvider.setUpSessionCookie(response, authResponse.getCookieSessionId());
-        }
-        return null;
+
+        SessionCookieProvider.setUpSessionCookie(response, authResponse.getCookieSessionId());
+
+        return "redirect:/guardofficer/main";
     }
 
 }
