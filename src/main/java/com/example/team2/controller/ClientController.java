@@ -32,14 +32,14 @@ public class ClientController {
 
     // Открытие страницы создания заявки для личного посещения (страница выбора типа web_visit_type)
     @GetMapping("/personal-visit")
-    public String personalVisit() {
-        return "personal_visit";
+    public String personalVisit(Model model) {
+        return clientUIService.getPersonalVisitPage(model);
     }
 
     // Открытие страницы создания заявки для группового посещения (страница выбора типа web_visit_type)
     @GetMapping("/group-visit")
-    public String groupVisit() {
-        return "group_visit";
+    public String groupVisit(Model model) {
+        return clientUIService.getGroupVisitPage(model);
     }
 
     // Сохранение данных с формы в бд (страница личной заявки web_request_one и групповая web_request_many)
