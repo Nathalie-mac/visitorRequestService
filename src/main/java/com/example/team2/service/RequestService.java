@@ -39,7 +39,7 @@ public class RequestService {
         //Информация для пропуска
         request.setRequestStartDate(appointmentRequestResponseDTO.getStartApplicationPeriod());
         request.setRequestStartDate(appointmentRequestResponseDTO.getEndApplicationPeriod());
-        request.setPurpose(AppointmentPurpose.valueOf(appointmentRequestResponseDTO.getPurposeVisit()));
+        request.setPurpose(AppointmentPurpose.BUSINESS.getEnum(appointmentRequestResponseDTO.getPurposeVisit()));
 
         //Принимающая сторона
         Department department = departmentService.findById(appointmentRequestResponseDTO.getDepartment());
