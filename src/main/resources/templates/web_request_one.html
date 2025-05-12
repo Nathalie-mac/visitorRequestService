@@ -58,7 +58,11 @@
 <div class="form-container">
   <h2 class="form-header">Форма записи на посещение мероприятия</h2>
 
-  <form th:action="@{/submit-visit}" method="post" enctype="multipart/form-data" th:object="${appointmentRequest}">
+  <form th:action="@{/client/personal-visit}" method="post" enctype="multipart/form-data" th:object="${appointmentRequest}">
+
+    <input type="hidden" th:field="*{userId}" th:value="${appointmentRequest.userId}">
+
+
     <!-- Информация для пропуска -->
     <div class="form-section">
       <h5 class="section-title">Информация для пропуска</h5>
@@ -85,6 +89,8 @@
       </div>
     </div>
 
+
+
     <!-- Принимающая сторона -->
     <div class="form-section">
       <h5 class="section-title">Принимающая сторона</h5>
@@ -102,13 +108,13 @@
       </div>
       <div class="form-group">
         <label for="workerName" class="required-field">ФИО сотрудника</label>
-        <select class="form-control" id="workerName" th:field="*{workerName}" required>
+        <select class="form-control" id="workerName" name="workerName" required disabled>
           <option value="">-- Сначала выберите подразделение --</option>
         </select>
       </div>
     </div>
 
-    <!-- Информация о посетителе (простая форма для одного посетителя) -->
+    <!-- Информация о посетителе -->
     <div class="form-section">
       <h5 class="section-title">Информация о посетителе</h5>
       <div class="row">
@@ -116,21 +122,21 @@
           <div class="form-group">
             <label for="lastName" class="required-field">Фамилия</label>
             <input type="text" class="form-control" id="lastName"
-                   name="visitorLastName" th:value="${visitor.lastName}" required>
+                   th:field="*{visitor.lastName}" required>
           </div>
         </div>
         <div class="col-md-4">
           <div class="form-group">
             <label for="firstName" class="required-field">Имя</label>
             <input type="text" class="form-control" id="firstName"
-                   name="visitorFirstName" th:value="${visitor.firstName}" required>
+                   th:field="*{visitor.firstName}" required>
           </div>
         </div>
         <div class="col-md-4">
           <div class="form-group">
             <label for="middleName">Отчество</label>
             <input type="text" class="form-control" id="middleName"
-                   name="visitorMiddleName" th:value="${visitor.middleName}">
+                   th:field="*{visitor.middleName}">
           </div>
         </div>
       </div>
@@ -139,47 +145,47 @@
           <div class="form-group">
             <label for="phone">Телефон</label>
             <input type="tel" class="form-control" id="phone"
-                   name="visitorPhone" th:value="${visitor.phoneNumber}">
+                   th:field="*{visitor.phoneNumber}">
           </div>
         </div>
         <div class="col-md-6">
           <div class="form-group">
             <label for="email">E-mail</label>
             <input type="email" class="form-control" id="email"
-                   name="visitorEmail" th:value="${visitor.email}">
+                   th:field="*{visitor.email}">
           </div>
         </div>
       </div>
       <div class="form-group">
         <label for="organization">Организация</label>
         <input type="text" class="form-control" id="organization"
-               name="visitorOrganization" th:value="${visitor.organizationName}">
+               th:field="*{visitor.organizationName}">
       </div>
       <div class="form-group">
         <label for="notes">Примечание</label>
         <textarea class="form-control" id="notes" rows="2"
-                  name="visitorNote" th:text="${visitor.note}"></textarea>
+                  th:field="*{visitor.note}"></textarea>
       </div>
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
             <label for="birthDate">Дата рождения</label>
             <input type="date" class="form-control" id="birthDate"
-                   name="visitorBirthDate" th:value="${visitor.birthDate}">
+                   th:field="*{visitor.birthDate}">
           </div>
         </div>
         <div class="col-md-4">
           <div class="form-group">
             <label for="passportSeries">Серия паспорта</label>
             <input type="text" class="form-control" id="passportSeries"
-                   name="visitorPassportSeries" th:value="${visitor.passportSeries}">
+                   th:field="*{visitor.passportSeries}">
           </div>
         </div>
         <div class="col-md-4">
           <div class="form-group">
             <label for="passportNumber">Номер паспорта</label>
             <input type="text" class="form-control" id="passportNumber"
-                   name="visitorPassportNumber" th:value="${visitor.passportNumber}">
+                   th:field="*{visitor.passportNumber}">
           </div>
         </div>
       </div>
@@ -211,34 +217,105 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+  // Инициализация данных при загрузке страницы
+  document.addEventListener('DOMContentLoaded', function() {
+    // Получаем данные о подразделениях из Thymeleaf
+    const departments = JSON.parse('[(${departmentsJson})]');
+
+    // Сохраняем данные в глобальной переменной
+    window.departmentsData = departments;
+
+    // Если уже выбрано подразделение, обновляем список рабочих
+    const departmentSelect = document.getElementById('department');
+    if (departmentSelect.value) {
+      updateWorkers(departmentSelect);
+    }
+  });
+
   function updateWorkers(select) {
-      const departmentId = select.value;
-      const workerSelect = document.getElementById('workerName');
+    const departmentId = select.value;
+    const workerSelect = document.getElementById('workerName');
 
-      workerSelect.innerHTML = '<option value="">-- Выберите сотрудника --</option>';
+    // Очищаем список и устанавливаем дефолтный вариант
+    workerSelect.innerHTML = '<option value="">-- Выберите сотрудника --</option>';
 
-      if (!departmentId) return;
+    if (!departmentId) {
+      workerSelect.disabled = true;
+      return;
+    }
 
-      const departments = JSON.parse(document.getElementById('departmentsData').textContent);
-      const selectedDept = departments.find(dept => dept.id == departmentId);
+    // Находим выбранное подразделение
+    const selectedDept = departmentsData.find(dept => dept.id == departmentId);
 
-      if (selectedDept && selectedDept.departmentWorkers) {
-          Object.entries(selectedDept.departmentWorkers).forEach(([name, id]) => {
-              const option = document.createElement('option');
-              option.value = id;
-              option.textContent = name;
-              workerSelect.appendChild(option);
-          });
-      }
+    if (selectedDept && selectedDept.departmentWorkers) {
+      // Активируем select и добавляем варианты
+      workerSelect.disabled = false;
+
+      // Сортируем имена сотрудников по алфавиту
+      const sortedWorkers = Object.entries(selectedDept.departmentWorkers)
+              .sort((a, b) => a[0].localeCompare(b[0]));
+
+      // Добавляем варианты в select
+      sortedWorkers.forEach(([name, id]) => {
+        const option = document.createElement('option');
+        option.value = id;  // Используем ID сотрудника как значение
+        option.textContent = name;
+        workerSelect.appendChild(option);
+      });
+    } else {
+      workerSelect.disabled = true;
+    }
   }
 
+</script>
+<script th:inline="javascript">
+  /*<![CDATA[*/
+  // Получаем данные о подразделениях из Thymeleaf
+  const departmentsData = /*[[${departments}]]*/ [];
+
+  function updateWorkers(select) {
+    const departmentId = select.value;
+    const workerSelect = document.getElementById('workerName');
+
+    // Очищаем список и устанавливаем дефолтный вариант
+    workerSelect.innerHTML = '<option value="">-- Выберите сотрудника --</option>';
+
+    if (!departmentId) {
+      workerSelect.disabled = true;
+      return;
+    }
+
+    // Находим выбранное подразделение
+    const selectedDept = departmentsData.find(dept => dept.id == departmentId);
+
+    if (selectedDept && selectedDept.departmentWorkers) {
+      // Активируем select и добавляем варианты
+      workerSelect.disabled = false;
+
+      // Сортируем имена сотрудников по алфавиту
+      const sortedWorkers = Object.entries(selectedDept.departmentWorkers)
+              .sort((a, b) => a[0].localeCompare(b[0]));
+
+      // Добавляем варианты в select
+      sortedWorkers.forEach(([name, id]) => {
+        const option = document.createElement('option');
+        option.value = id;
+        option.textContent = name;
+        workerSelect.appendChild(option);
+      });
+    } else {
+      workerSelect.disabled = true;
+    }
+  }
+
+  // Инициализация при загрузке страницы
   document.addEventListener('DOMContentLoaded', function() {
-      const departmentsData = document.createElement('div');
-      departmentsData.id = 'departmentsData';
-      departmentsData.style.display = 'none';
-      departmentsData.textContent = JSON.stringify(/*[[${appointmentRequestData.departments}]]*/ []);
-      document.body.appendChild(departmentsData);
+    const departmentSelect = document.getElementById('department');
+    if (departmentSelect.value) {
+      updateWorkers(departmentSelect);
+    }
   });
+  /*]]>*/
 </script>
 </body>
 </html>

@@ -1,13 +1,13 @@
 package com.example.team2.controller;
 
+import com.example.team2.dto.VisitorDTO;
+import com.example.team2.dto.hotass.AppointmentRequestResponseHelpDTO;
+import com.example.team2.dto.response.AppointmentRequestResponseDTO;
 import com.example.team2.uiservice.ClientUIService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -32,19 +32,19 @@ public class ClientController {
 
     // Открытие страницы создания заявки для личного посещения (страница выбора типа web_visit_type)
     @GetMapping("/personal-visit")
-    public String personalVisit(Model model) {
-        return clientUIService.getPersonalVisitPage(model);
+    public String personalVisit(Model model, @RequestHeader("Cookie") String cookieHeader) {
+        return clientUIService.getPersonalVisitPage(model, cookieHeader);
     }
 
     // Открытие страницы создания заявки для группового посещения (страница выбора типа web_visit_type)
     @GetMapping("/group-visit")
-    public String groupVisit(Model model) {
-        return clientUIService.getGroupVisitPage(model);
+    public String groupVisit(Model model, @RequestHeader("Cookie") String cookieHeader) {
+        return clientUIService.getGroupVisitPage(model, cookieHeader);
     }
 
     // Сохранение данных с формы в бд (страница личной заявки web_request_one и групповая web_request_many)
-    @PostMapping("/new-request")
-    public String handleVisitSubmission(){
+    @PostMapping("/personal-visit")
+    public String handlePersonalVisitSubmission(@ModelAttribute("appointmentRequest") AppointmentRequestResponseHelpDTO responseDTO){
         // 1. Обработка данных формы (web_request_one)
         // 2. Обработка загруженных файлов:
         //    - photo (фото посетителя)
@@ -52,7 +52,18 @@ public class ClientController {
             // Сохранение данных и файлов
             // visitService.saveVisit(appointmentRequest, photo, documents);
 
-        return "redirect:/web_request_table";
+        return clientUIService.createNewPersonalRequest(responseDTO);
+    }
+    @PostMapping("/group-visit")
+    public String handleGroupVisitSubmission(@ModelAttribute("appointmentRequest") AppointmentRequestResponseDTO responseDTO){
+        // 1. Обработка данных формы (web_request_one)
+        // 2. Обработка загруженных файлов:
+        //    - photo (фото посетителя)
+        //    - documents (дополнительные документы)
+        // Сохранение данных и файлов
+        // visitService.saveVisit(appointmentRequest, photo, documents);
+
+        return clientUIService.createNewGroupRequest(responseDTO);
     }
 
 }

@@ -83,7 +83,10 @@
 <div class="form-container">
     <h2 class="form-header">Форма записи на посещение мероприятия</h2>
 
-    <form th:action="@{/submit-visit}" method="post" enctype="multipart/form-data" th:object="${appointmentRequest}">
+    <form th:action="@{/client/group-visit}" method="post" enctype="multipart/form-data" th:object="${appointmentRequest}">
+
+        <input type="hidden" th:field="*{userId}" th:value="${appointmentRequest.userId}">
+
         <!-- Информация для пропуска -->
         <div class="form-section">
             <h5 class="section-title">Информация для пропуска</h5>
@@ -147,14 +150,14 @@
                     <div class="form-group">
                         <label for="lastName" class="required-field">Фамилия</label>
                         <input type="text" class="form-control" id="lastName"
-                               th:field="*{visitors[0].lastName}" required>
+                               th:field="*{visitors[0].lastName}" >
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="firstName" class="required-field">Имя</label>
                         <input type="text" class="form-control" id="firstName"
-                               th:field="*{visitors[0].firstName}" required>
+                               th:field="*{visitors[0].firstName}" >
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -381,6 +384,55 @@
             document.getElementById('visitorsSection').style.display = 'block';
         }
     });
+</script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    // Получаем данные о подразделениях из Thymeleaf
+    const departmentsData = /*[[${departments}]]*/ [];
+
+    function updateWorkers(select) {
+        const departmentId = select.value;
+        const workerSelect = document.getElementById('workerName');
+
+        // Очищаем список и устанавливаем дефолтный вариант
+        workerSelect.innerHTML = '<option value="">-- Выберите сотрудника --</option>';
+
+        if (!departmentId) {
+            workerSelect.disabled = true;
+            return;
+        }
+
+        // Находим выбранное подразделение
+        const selectedDept = departmentsData.find(dept => dept.id == departmentId);
+
+        if (selectedDept && selectedDept.departmentWorkers) {
+            // Активируем select и добавляем варианты
+            workerSelect.disabled = false;
+
+            // Сортируем имена сотрудников по алфавиту
+            const sortedWorkers = Object.entries(selectedDept.departmentWorkers)
+                .sort((a, b) => a[0].localeCompare(b[0]));
+
+            // Добавляем варианты в select
+            sortedWorkers.forEach(([name, id]) => {
+                const option = document.createElement('option');
+                option.value = id;
+                option.textContent = name;
+                workerSelect.appendChild(option);
+            });
+        } else {
+            workerSelect.disabled = true;
+        }
+    }
+
+    // Инициализация при загрузке страницы
+    document.addEventListener('DOMContentLoaded', function() {
+        const departmentSelect = document.getElementById('department');
+        if (departmentSelect.value) {
+            updateWorkers(departmentSelect);
+        }
+    });
+    /*]]>*/
 </script>
 </body>
 </html>
