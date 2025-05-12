@@ -57,6 +57,18 @@ public class TestDataFiller {
         request.setUser(user);
         requestService.save(request);
 
+        //Запрос на мероприятие
+        Request request2 = new Request();
+        request2.setAppointmentType(AppointmentType.PUBLIC);
+        request2.setRequestStartDate(LocalDate.parse("2025-01-01"));
+        request2.setRequestEndDate(LocalDate.parse("2025-01-10"));
+        request2.setPurpose(AppointmentPurpose.BUSINESS);
+        request2.setStatus(StatusType.PENDING);
+        request2.setDepartment(department);
+        request2.setWorker(departmentWorker);
+        request2.setUser(user);
+        requestService.save(request2);
+
         //Пользователь
         Person person = new Person();
         person.setFirstName("Имя");
@@ -72,6 +84,23 @@ public class TestDataFiller {
         person.setPhoto(1);
         person.setBlackList(false);
         person.setRequest(request);
+        person.setRequest(request2);
+        personService.save(person);
+
+        Person person2 = new Person();
+        person2.setFirstName("Имя2");
+        person2.setMiddleName("Отчество2");
+        person2.setLastName("Фамилия2");
+        person2.setPhone("+7(800)555-35-35");
+        person2.setEmail("test2@gmail.com");
+        person2.setNote("Тестовая записка");
+        person2.setOrganization("Тестовая организация");
+        person2.setBirthDate(LocalDate.parse("1992-10-23"));
+        person2.setPassportSery("1224");
+        person2.setPassportNumber("566890");
+        person2.setPhoto(2);
+        person2.setBlackList(false);
+        person2.setRequest(request2);
         personService.save(person);
 
         //PDF паспорта

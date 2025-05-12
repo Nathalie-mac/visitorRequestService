@@ -21,15 +21,15 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
 
     List<Request> findByUser(User user);
 
-    List<String> findDistinctStatusBy();
+    //List<String> findDistinctStatusBy();
 
-    List<String> findDistinctAppoinmentTypeBy();
+    //List<String> findDistinctAppoinmentTypeBy();
 
-    StatusType findStatusById(long id);
+    //StatusType findStatusById(long id);
 
-    RejectReason findRejectReasonById(long id);
+    //RejectReason findRejectReasonById(long id);
 
-    LocalDate findRequestDateById(long id);
+    //LocalDate findRequestDateById(long id);
 
-    LocalTime findRequestTimeById(long id);
+    //LocalTime findRequestTimeById(long id);
 }

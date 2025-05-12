@@ -27,6 +27,7 @@ public class PassportDataService {
     }
 
     public List<Integer> findPassportIdByRequest(Request request) {
-        return passportDataRepository.findPassportIdByRequest(request);
+        List<PassportData> passportData = passportDataRepository.findPassportIdByRequest(request);
+        return passportData.stream().map(PassportData::getPassportId).toList();
     }
 }

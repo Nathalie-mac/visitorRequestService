@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface PassportDataRepository extends JpaRepository<PassportData, Long> {
-    List<Integer> findPassportIdByRequest(Request request);
+    List<PassportData> findPassportIdByRequest(Request request);
 }
