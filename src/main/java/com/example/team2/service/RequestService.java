@@ -4,6 +4,7 @@ import com.example.team2.dto.request.RequestsTableDTO;
 import com.example.team2.dto.request.RowRequestsDTO;
 import com.example.team2.dto.StaticRequestDTO;
 import com.example.team2.dto.response.ManagerConfirmationResponseDTO;
+import com.example.team2.exceptions.service.ErrorInBDException;
 import com.example.team2.mapper.MapperRequest;
 import com.example.team2.model.*;
 import com.example.team2.dto.response.AppointmentRequestResponseDTO;
@@ -32,7 +33,7 @@ public class RequestService {
         return requestRepository.save(request);
     }
 
-    public Request createRequest(AppointmentRequestResponseDTO appointmentRequestResponseDTO, AppointmentType appointmentType) {
+    public Request createRequest(AppointmentRequestResponseDTO appointmentRequestResponseDTO, AppointmentType appointmentType) throws ErrorInBDException {
         Request request = new Request();
         request.setAppointmentType(appointmentType);
 

@@ -17,6 +17,7 @@ public class GuardOfficerSetUpTimeRequestDTO {
 
     @NotNull
     private boolean inBlackList;
+    @NotNull
     private StaticRequestDTO requestDTO;
     private LocalTime enterTime;            // если есть оно отображается, если нет, то нет
     private LocalTime exitTime;             // если есть оно отображается, если нет, то нет

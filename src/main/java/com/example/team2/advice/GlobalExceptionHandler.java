@@ -4,6 +4,7 @@ import com.example.team2.exceptions.auth.DecodeCredentialsException;
 import com.example.team2.exceptions.auth.InvalidBasicAuthorizationHeaderException;
 import com.example.team2.exceptions.data.ExistingUserWithThatUsernameException;
 import com.example.team2.exceptions.data.UserNotFoundException;
+import com.example.team2.exceptions.service.ErrorDTOPackingException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import org.springframework.http.HttpStatus;
@@ -126,7 +127,7 @@ public class GlobalExceptionHandler {
         return "error_login";
     }
 
-    //
+    //Сервисы: с фронта пришло что-то недопустимо пустое
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public String handleMethodArgumentNotValidException(
             MethodArgumentNotValidException ex, WebRequest request, Model model) {
@@ -135,6 +136,22 @@ public class GlobalExceptionHandler {
         errorResponse.setTimestamp(LocalDateTime.now());
         errorResponse.setStatus(HttpStatus.BAD_REQUEST.value());
         errorResponse.setError("Пожалуйста, заполните все обязательные поля, прежде чем нажать на кнопочку!");
+        errorResponse.setMessage(ex.getMessage());
+        errorResponse.setPath(request.getDescription(false));
+
+        model.addAttribute("errorMessage", errorResponse.getError());
+        model.addAttribute("status", errorResponse.getStatus());
+
+        return "error_login";
+    }
+
+    //Сервисы: на беке не упаковалось DTO
+    @ExceptionHandler(ErrorDTOPackingException.class)
+    public String handleErrorDTOPackingException(Exception ex, WebRequest request, Model model) {
+        CustomErrorResponse errorResponse = new CustomErrorResponse();
+        errorResponse.setTimestamp(LocalDateTime.now());
+        errorResponse.setStatus(HttpStatus.BAD_REQUEST.value());
+        errorResponse.setError("Упс! На беке произошла ошибка. Попробуйте еще раз через 5 минут!");
         errorResponse.setMessage(ex.getMessage());
         errorResponse.setPath(request.getDescription(false));
 

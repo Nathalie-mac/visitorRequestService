@@ -3,10 +3,12 @@ package com.example.team2.service;
 import com.example.team2.dto.request.AppointmentRequestRequestDTO;
 import com.example.team2.dto.request.SubmittedRequestRowDTO;
 import com.example.team2.dto.request.SubmittedRequestTableDTO;
+import com.example.team2.exceptions.service.ErrorInBDException;
 import com.example.team2.model.*;
 import com.example.team2.dto.response.AppointmentRequestResponseDTO;
 import com.example.team2.dto.VisitorDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -24,42 +26,53 @@ public class AppointmentRequestService {
 
 
     public Request createIndividualAppointment(AppointmentRequestResponseDTO signUpRequestResponseDTO) {
-        Request request = requestService.createRequest(signUpRequestResponseDTO, AppointmentType.INDIVIDUAL);
+        Request request = null;
+        try {
+            request = requestService.createRequest(signUpRequestResponseDTO, AppointmentType.INDIVIDUAL);
 
-        //Информация о посетителе
-        List<VisitorDTO> visitorsDTO = signUpRequestResponseDTO.getVisitors();
-        Person person = personService.createPerson(visitorsDTO.get(0), request);
+            //Информация о посетителе
+            List<VisitorDTO> visitorsDTO = signUpRequestResponseDTO.getVisitors();
+            Person person = personService.createPerson(visitorsDTO.get(0), request);
 
-        //PDF паспорта
-        List<Integer> pDFsId = signUpRequestResponseDTO.getDocs();
-        for (Integer pDFId : pDFsId) {
-            //PassportData passportData = passportDataService.createPassportData(pDFId, request);
-            passportDataService.createPassportData(pDFId, request);
+            //PDF паспорта
+            List<Integer> pDFsId = signUpRequestResponseDTO.getDocs();
+            for (Integer pDFId : pDFsId) {
+                //PassportData passportData = passportDataService.createPassportData(pDFId, request);
+                passportDataService.createPassportData(pDFId, request);
+            }
+        } catch (DataIntegrityViolationException e) {
+            throw new ErrorInBDException("Упс! Не получилось сохранить вашу заявочку. Попробуйте через 5 минут!");
         }
 
         return request;
     }
 
     public Request createPublicAppointment(AppointmentRequestResponseDTO signUpRequestResponseDTO) {
-        Request request = requestService.createRequest(signUpRequestResponseDTO, AppointmentType.PUBLIC);
+        Request request = null;
+        try {
+            request = requestService.createRequest(signUpRequestResponseDTO, AppointmentType.PUBLIC);
 
-        //Информация о посетителе
-        List<VisitorDTO> visitorsDTO = signUpRequestResponseDTO.getVisitors();
-        for (VisitorDTO visitorDTO : visitorsDTO) {
-            //Person person = personService.createPerson(visitorDTO, request);
-            personService.createPerson(visitorDTO, request);
-        }
+            //Информация о посетителе
+            List<VisitorDTO> visitorsDTO = signUpRequestResponseDTO.getVisitors();
+            for (VisitorDTO visitorDTO : visitorsDTO) {
+                //Person person = personService.createPerson(visitorDTO, request);
+                personService.createPerson(visitorDTO, request);
+            }
 
-        //PDF паспортов
-        List<Integer> pDFsId = signUpRequestResponseDTO.getDocs();
-        for (Integer pDFId : pDFsId) {
-            //PassportData passportData = passportDataService.createPassportData(pDFId, request);
-            passportDataService.createPassportData(pDFId, request);
+            //PDF паспортов
+            List<Integer> pDFsId = signUpRequestResponseDTO.getDocs();
+            for (Integer pDFId : pDFsId) {
+                //PassportData passportData = passportDataService.createPassportData(pDFId, request);
+                passportDataService.createPassportData(pDFId, request);
+            }
+        } catch (DataIntegrityViolationException e) {
+            throw new ErrorInBDException("Упс! Не получилось сохранить вашу заявочку. Попробуйте через 5 минут!");
         }
 
         return request;
     }
 
+    //TODO: department name приходит null пофиксить!
     public AppointmentRequestRequestDTO getPurposeDepartmentLists() {
         AppointmentRequestRequestDTO signUpRequestRequestDTO = new AppointmentRequestRequestDTO();
 

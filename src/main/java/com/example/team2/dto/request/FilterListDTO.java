@@ -1,5 +1,6 @@
 package com.example.team2.dto.request;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,6 +11,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Valid
 //на фронт
 //списки для фильтров на страницах менеджера и охранника
 public class FilterListDTO {

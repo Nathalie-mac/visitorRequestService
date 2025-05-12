@@ -7,6 +7,7 @@ import com.example.team2.dto.VisitorDTO;
 import com.example.team2.repository.PersonRepository;
 import com.example.team2.repository.RequestRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +24,7 @@ public class PersonService {
         return personRepository.save(person);
     }
 
-    public Person createPerson(VisitorDTO visitorDTO, Request request) {
+    public Person createPerson(VisitorDTO visitorDTO, Request request) throws DataIntegrityViolationException {
         Person person = new Person();
 
         person.setLastName(visitorDTO.getLastName());
