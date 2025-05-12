@@ -108,29 +108,29 @@
       </div>
     </div>
 
-    <!-- Информация о посетителе -->
-    <div class="form-section" th:each="visitor, iterStat : *{visitors}" th:if="${iterStat.index == 0}">
+    <!-- Информация о посетителе (простая форма для одного посетителя) -->
+    <div class="form-section">
       <h5 class="section-title">Информация о посетителе</h5>
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
             <label for="lastName" class="required-field">Фамилия</label>
             <input type="text" class="form-control" id="lastName"
-                   th:field="*{visitors[0].lastName}" required>
+                   name="visitorLastName" th:value="${appointmentRequest.visitorLastName}" required>
           </div>
         </div>
         <div class="col-md-4">
           <div class="form-group">
             <label for="firstName" class="required-field">Имя</label>
             <input type="text" class="form-control" id="firstName"
-                   th:field="*{visitors[0].firstName}" required>
+                   name="visitorFirstName" th:value="${appointmentRequest.visitorFirstName}" required>
           </div>
         </div>
         <div class="col-md-4">
           <div class="form-group">
             <label for="middleName">Отчество</label>
             <input type="text" class="form-control" id="middleName"
-                   th:field="*{visitors[0].middleName}">
+                   name="visitorMiddleName" th:value="${appointmentRequest.visitorMiddleName}">
           </div>
         </div>
       </div>
@@ -139,53 +139,53 @@
           <div class="form-group">
             <label for="phone">Телефон</label>
             <input type="tel" class="form-control" id="phone"
-                   th:field="*{visitors[0].phoneNumber}">
+                   name="visitorPhone" th:value="${appointmentRequest.visitorPhone}">
           </div>
         </div>
         <div class="col-md-6">
           <div class="form-group">
             <label for="email">E-mail</label>
             <input type="email" class="form-control" id="email"
-                   th:field="*{visitors[0].email}">
+                   name="visitorEmail" th:value="${appointmentRequest.visitorEmail}">
           </div>
         </div>
       </div>
       <div class="form-group">
         <label for="organization">Организация</label>
         <input type="text" class="form-control" id="organization"
-               th:field="*{visitors[0].organizationName}">
+               name="visitorOrganization" th:value="${appointmentRequest.visitorOrganization}">
       </div>
       <div class="form-group">
         <label for="notes">Примечание</label>
         <textarea class="form-control" id="notes" rows="2"
-                  th:field="*{visitors[0].note}"></textarea>
+                  name="visitorNote" th:text="${appointmentRequest.visitorNote}"></textarea>
       </div>
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
             <label for="birthDate">Дата рождения</label>
             <input type="date" class="form-control" id="birthDate"
-                   th:field="*{visitors[0].birthDate}">
+                   name="visitorBirthDate" th:value="${appointmentRequest.visitorBirthDate}">
           </div>
         </div>
         <div class="col-md-4">
           <div class="form-group">
             <label for="passportSeries">Серия паспорта</label>
             <input type="text" class="form-control" id="passportSeries"
-                   th:field="*{visitors[0].passportSeries}">
+                   name="visitorPassportSeries" th:value="${appointmentRequest.visitorPassportSeries}">
           </div>
         </div>
         <div class="col-md-4">
           <div class="form-group">
             <label for="passportNumber">Номер паспорта</label>
             <input type="text" class="form-control" id="passportNumber"
-                   th:field="*{visitors[0].passportNumber}">
+                   name="visitorPassportNumber" th:value="${appointmentRequest.visitorPassportNumber}">
           </div>
         </div>
       </div>
       <div class="form-group">
         <label for="photo">Добавить фото</label>
-        <input type="file" class="form-control" id="photo" name="photo" accept="image/*">
+        <input type="file" class="form-control" id="photo" name="visitorPhoto" accept="image/*">
         <small class="form-text text-muted">
           Допустимые форматы: JPG, PNG, GIF (макс. 5MB)
         </small>
@@ -211,24 +211,18 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-  // Функция для обновления списка сотрудников при выборе подразделения
   function updateWorkers(select) {
       const departmentId = select.value;
       const workerSelect = document.getElementById('workerName');
 
-      // Очищаем текущие варианты
       workerSelect.innerHTML = '<option value="">-- Выберите сотрудника --</option>';
 
       if (!departmentId) return;
 
-      // Получаем данные о подразделениях из Thymeleaf
       const departments = JSON.parse(document.getElementById('departmentsData').textContent);
-
-      // Находим выбранное подразделение
       const selectedDept = departments.find(dept => dept.id == departmentId);
 
       if (selectedDept && selectedDept.departmentWorkers) {
-          // Добавляем сотрудников из выбранного подразделения
           Object.entries(selectedDept.departmentWorkers).forEach(([name, id]) => {
               const option = document.createElement('option');
               option.value = id;
@@ -238,9 +232,7 @@
       }
   }
 
-  // Инициализация данных при загрузке страницы
   document.addEventListener('DOMContentLoaded', function() {
-      // Сохраняем данные о подразделениях в скрытом элементе
       const departmentsData = document.createElement('div');
       departmentsData.id = 'departmentsData';
       departmentsData.style.display = 'none';

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class GuardOfficerController {
 
     // Отображение страницы заявок и фильтров для охранника (страница guard_request_table)
-    @GetMapping
+    @GetMapping("/main")
     public String showApprovedRequests(Model model) {
         // Заполняем фильтры
         // Заполняем таблицу заявок
