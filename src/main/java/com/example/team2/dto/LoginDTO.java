@@ -1,5 +1,6 @@
 package com.example.team2.dto;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Valid
 //на и с фронта
 //данные для входа и регистрации
 public class LoginDTO {

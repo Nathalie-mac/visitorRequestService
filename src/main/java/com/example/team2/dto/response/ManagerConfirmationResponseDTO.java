@@ -1,5 +1,6 @@
 package com.example.team2.dto.response;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,6 +12,7 @@ import java.time.LocalTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Valid
 //с фронта
 //данные, которые ввел менеджер, на отклонение/одобрение
 public class ManagerConfirmationResponseDTO {

@@ -69,7 +69,7 @@ public class GlobalExceptionHandler {
         return "error_login";
     }
 
-    //Авторизация юзера:
+    //Авторизация юзера: не используется у елизаветы антипатроновой
     @ExceptionHandler(DecodeCredentialsException.class)
     public ResponseEntity<CustomErrorResponse> handleDecodeCredentialsException(Exception ex, WebRequest request) {
         CustomErrorResponse errorResponse = new CustomErrorResponse();
@@ -82,6 +82,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
+    //Авторизация юзера: не исп
     @ExceptionHandler(InvalidBasicAuthorizationHeaderException.class)
     public ResponseEntity<CustomErrorResponse> handleInvalidBasicAuthorizationHeaderException(Exception ex, WebRequest request) {
         CustomErrorResponse errorResponse = new CustomErrorResponse();
@@ -94,40 +95,52 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
+    //Авторизация юзера: не смаппился json
     @ExceptionHandler(JsonMappingException.class)
-    public ResponseEntity<CustomErrorResponse> handleJsonMappingException(Exception ex, WebRequest request) {
+    public String handleJsonMappingException(Exception ex, WebRequest request, Model model) {
         CustomErrorResponse errorResponse = new CustomErrorResponse();
         errorResponse.setTimestamp(LocalDateTime.now());
         errorResponse.setStatus(HttpStatus.BAD_REQUEST.value());
-        errorResponse.setError("error in json mapping when searching for userId");
+        errorResponse.setError("Не смаппился json при попытке достать вас из БД");
         errorResponse.setMessage(ex.getMessage());
         errorResponse.setPath(request.getDescription(false));
+        model.addAttribute("errorMessage", errorResponse.getError());
+        model.addAttribute("status", errorResponse.getStatus());
 
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        return "error_login";
     }
 
+    //Авторизация юзера: поломался json
     @ExceptionHandler(JsonProcessingException.class)
-    public ResponseEntity<CustomErrorResponse> handleJsonProcessingException(Exception ex, WebRequest request) {
+    public String handleJsonProcessingException(Exception ex, WebRequest request, Model model) {
         CustomErrorResponse errorResponse = new CustomErrorResponse();
         errorResponse.setTimestamp(LocalDateTime.now());
         errorResponse.setStatus(HttpStatus.BAD_REQUEST.value());
-        errorResponse.setError("error in json processing when searching for userId");
+        errorResponse.setError("Поломался json при попытке достать вас из БД");
         errorResponse.setMessage(ex.getMessage());
         errorResponse.setPath(request.getDescription(false));
 
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        model.addAttribute("errorMessage", errorResponse.getError());
+        model.addAttribute("status", errorResponse.getStatus());
+
+        return "error_login";
     }
 
-    //TODO: дописать
+    //
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public String handleMethodArgumentNotValidException(
             MethodArgumentNotValidException ex, WebRequest request, Model model) {
+
         CustomErrorResponse errorResponse = new CustomErrorResponse();
         errorResponse.setTimestamp(LocalDateTime.now());
         errorResponse.setStatus(HttpStatus.BAD_REQUEST.value());
-        model.addAttribute("errorMessage", "some Message");
-        return "error_login";
-        //errorResponse.setError("Недопус");
+        errorResponse.setError("Пожалуйста, заполните все обязательные поля, прежде чем нажать на кнопочку!");
+        errorResponse.setMessage(ex.getMessage());
+        errorResponse.setPath(request.getDescription(false));
 
+        model.addAttribute("errorMessage", errorResponse.getError());
+        model.addAttribute("status", errorResponse.getStatus());
+
+        return "error_login";
     }
 }
