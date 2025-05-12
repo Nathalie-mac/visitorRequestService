@@ -117,6 +117,7 @@
     <form th:action="@{/manager/request}" method="post" th:object="${responseDTO}">
         <input type="hidden" th:field="*{idRequest}" th:value="${managerConfirmation.requestDTO.idRequest}">
 
+
         <div class="form-group">
             <label class="info-label">Статус заявки</label>
             <select class="form-control" th:field="*{status}" required id="statusSelect"

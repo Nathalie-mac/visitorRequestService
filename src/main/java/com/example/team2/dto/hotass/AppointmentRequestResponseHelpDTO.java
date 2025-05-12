@@ -1,4 +1,4 @@
-package com.example.team2.dto.response;
+package com.example.team2.dto.hotass;
 
 import com.example.team2.dto.VisitorDTO;
 import jakarta.validation.constraints.NotNull;
@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 //с фронта
 // данные для оформления заявки клиентом
-public class AppointmentRequestResponseDTO {
+public class AppointmentRequestResponseHelpDTO {
 
     @NotNull
     private Long userId;
@@ -35,9 +35,9 @@ public class AppointmentRequestResponseDTO {
     private Long workerName;
 
     @NotNull
-    private List<VisitorDTO> visitors;
+    private VisitorDTO visitor;
 
-//    @NotNull
+    @NotNull
     private List<Integer> docs;
 
 }

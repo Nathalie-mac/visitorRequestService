@@ -38,7 +38,7 @@ public class RequestService {
 
         //Информация для пропуска
         request.setRequestStartDate(appointmentRequestResponseDTO.getStartApplicationPeriod());
-        request.setRequestStartDate(appointmentRequestResponseDTO.getEndApplicationPeriod());
+        request.setRequestEndDate(appointmentRequestResponseDTO.getEndApplicationPeriod());
         request.setPurpose(AppointmentPurpose.BUSINESS.getEnum(appointmentRequestResponseDTO.getPurposeVisit()));
 
         //Принимающая сторона
