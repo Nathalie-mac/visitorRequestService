@@ -96,11 +96,7 @@
 <div class="application-container">
   <div class="application-header">Работа с заявкой</div>
   <div class="section-title">Заявка на индивидуальное посещение</div>
-
-  <form th:action="@{/guardofficer/request}" th:object="${guardOfficerSetUpTimeResponseDTO}" method="post" enctype="multipart/form-data">
-    <input type="hidden" th:field="*{idRequest}" th:value="${guardOfficerSetUpTimeRequestDTO.requestDTO.idRequest}">
-
-<!--    <div class="time-inputs">-->
+  <!--    <div class="time-inputs">-->
 <!--      <div class="form-group">-->
 <!--        <label class="info-label">Время входа на территорию</label>-->
 <!--        <div th:if="${guardOfficerSetUpTimeRequestDTO.enterTime != null}" class="info-display">-->
@@ -125,33 +121,61 @@
 <!--    </div>-->
 
     <div class="time-inputs">
-        <!-- Время входа -->
-      <form th:action = "@{/request/sendexittime}" th:object="${guardOfficerSetUpTimeResponseDTO}" method="post" enctype="multipart/form-data">
+      <form th:action = "@{/guardofficer/{id}/sendexittime(id=${guardOfficerSetUpTimeRequestDTO.requestDTO.idRequest})}" th:object="${guardOfficerSetUpTimeResponseDTO}" method="post" enctype="multipart/form-data">
+        <input type="hidden" th:field="*{idRequest}" th:value="${guardOfficerSetUpTimeRequestDTO.requestDTO.idRequest}">
+        <!-- Время выхода -->
         <div class="form-group">
-          <label class="info-label">Время входа на территорию</label>
+          <label class="info-label">время прихода в хату</label>
 
-          <!-- Если время входа уже установлено — показываем его -->
-          <div th:if="${guardOfficerSetUpTimeRequestDTO.enterTime != null}" class="info-display">
-            <span th:text="${guardOfficerSetUpTimeRequestDTO.enterTime}"></span>
+          <!-- Если время выхода уже установлено — показываем его -->
+          <div th:if="${guardOfficerSetUpTimeRequestDTO.exitTime != null}" class="info-display">
+            <span th:text="${guardOfficerSetUpTimeRequestDTO.exitTime}"></span>
           </div>
 
-          <!-- Если время входа не установлено — показываем input -->
+          <!-- Если время выхода не установлено — показываем input -->
           <input
-                  th:if="${guardOfficerSetUpTimeRequestDTO.enterTime == null}"
+                  th:if="${guardOfficerSetUpTimeRequestDTO.exitTime == null}"
                   type="time"
                   class="form-control"
                   th:field="*{time}"
                   name="time"
           >
 
-          <button type="submit" class="submit-btn" name="action" value="setEnterTime">
-            Сохранить время входа
+          <button type="submit" class="submit-btn" name="action" value="setExitTime" th:disabled="${guardOfficerSetUpTimeRequestDTO.exitTime != null}">
+            Сохранить время выхода
             <i class="fas fa-save"></i>
           </button>
         </div>
       </form>
+        <!-- Время входа -->
+<!--      <form th:action = "@{/guardofficer/{id}/sendentertime(id=${guardOfficerSetUpTimeRequestDTO.requestDTO.idRequest})}" th:object="${guardOfficerSetUpTimeResponseDTO}" method="post" enctype="multipart/form-data">-->
+<!--        <input type="hidden" th:field="*{idRequest}" th:value="${guardOfficerSetUpTimeRequestDTO.requestDTO.idRequest}">-->
+<!--        <div class="form-group">-->
+<!--          <label class="info-label">Время входа на территорию</label>-->
 
-      <form th:action = "@{/request/sendentertime}" th:object="${guardOfficerSetUpTimeResponseDTO}" method="post" enctype="multipart/form-data">
+<!--          &lt;!&ndash; Если время входа уже установлено — показываем его &ndash;&gt;-->
+<!--          <div th:if="${guardOfficerSetUpTimeRequestDTO.enterTime != null}" class="info-display">-->
+<!--            <span th:text="${guardOfficerSetUpTimeRequestDTO.enterTime}"></span>-->
+<!--          </div>-->
+
+<!--          &lt;!&ndash; Если время входа не установлено — показываем input &ndash;&gt;-->
+<!--          <input-->
+<!--                  th:if="${guardOfficerSetUpTimeRequestDTO.enterTime == null}"-->
+<!--                  type="time"-->
+<!--                  class="form-control"-->
+<!--                  th:field="*{time}"-->
+<!--                  name="time"-->
+<!--          >-->
+
+<!--          <button type="submit" class="submit-btn" name="action" value="setEnterTime" th:disabled="${guardOfficerSetUpTimeRequestDTO.enterTime != null}">-->
+<!--            Сохранить время входа-->
+<!--            <i class="fas fa-save"></i>-->
+<!--          </button>-->
+<!--        </div>-->
+<!--      </form>-->
+
+      <form th:action = "@{/guardofficer/{id}/sendexittime(id=${guardOfficerSetUpTimeRequestDTO.requestDTO.idRequest})}" th:object="${guardOfficerSetUpTimeResponseDTO}" method="post" enctype="multipart/form-data">
+        <input type="hidden" th:field="*{idRequest}" th:value="${guardOfficerSetUpTimeRequestDTO.requestDTO.idRequest}">
         <!-- Время выхода -->
         <div class="form-group">
           <label class="info-label">Время ухода с территории</label>
@@ -170,7 +194,7 @@
                   name="time"
           >
 
-          <button type="submit" class="submit-btn" name="action" value="setExitTime">
+          <button type="submit" class="submit-btn" name="action" value="setExitTime" th:disabled="${guardOfficerSetUpTimeRequestDTO.exitTime != null}">
             Сохранить время выхода
             <i class="fas fa-save"></i>
           </button>
@@ -290,7 +314,6 @@
         </li>
       </ul>
     </div>
-  </form>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

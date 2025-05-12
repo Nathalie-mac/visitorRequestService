@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/guardofficer")
@@ -28,16 +29,22 @@ public class GuardOfficerController {
     }
 
     // сохранение времени входа и выхода
-    @PostMapping("/request/sendexittime")
-    public void handleExitTime(@ModelAttribute("guardOfficerSetUpTimeResponseDTO") GuardOfficerSetUpTimeResponseDTO guardOfficerSetUpTimeResponseDTO){
+    @PostMapping("/{id}/sendexittime")
+    public String handleExitTime(@PathVariable Long id,
+                                 @ModelAttribute("guardOfficerSetUpTimeResponseDTO") GuardOfficerSetUpTimeResponseDTO guardOfficerSetUpTimeResponseDTO,
+                                 RedirectAttributes redirectAttributes){
         guardOfficerUIService.setExitTime(guardOfficerSetUpTimeResponseDTO);
-        //return "redirect:/guard_request_table";
+        redirectAttributes.addAttribute("id", id); // Сохраняем ID для редиректа
+        return "redirect:/guardofficer/request";
     }
 
-    @PostMapping("/request/sendentertime")
-    public void handleEntryTime(@ModelAttribute("guardOfficerSetUpTimeResponseDTO") GuardOfficerSetUpTimeResponseDTO guardOfficerSetUpTimeResponseDTO){
-        guardOfficerUIService.setEntryTime(guardOfficerSetUpTimeResponseDTO);
-        //return "redirect:/guard_request_table";
+    @PostMapping("/{id}/sendentertime")
+    public String handleEnterTime(@PathVariable Long id,
+                                 @ModelAttribute("guardOfficerSetUpTimeResponseDTO") GuardOfficerSetUpTimeResponseDTO guardOfficerSetUpTimeResponseDTO,
+                                 RedirectAttributes redirectAttributes){
+        guardOfficerUIService.setExitTime(guardOfficerSetUpTimeResponseDTO);
+        redirectAttributes.addAttribute("id", id); // Сохраняем ID для редиректа
+        return "redirect:/guardofficer/request";
     }
 
 }
