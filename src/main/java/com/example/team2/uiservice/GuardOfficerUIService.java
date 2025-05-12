@@ -4,6 +4,7 @@ import com.example.team2.dto.request.FilterListDTO;
 import com.example.team2.dto.request.GuardOfficerSetUpTimeRequestDTO;
 import com.example.team2.dto.request.RequestsTableDTO;
 import com.example.team2.dto.response.GuardOfficerSetUpTimeResponseDTO;
+import com.example.team2.model.Request;
 import com.example.team2.service.GuardRequestService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,11 +30,27 @@ public class GuardOfficerUIService {
         guardOfficerSetUpTimeResponseDTO.setIdRequest(guardOfficerSetUpTimeRequestDTO.getRequestDTO().getIdRequest());
 
         model.addAttribute("guardOfficerSetUpTimeRequestDTO", guardOfficerSetUpTimeRequestDTO);
+        model.addAttribute("guardOfficerSetUpTimeResponseDTO", guardOfficerSetUpTimeResponseDTO);
 
         if (guardOfficerSetUpTimeRequestDTO.getRequestDTO().getVisitors().size() > 1) {
             return "guard_request_many";
         } else {
             return "guard_request_one";
         }
+    }
+
+    public String setEntryExitTime(GuardOfficerSetUpTimeResponseDTO guardOfficerSetUpTimeResponseDTO) {
+        guardRequestService.setGuardOfficerEnterTime(guardOfficerSetUpTimeResponseDTO);
+        //guardRequestService.setGuardOfficerExitTime(guardOfficerSetUpTimeResponseDTO);
+        //GuardOfficerSetUpTimeRequestDTO guardOfficerSetUpTimeRequestDTO = new GuardOfficerSetUpTimeRequestDTO();
+        return "redirect:/guardofficer/main";
+    }
+
+    public void setExitTime(GuardOfficerSetUpTimeResponseDTO guardOfficerSetUpTimeResponseDTO) {
+        guardRequestService.setGuardOfficerExitTime(guardOfficerSetUpTimeResponseDTO);
+    }
+
+    public void setEntryTime(GuardOfficerSetUpTimeResponseDTO guardOfficerSetUpTimeResponseDTO) {
+        guardRequestService.setGuardOfficerEnterTime(guardOfficerSetUpTimeResponseDTO);
     }
 }

@@ -1,13 +1,11 @@
 package com.example.team2.controller;
 
+import com.example.team2.dto.response.GuardOfficerSetUpTimeResponseDTO;
 import com.example.team2.uiservice.GuardOfficerUIService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/guardofficer")
@@ -30,10 +28,16 @@ public class GuardOfficerController {
     }
 
     // сохранение времени входа и выхода
-    @PostMapping("/request")
-    public String handleEntryExitTime(){
+    @PostMapping("/request/sendexittime")
+    public void handleExitTime(@ModelAttribute("guardOfficerSetUpTimeResponseDTO") GuardOfficerSetUpTimeResponseDTO guardOfficerSetUpTimeResponseDTO){
+        guardOfficerUIService.setExitTime(guardOfficerSetUpTimeResponseDTO);
+        //return "redirect:/guard_request_table";
+    }
 
-        return "redirect:/guard_request_table";
+    @PostMapping("/request/sendentertime")
+    public void handleEntryTime(@ModelAttribute("guardOfficerSetUpTimeResponseDTO") GuardOfficerSetUpTimeResponseDTO guardOfficerSetUpTimeResponseDTO){
+        guardOfficerUIService.setEntryTime(guardOfficerSetUpTimeResponseDTO);
+        //return "redirect:/guard_request_table";
     }
 
 }
