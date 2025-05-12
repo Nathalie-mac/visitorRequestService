@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/guardofficer")
@@ -22,10 +23,10 @@ public class GuardOfficerController {
 
     // отображение заявок (страница "guard_request_one" и "guard_request_many")
     @GetMapping("/request")
-    public  String showRequest(){
+    public  String showRequest(@RequestParam("id") Long requestId, Model model) {
 
         // if () {return "guard_request_one"} else {return "guard_request_many"}
-        return "guard_request_one";
+        return guardOfficerUIService.openRequest(requestId, model);
     }
 
     // сохранение времени входа и выхода
