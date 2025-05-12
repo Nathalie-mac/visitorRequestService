@@ -1,5 +1,10 @@
 package com.example.team2.advice;
 
+import com.example.team2.auth.exceptions.auth.DecodeCredentialsException;
+import com.example.team2.auth.exceptions.auth.InvalidBasicAuthorizationHeaderException;
+import com.example.team2.auth.exceptions.auth.InvalidCookieException;
+import com.example.team2.auth.exceptions.data.ExistingUserWithThatUsernameException;
+import com.example.team2.auth.exceptions.data.UserNotFoundException;
 import com.example.team2.exceptions.auth.DecodeCredentialsException;
 import com.example.team2.exceptions.auth.InvalidBasicAuthorizationHeaderException;
 import com.example.team2.exceptions.data.ExistingUserWithThatUsernameException;
@@ -64,8 +69,6 @@ public class GlobalExceptionHandler {
         errorResponse.setError("Пользователь с такой почтой не найден!");
         errorResponse.setMessage(ex.getMessage());
         errorResponse.setPath(request.getDescription(false));
-        model.addAttribute("errorMessage", errorResponse.getError());
-        model.addAttribute("status", errorResponse.getStatus());
 
         return "error_login";
     }
@@ -118,6 +121,18 @@ public class GlobalExceptionHandler {
         errorResponse.setTimestamp(LocalDateTime.now());
         errorResponse.setStatus(HttpStatus.BAD_REQUEST.value());
         errorResponse.setError("Поломался json при попытке достать вас из БД");
+        errorResponse.setMessage(ex.getMessage());
+        errorResponse.setPath(request.getDescription(false));
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(InvalidCookieException.class)
+    public ResponseEntity<CustomErrorResponse> handleInvalidCookieException(Exception ex, WebRequest request) {
+        CustomErrorResponse errorResponse = new CustomErrorResponse();
+        errorResponse.setTimestamp(LocalDateTime.now());
+        errorResponse.setStatus(HttpStatus.BAD_REQUEST.value());
+        errorResponse.setError("error in json processing when searching for userId");
         errorResponse.setMessage(ex.getMessage());
         errorResponse.setPath(request.getDescription(false));
 

@@ -38,7 +38,7 @@ public class DepartmentService {
             DepartmentDTO departmentDTO = new DepartmentDTO();
 
             departmentDTO.setId(department.getId());
-            departmentDTO.setName(departmentDTO.getName());
+            departmentDTO.setName(department.getDepartmentName());
 
             Map<String, Long> workers = new HashMap<>();
             List<DepartmentWorker> departmentWorkers = department.getWorkers();

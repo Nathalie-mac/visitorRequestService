@@ -1,40 +1,45 @@
 package com.example.team2.controller;
 
+import com.example.team2.uiservice.ClientUIService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/client")
 public class ClientController {
+    private final ClientUIService clientUIService;
 
     // Отображение страницы с заявками (главная страница web_request_table)
-    @GetMapping
-    public String showRequestsPage(Model model) {
+    @GetMapping("/main/{userId}")
+    public String showRequestsPage(@PathVariable Long userId, Model model) {
         // Здесь должна быть логика получения заявок из базы данных
 
-        return "web_request_table";
+        return clientUIService.getMainPage(userId, model);
     }
 
     // Открытие страницы с формой создания заявки (главная страница web_request_table)
     @GetMapping("/type")
-    public String showRequestForm(Model model) {
+    public String showRequestForm() {
 
-        return "web_visit_type";
+        return clientUIService.getTypePage();
     }
 
     // Открытие страницы создания заявки для личного посещения (страница выбора типа web_visit_type)
     @GetMapping("/personal-visit")
-    public String personalVisit() {
-        return "personal_visit";
+    public String personalVisit(Model model) {
+        return clientUIService.getPersonalVisitPage(model);
     }
 
     // Открытие страницы создания заявки для группового посещения (страница выбора типа web_visit_type)
     @GetMapping("/group-visit")
-    public String groupVisit() {
-        return "group_visit";
+    public String groupVisit(Model model) {
+        return clientUIService.getGroupVisitPage(model);
     }
 
     // Сохранение данных с формы в бд (страница личной заявки web_request_one и групповая web_request_many)
