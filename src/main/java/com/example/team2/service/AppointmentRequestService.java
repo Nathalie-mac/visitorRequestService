@@ -7,6 +7,7 @@ import com.example.team2.exceptions.service.ErrorInBDException;
 import com.example.team2.model.*;
 import com.example.team2.dto.response.AppointmentRequestResponseDTO;
 import com.example.team2.dto.VisitorDTO;
+import jakarta.persistence.NoResultException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -72,7 +73,7 @@ public class AppointmentRequestService {
         return request;
     }
 
-    //TODO: department name приходит null пофиксить!
+
     public AppointmentRequestRequestDTO getPurposeDepartmentLists() {
         AppointmentRequestRequestDTO signUpRequestRequestDTO = new AppointmentRequestRequestDTO();
 
@@ -104,6 +105,7 @@ public class AppointmentRequestService {
         }
 
         submittedRequestTableDTO.setSubmittedRequestList(submittedRequestRowDTOs);
+
 
         return submittedRequestTableDTO;
     }

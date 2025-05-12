@@ -79,6 +79,7 @@ public class GuardRequestService {
         return new RequestsTableDTO(rowRequestsDTOS);
     }
 
+    //TODO: исключения
     //данные для указания времени охранником
     public GuardOfficerSetUpTimeRequestDTO getGuardOfficerSetUpTime(long requestId){
         GuardOfficerSetUpTimeRequestDTO guardOfficerSetUpTimeDTO = new GuardOfficerSetUpTimeRequestDTO();

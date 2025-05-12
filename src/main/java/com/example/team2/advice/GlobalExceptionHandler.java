@@ -1,15 +1,12 @@
 package com.example.team2.advice;
 
-import com.example.team2.auth.exceptions.auth.DecodeCredentialsException;
-import com.example.team2.auth.exceptions.auth.InvalidBasicAuthorizationHeaderException;
-import com.example.team2.auth.exceptions.auth.InvalidCookieException;
-import com.example.team2.auth.exceptions.data.ExistingUserWithThatUsernameException;
-import com.example.team2.auth.exceptions.data.UserNotFoundException;
 import com.example.team2.exceptions.auth.DecodeCredentialsException;
 import com.example.team2.exceptions.auth.InvalidBasicAuthorizationHeaderException;
+import com.example.team2.auth.exceptions.auth.InvalidCookieException;
 import com.example.team2.exceptions.data.ExistingUserWithThatUsernameException;
 import com.example.team2.exceptions.data.UserNotFoundException;
 import com.example.team2.exceptions.service.ErrorDTOPackingException;
+import com.example.team2.exceptions.service.ErrorInBDException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import org.springframework.http.HttpStatus;
@@ -124,11 +121,11 @@ public class GlobalExceptionHandler {
         errorResponse.setMessage(ex.getMessage());
         errorResponse.setPath(request.getDescription(false));
 
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        return "error_login";
     }
 
     @ExceptionHandler(InvalidCookieException.class)
-    public ResponseEntity<CustomErrorResponse> handleInvalidCookieException(Exception ex, WebRequest request) {
+    public String handleInvalidCookieException(Exception ex, WebRequest request, Model model) {
         CustomErrorResponse errorResponse = new CustomErrorResponse();
         errorResponse.setTimestamp(LocalDateTime.now());
         errorResponse.setStatus(HttpStatus.BAD_REQUEST.value());
@@ -165,9 +162,25 @@ public class GlobalExceptionHandler {
     public String handleErrorDTOPackingException(Exception ex, WebRequest request, Model model) {
         CustomErrorResponse errorResponse = new CustomErrorResponse();
         errorResponse.setTimestamp(LocalDateTime.now());
-        errorResponse.setStatus(HttpStatus.BAD_REQUEST.value());
+        errorResponse.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
         errorResponse.setError("Упс! На беке произошла ошибка. Попробуйте еще раз через 5 минут!");
         errorResponse.setMessage(ex.getMessage());
+        errorResponse.setPath(request.getDescription(false));
+
+        model.addAttribute("errorMessage", errorResponse.getError());
+        model.addAttribute("status", errorResponse.getStatus());
+
+        return "error_login";
+    }
+
+    //Сервисы: проблемы с БД
+    @ExceptionHandler(ErrorInBDException.class)
+    public String handleErrorInBDException(Exception ex, WebRequest request, Model model) {
+        CustomErrorResponse errorResponse = new CustomErrorResponse();
+        errorResponse.setTimestamp(LocalDateTime.now());
+        errorResponse.setStatus(HttpStatus.SERVICE_UNAVAILABLE.value());
+        errorResponse.setError(ex.getMessage());
+        errorResponse.setMessage("Error in BD");
         errorResponse.setPath(request.getDescription(false));
 
         model.addAttribute("errorMessage", errorResponse.getError());
