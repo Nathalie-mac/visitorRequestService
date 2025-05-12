@@ -44,7 +44,7 @@ public class ManagerUIService {
         model.addAttribute("managerConfirmation", managerRequestDTO);
         model.addAttribute("responseDTO", responseDTO);
 
-        if (managerRequestDTO.getRequestDTO().getVisitors().size() >= 1) {
+        if (managerRequestDTO.getRequestDTO().getVisitors().size() > 1) {
             return "manager_check_many";
         } else {
             return "manager_check_one";

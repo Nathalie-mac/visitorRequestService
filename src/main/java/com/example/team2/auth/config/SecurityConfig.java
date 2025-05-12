@@ -30,8 +30,9 @@ public class SecurityConfig {
         FilterRegistrationBean<SessionExistFilter> registrationBean = new FilterRegistrationBean<>();
         registrationBean.setFilter(sessionExistFilter());
         // описано в фильтрах
-        registrationBean.addUrlPatterns("/auth/logout");
-        registrationBean.setOrder(2);
+
+        registrationBean.addUrlPatterns("/auth/logout", "/manager/*", "/client/*", "/guardofficer/*");
+        registrationBean.setOrder(1);
         return registrationBean;
     }
 
