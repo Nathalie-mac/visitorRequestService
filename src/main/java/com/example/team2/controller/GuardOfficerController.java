@@ -5,7 +5,9 @@ import com.example.team2.uiservice.GuardOfficerUIService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -29,22 +31,18 @@ public class GuardOfficerController {
     }
 
     // сохранение времени входа и выхода
-    @PostMapping("/{id}/sendexittime")
-    public String handleExitTime(@PathVariable Long id,
-                                 @ModelAttribute("guardOfficerSetUpTimeResponseDTO") GuardOfficerSetUpTimeResponseDTO guardOfficerSetUpTimeResponseDTO,
-                                 RedirectAttributes redirectAttributes){
+    @PostMapping("/sendexittime")
+    public ModelAndView handleExitTime(ModelMap model, @ModelAttribute("guardOfficerSetUpTimeResponseDTO") GuardOfficerSetUpTimeResponseDTO guardOfficerSetUpTimeResponseDTO){
         guardOfficerUIService.setExitTime(guardOfficerSetUpTimeResponseDTO);
-        redirectAttributes.addAttribute("id", id); // Сохраняем ID для редиректа
-        return "redirect:/guardofficer/request";
+        model.addAttribute("id", guardOfficerSetUpTimeResponseDTO.getIdRequest()); // Сохраняем ID для редиректа
+        return new ModelAndView("redirect:/guardofficer/request", model);
     }
 
-    @PostMapping("/{id}/sendentertime")
-    public String handleEnterTime(@PathVariable Long id,
-                                 @ModelAttribute("guardOfficerSetUpTimeResponseDTO") GuardOfficerSetUpTimeResponseDTO guardOfficerSetUpTimeResponseDTO,
-                                 RedirectAttributes redirectAttributes){
-        guardOfficerUIService.setExitTime(guardOfficerSetUpTimeResponseDTO);
-        redirectAttributes.addAttribute("id", id); // Сохраняем ID для редиректа
-        return "redirect:/guardofficer/request";
+    @PostMapping("/sendentertime")
+    public ModelAndView handleEnterTime(ModelMap model, @ModelAttribute("guardOfficerSetUpTimeResponseDTO") GuardOfficerSetUpTimeResponseDTO guardOfficerSetUpTimeResponseDTO){
+        guardOfficerUIService.setEntryTime(guardOfficerSetUpTimeResponseDTO);
+        model.addAttribute("id", guardOfficerSetUpTimeResponseDTO.getIdRequest());
+        return new ModelAndView("redirect:/guardofficer/request", model);
     }
 
 }

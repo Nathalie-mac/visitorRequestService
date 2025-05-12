@@ -39,13 +39,6 @@ public class GuardOfficerUIService {
         }
     }
 
-    public String setEntryExitTime(GuardOfficerSetUpTimeResponseDTO guardOfficerSetUpTimeResponseDTO) {
-        guardRequestService.setGuardOfficerEnterTime(guardOfficerSetUpTimeResponseDTO);
-        //guardRequestService.setGuardOfficerExitTime(guardOfficerSetUpTimeResponseDTO);
-        //GuardOfficerSetUpTimeRequestDTO guardOfficerSetUpTimeRequestDTO = new GuardOfficerSetUpTimeRequestDTO();
-        return "redirect:/guardofficer/main";
-    }
-
     public void setExitTime(GuardOfficerSetUpTimeResponseDTO guardOfficerSetUpTimeResponseDTO) {
         guardRequestService.setGuardOfficerExitTime(guardOfficerSetUpTimeResponseDTO);
     }
