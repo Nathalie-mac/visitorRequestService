@@ -149,22 +149,46 @@
             <tbody>
             <!-- Строки с заявками -->
             <tr th:each="request : ${requests}" th:data-id="${request.idRequest}">
-                <td th:text="${request.appointmentType}"></td>
+                <td th:text="${request.appointmentType} ?: ' '"></td>
+<!--                <td th:text="${request.appointmentType}"></td>-->
                 <td>
-                    <span th:each="name, iter : ${request.userNames}"
-                          th:text="${name} + (${not iter.last} ? ', ' : '')"></span>
+                     <span th:if="${request.userNames != null and not request.userNames.empty}"
+                        th:each="name, iter : ${request.userNames}"
+                        th:text="${name} + (${not iter.last} ? ', ' : '')"></span>
+                    <span th:unless="${request.userNames != null and not request.userNames.empty}"> </span>
                 </td>
-                <td th:text="${request.department}"></td>
+<!--                <td>-->
+<!--                    <span th:each="name, iter : ${request.userNames}"-->
+<!--                          th:text="${name} + (${not iter.last} ? ', ' : '')"></span>-->
+<!--                </td>-->
+                <td th:text="${request.department} ?: ' '"></td>
                 <td>
-                    <span th:text="${#temporals.format(request.date, 'dd.MM.yyyy')} + ' ' +
+                    <span th:if="${request.date} and ${request.time}"
+                          th:text="${#temporals.format(request.date, 'dd.MM.yyyy')} + ' ' +
                                    ${#temporals.format(request.time, 'HH:mm')}"></span>
+                    <span th:unless="${request.date} and ${request.time}"> </span>
                 </td>
+<!--                <td>-->
+<!--                    <span th:text="${#temporals.format(request.date, 'dd.MM.yyyy')} + ' ' +-->
+<!--                                   ${#temporals.format(request.time, 'HH:mm')}"></span>-->
+<!--                </td>-->
+
+
+<!--                кажется, надо поменять логику работы со статусами-->
                 <td>
-                    <span th:classappend="${request.status == 'На рассмотрении'} ? 'badge badge-pending' :
-                                          ${request.status == 'Одобрено'} ? 'badge badge-approved' :
-                                          'badge badge-rejected'"
-                          th:text="${request.status}"></span>
+                <span th:if="${request.status}"
+                      th:classappend="${request.status == T(com.example.team2.model.StatusType).PENDING.statusType} ? 'badge badge-pending' :
+                          (${request.status == T(com.example.team2.model.StatusType).APPROVED.statusType} ? 'badge badge-approved' :
+                          'badge badge-rejected')"
+                      th:text="${request.status}"></span>
+                    <span th:unless="${request.status}" class="badge"> </span>
                 </td>
+<!--                <td>-->
+<!--                    <span th:classappend="${request.status == 'на рассмотрении'} ? 'badge badge-pending' :-->
+<!--                                          ${request.status == 'одобрено'} ? 'badge badge-approved' :-->
+<!--                                          'badge badge-rejected'"-->
+<!--                          th:text="${request.status}"></span>-->
+<!--                </td>-->
                 <td>
                     <button class="open-btn" th:data-id="${request.idRequest}">Открыть заявку</button>
                 </td>
@@ -190,9 +214,9 @@
 
             // Фильтрация строк таблицы
             document.querySelectorAll('tbody tr[data-id]').forEach(row => {
-                const rowVisitType = row.cells[0].textContent;
-                const rowDepartment = row.cells[2].textContent;
-                const rowStatus = row.cells[4].querySelector('span').textContent;
+                const rowVisitType = row.cells[0].textContent || '';
+                const rowDepartment = row.cells[2].textContent || '';
+                const rowStatus = row.cells[4].querySelector('span').textContent || '';
 
                 const typeMatch = !visitType || rowVisitType === visitType;
                 const deptMatch = !department || rowDepartment === department;
@@ -208,7 +232,7 @@
         btn.addEventListener('click', function() {
             const requestId = this.getAttribute('data-id');
             // Отправка ID заявки на сервер или переход на страницу заявки
-            window.location.href = '/check-request?id=' + requestId;
+            window.location.href = '/manager/request?id=' + requestId;
         });
     });
 </script>

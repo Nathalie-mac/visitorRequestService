@@ -34,8 +34,8 @@ public class AuthManagerController {
 
     //Обработка данных формы входа (POST)
     @PostMapping("/sign-in")
-    public String signIn(@ModelAttribute("LoginDTO") LoginDTO loginDTO, HttpServletResponse response) {
-        return authStuffUIService.postSignInManager(loginDTO, response);
+    public String signIn(@ModelAttribute("LoginDTO") LoginDTO loginDTO, Model model,  HttpServletResponse response) {
+        return authStuffUIService.postSignInManager(loginDTO,model, response);
 
     }
 

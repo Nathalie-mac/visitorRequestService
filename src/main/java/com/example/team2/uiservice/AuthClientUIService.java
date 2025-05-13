@@ -2,14 +2,10 @@ package com.example.team2.uiservice;
 
 import com.example.team2.auth.services.AuthService;
 import com.example.team2.auth.services.CustomResponse;
-import com.example.team2.auth.services.parser.CookieHeaderParser;
 import com.example.team2.dto.LoginDTO;
 import com.example.team2.uiservice.provider.SessionCookieProvider;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
@@ -23,21 +19,17 @@ public class AuthClientUIService {
         model.addAttribute("LoginDTO", new LoginDTO());
         return "user_login";
     }
+
     //Обработка данных формы входа (POST)
-    public String postSignIn(LoginDTO loginDTO, HttpServletResponse response) {
+    public String postSignIn(Model model, LoginDTO loginDTO, HttpServletResponse response) {
         CustomResponse authResponse = authService.signInClient(loginDTO);
 
-        if (authResponse.isSuccess()) {
 
-            SessionCookieProvider.setUpSessionCookie(response, authResponse.getCookieSessionId());
+        SessionCookieProvider.setUpSessionCookie(response, authResponse.getCookieSessionId());
 
+        return "redirect:/client/main/" + authResponse.getUserId();
 
-            return "redirect:/dashboard";
-        } else {
-            return "redirect:/auth/login?error";
-        }
     }
-
 
 
     // Показ формы регистрации
@@ -52,9 +44,6 @@ public class AuthClientUIService {
         authService.signUpClient(loginDTO);
         return "user_login";
     }
-
-
-
 
 
 }

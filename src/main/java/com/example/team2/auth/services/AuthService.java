@@ -39,7 +39,6 @@ public class AuthService {
 
     public boolean signUpClient(LoginDTO loginDTO) {
         userService.createUser(loginDTO.getLogin(), passwordEncoder.encode(loginDTO.getPassword()));
-
         return true;
     }
 
@@ -53,13 +52,20 @@ public class AuthService {
     public CustomResponse signInClient(LoginDTO loginDTO) {
 
         Session session = createUserSession(loginDTO.getLogin());
-        return new CustomResponse(true, session.getSessionId());
+        CustomResponse customResponse = new CustomResponse();
+        customResponse.setSuccess(true);
+        customResponse.setCookieSessionId(session.getSessionId());
+        customResponse.setUserId(redisSessionService.getUserIdFromSession(session.getSessionId()));
+        return customResponse;
     }
 
     public CustomResponse signInStuff(LoginDTO loginDTO, StuffRoleType stuffRole) {
 
         Session session = createStuffSession(loginDTO.getLogin(), stuffRole);
-        return new CustomResponse(true, session.getSessionId());
+        CustomResponse customResponse = new CustomResponse();
+        customResponse.setSuccess(true);
+        customResponse.setCookieSessionId(session.getSessionId());
+        return customResponse;
     }
 
     //TODO: снести после отладки

@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ХранительПРО - Проверка заявки</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Arial', sans-serif;
+            padding: 20px;
+        }
+        .request-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+        .request-header {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 25px 0 15px 0;
+            color: #3498db;
+        }
+        .section-divider {
+            border-top: 1px dashed #ddd;
+            margin: 20px 0;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .info-item {
+            margin-bottom: 10px;
+        }
+        .info-label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .date-inputs {
+            display: flex;
+            gap: 15px;
+        }
+        .date-inputs .form-group {
+            flex: 1;
+        }
+        .blacklist-status {
+            padding: 10px;
+            border-radius: 5px;
+            margin: 15px 0;
+            font-weight: bold;
+        }
+        .in-blacklist {
+            background-color: #ffecec;
+            color: #d32f2f;
+        }
+        .not-in-blacklist {
+            background-color: #e8f5e9;
+            color: #388e3c;
+        }
+        .photo-upload {
+            margin: 15px 0;
+        }
+        .submit-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .submit-btn:hover {
+            background-color: #2980b9;
+        }
+        .submit-btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        .static-info {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        .readonly-field {
+            background-color: #e9ecef;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+<div class="request-container">
+    <div class="request-header">Проверка заявки</div>
+    <div class="section-title">Заявка на индивидуальное посещение</div>
+
+    <!-- Статус черного списка -->
+    <div th:class="${managerConfirmation.inBlackList} ? 'blacklist-status in-blacklist' : 'blacklist-status not-in-blacklist'">
+        <span th:text="${managerConfirmation.inBlackList} ? 'Заявка находится в черном списке' : 'Заявка не находится в черном списке'"></span>
+    </div>
+
+    <form th:action="@{/manager/request}" method="post" th:object="${responseDTO}">
+        <input type="hidden" th:field="*{idRequest}" th:value="${managerConfirmation.requestDTO.idRequest}">
+
+
+        <div class="form-group">
+            <label class="info-label">Статус заявки</label>
+            <select class="form-control" th:field="*{status}" required id="statusSelect"
+                    th:disabled="${managerConfirmation.status != T(com.example.team2.model.StatusType).PENDING.statusType}">
+                <option value="">-- Выберите статус --</option>
+                <option th:each="statusItem : ${managerConfirmation.statusList}"
+                        th:value="${statusItem}"
+                        th:text="${statusItem}"
+                        th:selected="${managerConfirmation.status != null and managerConfirmation.status == statusItem}">
+                </option>
+            </select>
+        </div>
+
+        <!-- Причина отклонения -->
+        <div class="form-group" id="rejectReasonGroup"
+             th:style="${managerConfirmation.status == T(com.example.team2.model.StatusType).REJECTED_FOR_REASON.statusType} ? 'display: block;' : 'display: none;'">
+            <label class="info-label">Причина отклонения</label>
+            <select class="form-control" th:field="*{rejectReason}" id="rejectReasonSelect"
+                    th:disabled="${managerConfirmation.status != T(com.example.team2.model.StatusType).PENDING.statusType}"
+                    th:classappend="${managerConfirmation.status != T(com.example.team2.model.StatusType).PENDING.statusType} ? 'readonly-field'">
+                <option value="">-- Выберите причину --</option>
+                <option th:each="reason : ${managerConfirmation.rejectReasonList}"
+                        th:value="${reason}"
+                        th:text="${reason}"
+                        th:selected="${managerConfirmation.rejectReason != null and managerConfirmation.rejectReason == reason}">
+                </option>
+            </select>
+        </div>
+
+<!--        &lt;!&ndash; Дата и время посещения &ndash;&gt;-->
+<!--        <div class="date-inputs">-->
+<!--            <div class="form-group">-->
+<!--                <label class="info-label">Дата посещения</label>-->
+<!--                <input type="date" class="form-control" th:field="*{visitDate}" id="visitDate"-->
+<!--                       th:disabled="${managerConfirmation.status != T(com.example.team2.model.StatusType).PENDING.statusType}"-->
+<!--                       th:classappend="${managerConfirmation.status != T(com.example.team2.model.StatusType).PENDING.statusType} ? 'readonly-field'"-->
+<!--                       th:value="${managerConfirmation.visitDate != null} ? ${#temporals.format(managerConfirmation.visitDate, 'yyyy-MM-dd')} : ''"-->
+<!--                       required>-->
+<!--            </div>-->
+<!--            <div class="form-group">-->
+<!--                <label class="info-label">Время посещения</label>-->
+<!--                <input type="time" class="form-control" th:field="*{visitTime}" id="visitTime"-->
+<!--                       th:disabled="${managerConfirmation.status != T(com.example.team2.model.StatusType).PENDING.statusType}"-->
+<!--                       th:classappend="${managerConfirmation.status != T(com.example.team2.model.StatusType).PENDING.statusType} ? 'readonly-field'"-->
+<!--                       th:value="${managerConfirmation.visitTime != null} ? ${managerConfirmation.visitTime} : ''"-->
+<!--                       required>-->
+<!--            </div>-->
+<!--        </div>-->
+
+        <!-- Дата и время посещения -->
+        <div id="dateTimeGroup" class="date-inputs">
+            <div class="form-group">
+                <label class="info-label">Дата посещения</label>
+                <input type="date" class="form-control" th:field="*{visitDate}" id="visitDate"
+                       th:disabled="${managerConfirmation.status != T(com.example.team2.model.StatusType).PENDING.statusType}"
+                       th:classappend="${managerConfirmation.status != T(com.example.team2.model.StatusType).PENDING.statusType} ? 'readonly-field'"
+                       th:value="${managerConfirmation.visitDate != null} ? ${#temporals.format(managerConfirmation.visitDate, 'yyyy-MM-dd')} : ''"
+                       required>
+            </div>
+            <div class="form-group">
+                <label class="info-label">Время посещения</label>
+                <input type="time" class="form-control" th:field="*{visitTime}" id="visitTime"
+                       th:disabled="${managerConfirmation.status != T(com.example.team2.model.StatusType).PENDING.statusType}"
+                       th:classappend="${managerConfirmation.status != T(com.example.team2.model.StatusType).PENDING.statusType} ? 'readonly-field'"
+                       th:value="${managerConfirmation.visitTime != null} ? ${managerConfirmation.visitTime} : ''"
+                       required>
+            </div>
+        </div>
+
+        <button type="submit" class="submit-btn" id="submitBtn"
+                th:disabled="${managerConfirmation.status != T(com.example.team2.model.StatusType).PENDING.statusType}">Сохранить решение
+        </button>
+
+
+
+        <!-- Информация для пропуска -->
+        <div class="section-title">Информация для пропуска</div>
+        <div class="static-info">
+            <div class="info-item">
+                <div class="info-label">Срок действия заявок:</div>
+                <div>
+                    с <span th:text="${#temporals.format(managerConfirmation.requestDTO.startApplicationPeriod, 'dd.MM.yyyy')}"></span>
+                    по <span th:text="${#temporals.format(managerConfirmation.requestDTO.endApplicationPeriod, 'dd.MM.yyyy')}"></span>
+                </div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Цель посещения:</div>
+                <div th:text="${managerConfirmation.requestDTO.purposeVisit}"></div>
+            </div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- Принимающая сторона -->
+        <div class="section-title">Принимающая сторона</div>
+        <div class="static-info">
+            <div class="info-item">
+                <div class="info-label">Подразделение:</div>
+                <div th:text="${managerConfirmation.requestDTO.department}"></div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">ФИО:</div>
+                <div th:text="${managerConfirmation.requestDTO.workerName}"></div>
+            </div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- Информация о посетителе -->
+        <div class="section-title">Информация о посетителе</div>
+        <div class="static-info" th:each="visitor : ${managerConfirmation.requestDTO.visitors}">
+            <div class="info-grid">
+                <div>
+                    <div class="form-group">
+                        <div class="info-label">Фамилия:</div>
+                        <div th:text="${visitor.lastName}"></div>
+                    </div>
+                    <div class="form-group">
+                        <div class="info-label">Имя:</div>
+                        <div th:text="${visitor.firstName}"></div>
+                    </div>
+                    <div class="form-group">
+                        <div class="info-label">Отчество:</div>
+                        <div th:text="${visitor.middleName}"></div>
+                    </div>
+                    <div class="form-group">
+                        <div class="info-label">Телефон:</div>
+                        <div th:text="${visitor.phoneNumber}"></div>
+                    </div>
+                    <div class="form-group">
+                        <div class="info-label">E-mail:</div>
+                        <div th:text="${visitor.email}"></div>
+                    </div>
+                </div>
+                <div>
+                    <div class="form-group">
+                        <div class="info-label">Организация:</div>
+                        <div th:text="${visitor.organizationName}"></div>
+                    </div>
+                    <div class="form-group">
+                        <div class="info-label">Примечание:</div>
+                        <div th:text="${visitor.note}"></div>
+                    </div>
+                    <div class="form-group">
+                        <div class="info-label">Дата рождения:</div>
+                        <div th:text="${visitor.birthDate != null} ? ${#temporals.format(visitor.birthDate, 'dd.MM.yyyy')} : ''"></div>
+                    </div>
+                    <div class="form-group">
+                        <div class="info-label">Серия паспорта:</div>
+                        <div th:text="${visitor.passportSeries}"></div>
+                    </div>
+                    <div class="form-group">
+                        <div class="info-label">Номер паспорта:</div>
+                        <div th:text="${visitor.passportNumber}"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="photo-upload">
+                <div class="info-label">Фото:</div>
+                <div th:if="${visitor.photo != null}">
+                    <img th:src="@{'/photo/' + ${visitor.photo}}" alt="Фото посетителя" style="max-width: 150px;">
+                </div>
+                <div th:unless="${visitor.photo != null}">Фото отсутствует</div>
+            </div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- Прикрепляемые документы -->
+        <div class="section-title">Прикрепляемые документы</div>
+        <div class="static-info">
+            <div th:if="${not managerConfirmation.requestDTO.docs.empty}">
+                <ul style="list-style-type: none; padding-left: 0;">
+                    <li th:each="doc : ${managerConfirmation.requestDTO.docs}">
+                        <i class="fas fa-file"></i> Документ #<span th:text="${doc}"></span>
+                    </li>
+                </ul>
+            </div>
+            <div th:if="${managerConfirmation.requestDTO.docs.empty}">
+                Нет прикрепленных файлов
+            </div>
+        </div>
+
+        <div class="section-divider"></div>
+
+    </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Получаем данные из DTO (передаются через Thymeleaf)
+        const dtoData = {
+            status: "[[${managerConfirmation.status}]]",
+            rejectReason: "[[${managerConfirmation.rejectReason}]]",
+            visitDate: "[[${managerConfirmation.visitDate != null ? #temporals.format(managerConfirmation.visitDate, 'yyyy-MM-dd') : ''}]]",
+            visitTime: "[[${managerConfirmation.visitTime != null ? managerConfirmation.visitTime : ''}]]",
+            isPending: [[${managerConfirmation.status == T(com.example.team2.model.StatusType).PENDING.statusType}]]
+        };
+
+        const statusSelect = document.getElementById('statusSelect');
+        const rejectReasonGroup = document.getElementById('rejectReasonGroup');
+        const rejectReasonSelect = document.getElementById('rejectReasonSelect');
+        const visitDateField = document.getElementById('visitDate');
+        const visitTimeField = document.getElementById('visitTime');
+        const submitBtn = document.getElementById('submitBtn');
+
+        //new
+        function setInitialValues() {
+            if (!dtoData.isPending) {
+                if (statusSelect && dtoData.status) {
+                    statusSelect.value = dtoData.status;
+                }
+                if (rejectReasonSelect && dtoData.rejectReason) {
+                    rejectReasonSelect.Value = dtoData.rejectReason;
+                }
+                if (visitDateField && dtoData.visitDate) {
+                    visitDateField.Value = dtoData.visitDate;
+                }
+                if (visitTimeField && dtoData.visitTime) {
+                    visitTimeField.Value = dtoData.visitTime;
+                }
+            }
+            // Вызываем handleFormState для установки начального состояния
+            handleFormState();
+        }
+
+<!--        // Устанавливаем значения из DTO при загрузке-->
+<!--        function setInitialValues() {-->
+<!--            if (!dtoData.isPending) {-->
+<!--                if (statusSelect && dtoData.status) {-->
+<!--                    statusSelect.value = dtoData.status;-->
+<!--                }-->
+<!--                if (rejectReasonSelect && dtoData.rejectReason) {-->
+<!--                    rejectReasonSelect.value = dtoData.rejectReason;-->
+<!--                }-->
+<!--                if (visitDateField && dtoData.visitDate) {-->
+<!--                    visitDateField.value = dtoData.visitDate;-->
+<!--                }-->
+<!--                if (visitTimeField && dtoData.visitTime) {-->
+<!--                    visitTimeField.value = dtoData.visitTime;-->
+<!--                }-->
+<!--            }-->
+<!--        }-->
+
+        //new
+        function handleFormState() {
+            const currentStatus = statusSelect ? statusSelect.value : null;
+            const dateTimeGroup = document.getElementById('dateTimeGroup');
+
+            // Управление полем причины
+            if (rejectReasonGroup && rejectReasonSelect) {
+                const isRejected = currentStatus === 'отклонена по причине';
+                rejectReasonGroup.style.display = isRejected ? 'block' : 'none';
+                rejectReasonSelect.disabled = !dtoData.isPending || !isRejected;
+
+                if (!isRejected) {
+                    rejectReasonSelect.value = '';
+                }
+            }
+
+            // Управление полями даты и времени
+            if (dateTimeGroup) {
+                const isApproved = currentStatus === 'одобрена';
+                dateTimeGroup.style.display = isApproved ? 'flex' : 'none';
+
+                // Снимаем required, если статус не "одобрена"
+                if (visitDateField) visitDateField.required = isApproved;
+                if (visitTimeField) visitTimeField.required = isApproved;
+            }
+
+            // Управление кнопкой отправки
+            if (submitBtn) {
+                submitBtn.disabled = !dtoData.isPending;
+
+                // Для статуса "одобрена" проверяем дату и время
+                if (currentStatus === 'одобрена' && dtoData.isPending) {
+                    const dateValid = visitDateField.value.trim() !== '';
+                    const timeValid = visitTimeField.value.trim() !== '';
+                    submitBtn.disabled = !(dateValid && timeValid);
+                }
+            }
+        }
+
+
+<!--        // Функция для управления состоянием формы-->
+<!--        function handleFormState() {-->
+<!--            const currentStatus = statusSelect ? statusSelect.value : null;-->
+
+<!--            // Управление полем причины-->
+<!--            if (rejectReasonGroup && rejectReasonSelect) {-->
+<!--                const isRejected = currentStatus === 'отклонена по причине';-->
+<!--                rejectReasonGroup.style.display = isRejected ? 'block' : 'none';-->
+<!--                rejectReasonSelect.disabled = !dtoData.isPending || !isRejected;-->
+
+<!--                if (!isRejected) {-->
+<!--                    rejectReasonSelect.value = '';-->
+<!--                }-->
+<!--            }-->
+
+<!--            // Управление кнопкой отправки-->
+<!--            if (submitBtn) {-->
+<!--                submitBtn.disabled = !dtoData.isPending;-->
+
+<!--                // Для статуса "одобрена" проверяем дату и время-->
+<!--                if (currentStatus === 'одобрена' && dtoData.isPending) {-->
+<!--                    const dateValid = visitDateField.value.trim() !== '';-->
+<!--                    const timeValid = visitTimeField.value.trim() !== '';-->
+<!--                    submitBtn.disabled = !(dateValid && timeValid);-->
+<!--                }-->
+<!--            }-->
+<!--        }-->
+
+        // Инициализация при загрузке
+        setInitialValues();
+        handleFormState();
+
+        // Обработчики событий
+        if (statusSelect) {
+            statusSelect.addEventListener('change', handleFormState);
+        }
+        if (visitDateField) {
+            visitDateField.addEventListener('change', handleFormState);
+        }
+        if (visitTimeField) {
+            visitTimeField.addEventListener('change', handleFormState);
+        }
+    });
+</script>
+
+</body>
+</html>

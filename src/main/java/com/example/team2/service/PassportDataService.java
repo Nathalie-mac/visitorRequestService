@@ -6,6 +6,8 @@ import com.example.team2.repository.PassportDataRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class PassportDataService {
@@ -22,5 +24,10 @@ public class PassportDataService {
         passportData.setRequest(request);
 
         return save(passportData);
+    }
+
+    public List<Integer> findPassportIdByRequest(Request request) {
+        List<PassportData> passportData = passportDataRepository.findPassportIdByRequest(request);
+        return passportData.stream().map(PassportData::getPassportId).toList();
     }
 }

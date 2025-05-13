@@ -1,6 +1,7 @@
 package com.example.team2.dto.request;
 
 import com.example.team2.dto.StaticRequestDTO;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,10 +16,16 @@ import java.util.List;
 //на фронт
 //данные, для одобрения/отклонения заявок менеджером
 public class ManagerConfirmationRequestDTO {
+    @NotNull
     private boolean inBlackList;
     private StaticRequestDTO requestDTO;
-    private List<String> status;            //Отклонено|Одобрено (для выпадающего списка)
-    private List<String> rejectReason;      //причины отклонения (для выпадающего списка), в нем присутствует причина "Черный список", но у менеджера он не отображается
+    @NotNull
+    private List<String> statusList; //Отклонено|Одобрено (для выпадающего списка)
+
+    private String status;
+    @NotNull
+    private List<String> rejectReasonList; //причины отклонения (для выпадающего списка), в нем присутствует причина "Черный список", но у менеджера он не отображается
+    private String rejectReason;
     private LocalDate visitDate;            // если есть оно отображается, если нет, то нет
     private LocalTime visitTime;            // если есть оно отображается, если нет, то нет
 }

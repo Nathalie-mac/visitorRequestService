@@ -63,6 +63,6 @@ public class Person {
     private Request request;
 
     @Column(name = "black_list", nullable = false)
-    private String blackList;
+    private boolean blackList;
 
 }

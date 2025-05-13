@@ -55,9 +55,9 @@
 
   <!-- Форма подачи заявки -->
   <div class="request-form">
-    <form th:action="@{/submit-request}" method="post">
-      <button type="submit" class="btn btn-success btn-submit">Подать заявку</button>
-    </form>
+    <a th:href="@{/client/type}" class="btn btn-success btn-submit">
+      Подать заявку
+    </a>
   </div>
 
   <!-- Список заявок -->

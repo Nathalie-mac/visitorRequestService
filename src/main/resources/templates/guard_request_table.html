@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ХранительПРО - Одобренные заявки</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    body {
+        background-color: #f8f9fa;
+        font-family: 'Arial', sans-serif;
+        padding: 20px;
+    }
+    .header {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 30px;
+        color: #2c3e50;
+    }
+    .filter-section {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 30px;
+    }
+    .filter-title {
+        font-weight: bold;
+        margin-bottom: 15px;
+        color: #3498db;
+    }
+    .filter-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+    @media (max-width: 768px) {
+        .filter-row {
+            grid-template-columns: 1fr;
+        }
+    }
+    .filter-group {
+        margin-bottom: 15px;
+    }
+    .filter-label {
+        font-weight: bold;
+        margin-bottom: 5px;
+        display: block;
+    }
+    .results-section {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .results-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    .results-table th {
+        background-color: #f2f2f2;
+        padding: 12px;
+        text-align: left;
+        border-bottom: 2px solid #ddd;
+    }
+    .results-table td {
+        padding: 12px;
+        border-bottom: 1px solid #eee;
+    }
+    .footer {
+        text-align: right;
+        margin-top: 30px;
+        font-weight: bold;
+        color: #2c3e50;
+    }
+    .form-control {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+    .view-btn {
+        background-color: #3498db;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    .view-btn:hover {
+        background-color: #2980b9;
+    }
+    .empty-row td {
+        color: #999;
+        font-style: italic;
+        text-align: center;
+        padding: 20px;
+    }
+  </style>
+</head>
+<body>
+<div class="footer">
+  <strong>ХранительПРО</strong>
+</div>
+<div class="container">
+  <div class="header">Одобренные заявки</div>
+
+  <!-- Фильтры -->
+  <div class="filter-section">
+    <div class="filter-title">Фильтры:</div>
+    <div class="filter-row">
+      <div class="filter-group">
+        <label class="filter-label">Тип посещения</label>
+        <select class="form-control" id="appointmentTypeFilter">
+          <option value="">Все типы</option>
+          <option th:each="type : ${filterList.appointmentTypeList}"
+                  th:value="${type}"
+                  th:text="${type}"></option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label class="filter-label">Подразделение</label>
+        <select class="form-control" id="departmentFilter">
+          <option value="">Все подразделения</option>
+          <option th:each="dept : ${filterList.departmentList}"
+                  th:value="${dept}"
+                  th:text="${dept}"></option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label class="filter-label">Дата посещения</label>
+        <input type="date" class="form-control" id="dateFilter">
+      </div>
+      <div class="filter-group">
+        <label class="filter-label">ФИО посетителя</label>
+        <input type="text" class="form-control" id="fioFilter" placeholder="Введите часть ФИО">
+      </div>
+    </div>
+  </div>
+
+  <!-- Результаты -->
+  <div class="results-section">
+    <table class="results-table">
+      <thead>
+      <tr>
+        <th>Тип посещения</th>
+        <th>ФИО посетителя/посетителей</th>
+        <th>Подразделение для доступа</th>
+        <th>Дата и время посещения</th>
+        <th>Действия</th>
+      </tr>
+      </thead>
+      <tbody>
+      <!-- Данные из RequestsTableDTO -->
+      <tr th:each="row : ${requestsTable.registrationApplicationTable}"
+          th:data-id="${row.idRequest}"
+          th:data-type="${row.appointmentType}"
+          th:data-dept="${row.department}"
+          th:data-date="${#temporals.format(row.date, 'yyyy-MM-dd')}">
+        <td th:text="${row.appointmentType}">Тип посещения</td>
+        <td th:data-fio="${#strings.toLowerCase(#strings.listJoin(row.userNames, ','))}">
+          <span th:each="name, iter : ${row.userNames}"
+                th:text="${name} + (${iter.last} ? '' : ', ')">ФИО</span>
+        </td>
+        <td th:text="${row.department}">Подразделение</td>
+        <td>
+          <span th:text="${#temporals.format(row.date, 'dd.MM.yyyy')} + ' ' + ${#temporals.format(row.time, 'HH:mm')}">
+            Дата и время
+          </span>
+        </td>
+        <td>
+          <button class="view-btn" th:onclick="'viewRequest(' + ${row.idRequest} + ')'">
+            Просмотр
+          </button>
+        </td>
+      </tr>
+
+      <!-- Пустая строка, если нет результатов -->
+      <tr class="empty-row" th:if="${requestsTable.registrationApplicationTable == null or requestsTable.registrationApplicationTable.empty}">
+        <td colspan="5">Нет данных для отображения</td>
+      </tr>
+
+      <!-- Строка, которая показывается при фильтрации, когда нет совпадений -->
+      <tr class="empty-row no-matches" style="display: none;">
+        <td colspan="5">Нет заявок, соответствующих выбранным фильтрам</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // Функция для просмотра заявки
+  function viewRequest(id) {
+      window.location.href = '/guardofficer/request?id=' + id;
+  }
+
+  // Функция для фильтрации таблицы
+  function filterTable() {
+      const typeFilter = document.getElementById('appointmentTypeFilter').value;
+      const deptFilter = document.getElementById('departmentFilter').value;
+      const dateFilter = document.getElementById('dateFilter').value;
+      const fioFilter = document.getElementById('fioFilter').value.toLowerCase();
+
+      let hasMatches = false;
+      const rows = document.querySelectorAll('.results-table tbody tr[data-id]');
+
+      rows.forEach(row => {
+          const rowType = row.getAttribute('data-type');
+          const rowDept = row.getAttribute('data-dept');
+          const rowDate = row.getAttribute('data-date');
+          const rowFio = row.querySelector('td:nth-child(2)').getAttribute('data-fio');
+
+          // Проверяем соответствие фильтрам
+          const typeMatch = !typeFilter || rowType === typeFilter;
+          const deptMatch = !deptFilter || rowDept === deptFilter;
+          const dateMatch = !dateFilter || rowDate === dateFilter;
+          const fioMatch = !fioFilter || rowFio.includes(fioFilter);
+
+          if (typeMatch && deptMatch && dateMatch && fioMatch) {
+              row.style.display = '';
+              hasMatches = true;
+          } else {
+              row.style.display = 'none';
+          }
+      });
+
+      // Показываем/скрываем сообщение "Нет совпадений"
+      const noMatchesRow = document.querySelector('.no-matches');
+      const emptyRow = document.querySelector('.empty-row:not(.no-matches)');
+
+      if (rows.length > 0 && !hasMatches) {
+          noMatchesRow.style.display = '';
+          if (emptyRow) emptyRow.style.display = 'none';
+      } else {
+          noMatchesRow.style.display = 'none';
+          if (emptyRow) emptyRow.style.display = '';
+      }
+  }
+
+  // Навешиваем обработчики на все элементы фильтрации
+  document.querySelectorAll('#appointmentTypeFilter, #departmentFilter, #dateFilter, #fioFilter').forEach(element => {
+      element.addEventListener('change', filterTable);
+      element.addEventListener('input', function() {
+          if (this.id === 'fioFilter') filterTable();
+      });
+  });
+
+  // Инициализация фильтрации при загрузке
+  document.addEventListener('DOMContentLoaded', filterTable);
+</script>
+</body>
+</html>
