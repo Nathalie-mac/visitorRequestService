@@ -1,6 +1,6 @@
 package com.example.team2.service;
 
-import com.example.team2.dto.BlyadskoeFioDTO;
+import com.example.team2.dto.CustomFioDTO;
 import com.example.team2.model.Person;
 import com.example.team2.model.Request;
 import com.example.team2.dto.VisitorDTO;
@@ -80,7 +80,7 @@ public class PersonService {
         return visitorDTOS;
     }
 
-    public List<BlyadskoeFioDTO> findNameByRequest(Request request) {
+    public List<CustomFioDTO> findNameByRequest(Request request) {
         return personRepository.findNameByRequest(request);
     }
 }

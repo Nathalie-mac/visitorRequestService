@@ -1,6 +1,5 @@
 package com.example.team2.service;
 
-import com.example.team2.dto.StaticRequestDTO;
 import com.example.team2.dto.request.ManagerConfirmationRequestDTO;
 import com.example.team2.dto.request.RequestsTableDTO;
 import com.example.team2.dto.request.RowRequestsDTO;

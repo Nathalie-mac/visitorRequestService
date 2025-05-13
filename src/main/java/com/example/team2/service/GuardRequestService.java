@@ -2,7 +2,7 @@ package com.example.team2.service;
 
 //сервис для терминала сотрудника охраны
 
-import com.example.team2.dto.BlyadskoeFioDTO;
+import com.example.team2.dto.CustomFioDTO;
 import com.example.team2.dto.request.FilterListDTO;
 import com.example.team2.dto.request.GuardOfficerSetUpTimeRequestDTO;
 import com.example.team2.dto.request.RequestsTableDTO;
@@ -49,7 +49,7 @@ public class GuardRequestService {
 
     public List<String> getPersonFiosInRequest(Long id){
         Request request = requestService.findById(id);
-        List<BlyadskoeFioDTO> rawFios =  personService.findNameByRequest(request);
+        List<CustomFioDTO> rawFios =  personService.findNameByRequest(request);
         return rawFios.stream()
                 .map(dto -> String.join(" ", dto.lastName(), dto.firstName(), dto.middleName()))
                 .toList();
