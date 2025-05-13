@@ -35,7 +35,7 @@
 <body>
 <div class="container">
   <div class="error-container">
-    <div class="error-icon">⚠️</div>
+    <div class="error-icon">🐖</div>
     <h1 th:text="${errorTitle} ?: 'Произошла ошибка'"></h1>
     <p class="lead" th:text="${errorMessage} ?: 'Пожалуйста, попробуйте позже.'"></p>
 
@@ -44,7 +44,6 @@
     </div>
 
     <div class="error-actions">
-      <a href="/" class="btn btn-primary">На главную</a>
       <a href="javascript:history.back()" class="btn btn-outline-secondary ms-2">Назад</a>
     </div>
 

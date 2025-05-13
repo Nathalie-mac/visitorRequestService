@@ -8,6 +8,7 @@ import com.example.team2.dto.request.GuardOfficerSetUpTimeRequestDTO;
 import com.example.team2.dto.request.RequestsTableDTO;
 import com.example.team2.dto.request.RowRequestsDTO;
 import com.example.team2.dto.response.GuardOfficerSetUpTimeResponseDTO;
+import com.example.team2.exceptions.service.ErrorDTOPackingException;
 import com.example.team2.mapper.MapperRequest;
 import com.example.team2.model.Department;
 import com.example.team2.model.Person;
@@ -15,8 +16,10 @@ import com.example.team2.model.Request;
 import com.example.team2.repository.DepartmentRepository;
 import com.example.team2.repository.PersonRepository;
 import com.example.team2.repository.RequestRepository;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,20 +33,22 @@ public class GuardRequestService {
     private final PersonService personService;
     private final RequestRepository requestRepository;
     private final MapperRequest mapperRequest;
+    private final PersonRepository personRepository;
 
     //списки для фильтров на странице охранника
     public FilterListDTO getFilterLists(){
+        FilterListDTO filterListDTO = new FilterListDTO();
         List<String> statuses = requestService.getStatuses();
         List<String> departments = departmentService.getDepartmentNames();
         List<String> appointments = requestService.getAppointmentTypes();
-
-//        if (statuses.isEmpty() || departments.isEmpty() || appointments.isEmpty()){
-//            // TODO: обработка исключениЯ
-//            return null;
-//        }else{
-        FilterListDTO filterListDTO = new FilterListDTO(appointments, departments, statuses);
-        return filterListDTO;
-//        }
+        if (statuses.isEmpty() || appointments.isEmpty()) {
+            throw new ErrorDTOPackingException();
+        }else{
+            filterListDTO.setStatusList(statuses);
+            filterListDTO.setDepartmentList(departments);
+            filterListDTO.setAppointmentTypeList(appointments);
+            return filterListDTO;
+        }
     }
 
 
@@ -59,9 +64,7 @@ public class GuardRequestService {
     public RequestsTableDTO getApprovedRequestsTableDTO() {
         List<RowRequestsDTO> rowRequestsDTOS = new ArrayList<>();
         List<Request> requests = requestRepository.getApprovedRequests();
-        if (requests.isEmpty()) {
-            //TODO: обработка ошибок
-        }else{
+        if (!requests.isEmpty()) {
             for (Request request : requests) {
                 RowRequestsDTO rowRequestsDTO = new RowRequestsDTO();
                 mapperRequest.mapToRowRequestDTO(request, rowRequestsDTO);
@@ -76,6 +79,7 @@ public class GuardRequestService {
         return new RequestsTableDTO(rowRequestsDTOS);
     }
 
+    //TODO: исключения
     //данные для указания времени охранником
     public GuardOfficerSetUpTimeRequestDTO getGuardOfficerSetUpTime(long requestId){
         GuardOfficerSetUpTimeRequestDTO guardOfficerSetUpTimeDTO = new GuardOfficerSetUpTimeRequestDTO();

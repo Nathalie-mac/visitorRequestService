@@ -1,8 +1,8 @@
 package com.example.team2.auth.services.parser;
 
 
-import com.example.team2.auth.exceptions.auth.DecodeCredentialsException;
-import com.example.team2.auth.exceptions.auth.InvalidBasicAuthorizationHeaderException;
+import com.example.team2.exceptions.auth.DecodeCredentialsException;
+import com.example.team2.exceptions.auth.InvalidBasicAuthorizationHeaderException;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;

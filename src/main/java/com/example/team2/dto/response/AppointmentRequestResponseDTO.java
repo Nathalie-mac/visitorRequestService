@@ -1,6 +1,7 @@
 package com.example.team2.dto.response;
 
 import com.example.team2.dto.VisitorDTO;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,6 +13,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Valid
 //с фронта
 // данные для оформления заявки клиентом
 public class AppointmentRequestResponseDTO {

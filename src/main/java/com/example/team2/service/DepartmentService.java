@@ -30,26 +30,27 @@ public class DepartmentService {
         return departmentRepository.findAll();
     }
 
+
     public List<DepartmentDTO> getDepartmentsDTOs() {
         List<DepartmentDTO> departmentDTOS = new ArrayList<>();
         List<Department> departments = findAll();
+        if (!departments.isEmpty()) {
+            for (Department department : departments) {
+                DepartmentDTO departmentDTO = new DepartmentDTO();
 
-        for (Department department : departments) {
-            DepartmentDTO departmentDTO = new DepartmentDTO();
+                departmentDTO.setId(department.getId());
+                departmentDTO.setName(department.getDepartmentName());
 
-            departmentDTO.setId(department.getId());
-            departmentDTO.setName(department.getDepartmentName());
+                Map<String, Long> workers = new HashMap<>();
+                List<DepartmentWorker> departmentWorkers = department.getWorkers();
+                for (DepartmentWorker departmentWorker : departmentWorkers) {
+                    workers.put(departmentWorker.getWorkerName(), departmentWorker.getId());
+                }
+                departmentDTO.setDepartmentWorkers(workers);
 
-            Map<String, Long> workers = new HashMap<>();
-            List<DepartmentWorker> departmentWorkers = department.getWorkers();
-            for (DepartmentWorker departmentWorker : departmentWorkers) {
-                workers.put(departmentWorker.getWorkerName(), departmentWorker.getId());
+                departmentDTOS.add(departmentDTO);
             }
-            departmentDTO.setDepartmentWorkers(workers);
-
-            departmentDTOS.add(departmentDTO);
         }
-
         return departmentDTOS;
     }
 

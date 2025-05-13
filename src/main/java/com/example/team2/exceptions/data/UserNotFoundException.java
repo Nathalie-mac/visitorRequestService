@@ -1,4 +1,4 @@
-package com.example.team2.auth.exceptions.data;
+package com.example.team2.exceptions.data;
 
 public class UserNotFoundException extends RuntimeException {
     public UserNotFoundException() {

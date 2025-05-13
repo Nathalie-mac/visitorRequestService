@@ -1,4 +1,4 @@
-package com.example.team2.auth.exceptions.auth;
+package com.example.team2.exceptions.auth;
 
 public class DecodeCredentialsException extends RuntimeException {
     public DecodeCredentialsException() {

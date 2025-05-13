@@ -43,9 +43,7 @@ public class ManagerConfirmationService {
         List<RowRequestsDTO> rowRequestsDTOS = new ArrayList<>();
         List<Request> requests = requestRepository.findAll();
 
-        if (requests.isEmpty()) {
-            //TODO: обработка ошибок
-        }else{
+        if (!requests.isEmpty()) {
             for (Request request : requests) {
                 RowRequestsDTO rowRequestsDTO = new RowRequestsDTO();
                 mapperRequest.mapToRowRequestDTO(request, rowRequestsDTO);
@@ -56,6 +54,7 @@ public class ManagerConfirmationService {
 
                 rowRequestsDTOS.add(rowRequestsDTO);
             }
+
         }
         return new RequestsTableDTO(rowRequestsDTOS);
     }
